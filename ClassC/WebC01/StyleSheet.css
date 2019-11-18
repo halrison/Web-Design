@@ -1,0 +1,131 @@
+﻿.container {
+    display: grid;
+    width: 1024px;
+    height: 768px;
+    grid-template-columns: 215px auto;
+    grid-template-rows: 65px 29px auto 20px 25px;
+    font-family: '標楷體';
+}
+
+.header {
+    grid-area: 1 / 1 / 2 / 3;
+    width: 994px;
+    height: 60px;
+}
+
+.aside {
+    grid-area: 2 / 1 / 5 / 2;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    margin:auto;
+}
+.menu{
+    height:694px;
+}
+.footer {
+    grid-area: 4 / 1 / 5 / 3;
+    text-align:center;
+}
+
+.main {
+    grid-area: 2 / 2 / 4 / 3;
+    width:100%;
+    height:inherit;
+}
+
+.menu > div{
+    line-height:40px;
+    width:200px;
+    height:40px;
+    background-image:url('menu1.png');
+    background-repeat:no-repeat;
+    text-align:center;
+}
+.menu > div:hover{
+    background-image:url('menu2.png');
+}
+#marquee {
+    font-family: '標楷體';
+    height: 29px;
+    width: 770px;
+    color: blue;
+    overflow: hidden;
+    position: relative;
+}
+#marquee > div {
+    display: block;
+    width: 200%;
+    height: 29px;
+    position: absolute;
+    overflow: hidden;
+    -webkit-animation: marquee 10s linear infinite;
+    -moz-animation: marquee 10s linear infinite;
+    -ms-animation: marquee 10s linear infinite;
+    -o-animation: marquee 10s linear infinite;
+    animation: marquee 10s linear infinite;
+}
+#content{
+    display:flex;
+    height:714px;
+    flex-direction:column;
+    align-items:center;
+    background-image:url('0101.jpg');
+    background-repeat:repeat;
+}
+#introduce {
+    color: #ff00ff;
+    border-bottom:1px solid black;
+    font-size:x-large;
+    text-align:center;
+}
+@-webkit-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+@-moz-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+@-ms-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+@-o-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+@keyframes marquee {
+    0% {
+        left: 100%
+    }
+
+    100% {
+        left: -100%
+    }
+}
+

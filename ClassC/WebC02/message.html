@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>勞動部勞動力發展署-運動廣場連結網</title>
+    <link rel="stylesheet" href="StyleSheet.css">
+    <style>
+        table{                       
+            object-position:center top;
+        }
+        table td{
+            margin:0;
+            padding:2px; 
+            border:1px solid #DDDDDD;
+        }
+        table td:first-child{
+            width:120px;
+            text-align:center;
+        }
+        table td:last-child{
+            width:580px;
+        }
+        #marquee {
+            height: 29px;
+            width: 1000px;
+            overflow: hidden;
+            position: relative;
+        }
+        #marquee > div {
+            display: block;
+            width: 200%;
+            height: 29px;
+            position: absolute;
+            overflow: hidden;
+            -webkit-animation: marquee 10s linear infinite;
+            -moz-animation: marquee 10s linear infinite;
+            -ms-animation: marquee 10s linear infinite;
+            -o-animation: marquee 10s linear infinite;
+            animation: marquee 10s linear infinite;
+        }
+        @-webkit-keyframes marquee {
+            0% {
+                left: 100%;
+            }
+            100% {
+                left: -100%;
+            }
+        }
+        @-moz-keyframes marquee {
+            0% {
+                left: 100%;
+            }
+            100% {
+                left: -100%;
+            }
+        }
+        @-ms-keyframes marquee {
+            0% {
+                left: 100%;
+            }
+            100% {
+                left: -100%;
+            }
+        }
+        @-o-keyframes marquee {
+            0% {
+                left: 100%;
+            }
+            100% {
+                left: -100%;
+            }
+        }
+        @keyframes marquee {
+            0% {
+                left: 100%
+            }
+            100% {
+                left: -100%
+            }
+        }
+    </style>
+    <script  src="https://code.jquery.com/jquery-3.4.1.js"></script>"
+</head>
+<body>
+    <header>
+        <a href="index.html"><img id="top" src="logo.png" width="180" height="90" alt="運動廣場連結網-回首頁" style="float:left"></a>
+        <canvas width="844" height="90"></canvas>
+        <script src="JavaScript.js"></script>
+    </header>
+    <nav><ul>
+        <li><a href="index.html">首頁</a></li>
+        <li><a href="health.html">健康天地</a></li>
+        <li><a href="basketball.html">籃球介紹</a></li>
+        <li><a href="baseball.html">棒球介紹</a></li>
+        <li><a href="swimming.html">游泳介紹</a></li>
+        <li><a href="message.html">訪客留言</a></li>
+        <li><a href="reference.html">資料來源</a></li>
+    </ul></nav>
+    <main>
+        <p>現在位置：首頁>訪客留言</p>
+        <div id="content">
+            <div id="marquee"><div>謝謝蒞臨本網站，請給予我們支持、鼓勵與建言</div></div>
+            <form><table>
+                <tr>
+                    <td>姓名</td>
+                    <td><input type="text" width="20"></td>
+                </tr>
+                <tr>
+                    <td>電子郵件</td>
+                    <td><input type="email" width="60"></td>
+                </tr>
+                <tr>
+                    <td>性別</td>
+                    <td>
+                        <label>男</label><input type="radio" checked>
+                        <label>女</label><input type="radio">
+                    </td>
+                </tr>
+                <tr>
+                    <td>職業類別</td>
+                    <td><select>
+                        <option selected>-----------請選擇職業類別-----------</option>
+                        <option>1.現役軍人</option>
+                        <option>2.專業人員</option>
+                        <option>3.技術員及助理專業人員</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td>留言內容</td>
+                    <td><textarea rows="10" maxlength="78"></textarea></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="送出">
+                        <input type="reset" value="重寫">
+                    </td>
+                    <td></td>
+                </tr>
+            </table></form>
+            <script type="text/javascript">
+                $('form').submit(function (event) {
+                    event.preventDefault();
+                    alert('歡迎蒞臨本網站，您的寶貴意見我們會盡速處理與回復，謝謝');
+                    $('form').reset();
+                });
+            </script>
+        </div>
+    </main>
+    <footer>
+        網頁設計與維護：XXX<br>
+        最近更新日期：YYYY/MM/DD
+    </footer>
+</body>
+</html>

@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>勞動部勞動力發展署-運動廣場連結網</title>
+    <link rel="stylesheet" href="StyleSheet.css">
+    <style>
+
+        aside {
+            width: 278px;
+            height: 458px;
+            float: left;
+            border: 1px solid #999999;
+        }
+
+        caption {
+            font-size: medium;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        th {
+            font-size: 14px;
+            color: white;
+            text-align: center;
+        }
+
+        thead tr {
+            background-color: #3399FF;
+        }
+
+        tbody tr:nth-child(2n+1) {
+            background-color: #FFFFCC;
+        }
+
+        tbody tr:nth-child(2n) {
+            background-color: #DDDDDD;
+        }
+
+        td {
+            font-size: 12px;
+            line-height: 2em;
+        }
+
+        figure {
+            margin: 1px;
+        }
+
+        figcaption {
+            font-size: 14px;
+            color: yellow;
+            text-align:center;
+        }
+
+        #content {
+            width: 550px;
+            height: 420px;
+            float: right;
+            left: inherit;
+            background-color: #333333;
+            padding: 20px;
+        }
+
+        #content ul {
+            list-style-type: none;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            height: 140px;
+        }
+
+        #content ul li {
+            margin: 1px;
+            width:25%;
+        }
+
+        #fullsize {
+            width: 550px;
+            height: 300px;
+            background-color: #333333;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://raw.githubusercontent.com/caleb531/jcanvas/v21.0.1/dist/jcanvas.js"></script>
+</head>
+    <body>
+        <header>
+            <a href="index.html" target="_self"><img id="top" src="logo.png" width="180" height="90" alt="運動廣場連結網-回首頁"></a>
+            <canvas width="844" height="90"></canvas>
+            <script src="JavaScript.js"></script>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="index.html" target="_self">首頁</a></li>
+                <li><a href="health.html" target="_self">健康天地</a></li>
+                <li><a href="basketball.html" target="_self">籃球天地</a></li>
+                <li><a href="baseball.html" target="_self">棒球介紹</a></li>
+                <li><a href="swimming.html" target="_self">游泳介紹</a></li>
+                <li><a href="message.html" target="_self">訪客留言</a></li>
+                <li><a href="reference.html" target="_self">資料來源</a></li>
+            </ul>
+        </nav>
+        <main>
+            <aside>
+                <table>
+                    <caption>最新消息</caption>
+                    <thead>
+                        <tr>
+                            <th>主題</th>
+                            <th>發布日期</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src="0201.png" height="12">公告全國技能競賽相關事宜</td>
+                            <td>YYYY/MM/DD</td>
+                        </tr>
+                        <tr>
+                            <td><img src="0201.png" height="12">公告即測即評及發證相關事宜</td>
+                            <td>YYYY/MM/DD</td>
+                        </tr>
+                        <tr>
+                            <td><img src="0201.png" height="12">公告網頁設計修題相關事宜</td>
+                            <td>YYYY/MM/DD</td>
+                        </tr>
+                        <tr>
+                            <td><img src="0201.png" height="12">公告網路架設應檢相關事宜</td>
+                            <td>YYYY/MM/DD</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </aside>
+            <div id="content">
+                <div id="fullsize"></div>
+                <ul>
+                    <li>
+                        <figure>
+                            <a href="0202A.png" class="thumbnail"><img src="0202B.png"></a>
+                            <figcaption>第30屆倫敦奧運</figcaption>
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <a href="0203A.png" class="thumbnail"><img src="0203B.png"></a>
+                            <figcaption>許淑淨奪舉重銀牌</figcaption>
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <a href="0204A.png" class="thumbnail"><img src="0204B.png"></a>
+                            <figcaption>第26屆深圳世大運</figcaption>
+                        </figure>
+                    </li>
+                    <li>
+                        <figure>
+                            <a href="0205A.png" class="thumbnail"><img src="0205B.png"></a>
+                            <figcaption>第27屆喀山世大運</figcaption>
+                        </figure>
+                    </li>
+                </ul>
+                <script type="text/javascript">
+                    $(document).on('click', '.thumbnail', function (event) {
+                        event.preventDefault();
+                        var filename = $(this).attr('href');
+                        $('#fullsize').empty().html('<img src=' + filename + ' width="540" height="280" style="padding:10px;">');
+                    });
+                </script>
+            </div>
+        </main>
+        <footer>
+            網頁設計與維護：XXX<br>
+            最近更新日期：YYYY/MM/DD
+        </footer>
+    </body>
+</html>

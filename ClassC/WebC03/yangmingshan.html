@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="StyleSheet.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <style>
+        #content{
+            background-color:#FFFFCC;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        #content p{
+            font:italic normal bold small '標楷體' ;
+            color:blue;
+            align-self:flex-start;
+        }
+    </style>
+    <title>國家公園介紹網</title>
+</head>
+<body>
+    <header>
+        <a href="index.html"><img src="a0.gif" alt="國家公園介紹網"></a>
+    </header>
+    <aside>
+        <ul>
+            <li><a href="yanminshan.html"><img src="park0302.jpg" alt="陽明山國家公園" data-show="park0302.jpg" data-bind="park0302a.jpg"></a></li>
+            <li><p></p></li>
+            <li><a href="sheipa.html"><img src="park0303.jpg" alt="雪霸國家公園" data-show="park0303.jpg" data-bind="park0303a.jpg"></a></li>
+            <li><p></p></li>
+            <li><img src="park0304.jpg" alt="太魯閣國家公園" data-show="park0304.jpg" data-bind="park0304a.jpg"></li>
+            <li><p></p></li>
+            <li><img src="park0305.jpg" alt="玉山國家公園" data-show="park0305.jpg" data-bind="park0305a.jpg"></li>
+        </ul>
+        <script src="JavaScript.js"></script>
+        <a href="park.mp3" download="park.mp3"><p>檔案下載</p></a>
+    </aside>
+    <main>
+        <div id="marquee"><div>歡迎進入國家公園介紹網，本網站有詳細的國家公園介紹哦！</div></div>
+        <div id="content">
+            <img src="park0302.jpg">
+            <p>「陽明山國家公園」位處臺北盆地北緣，東起磺嘴山、五指山東側，西至向天山、面天山西麓，北迄竹子山、土地公嶺，南迨紗帽山南麓，面積約11455公頃；海拔高度自200公尺至1120公尺範圍不等。</p>
+            <a href="index.html">回首頁</a>
+        </div>
+    </main>
+    <footer>網頁設計及維護：XXOOO、最近更新日期：yyyy/mm/dd</footer>
+</body>
+</html>

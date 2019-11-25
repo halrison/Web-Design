@@ -40,6 +40,8 @@ footer{
     clear:both;
     height:20px;
     text-align:center;
+    font-size:medium;
+    font-family:'標楷體'
 }
 #marquee {
     height: 29px;
@@ -61,11 +63,7 @@ footer{
     animation: marquee 10s linear infinite;
 }
 #content{
-    background-image:url('park0301.jpg');
-}
-#content p{
-    text-align:right;
-    color:purple;
+    height:672px;
 }
 @-webkit-keyframes marquee {
     0% {

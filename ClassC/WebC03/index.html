@@ -3,8 +3,24 @@
 <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="StyleSheet.css">
+    <style>
+        #content{
+            background-image:url('park0301.jpg');
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        #content img{
+            width:452px;
+            height:624px;
+        }
+        #content p{
+            align-self:flex-end;
+            color:purple;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <title></title>
+    <title>國家公園介紹網</title>
 </head>
     <body>
         <header>
@@ -12,7 +28,7 @@
         </header>
         <aside>
             <ul>
-                <li><a href="yanminshan.html"><img src="park0302.jpg" alt="陽明山國家公園" data-show="park0302.jpg" data-bind="park0302a.jpg"></a></li>
+                <li><a href="yangminshan.html"><img src="park0302.jpg" alt="陽明山國家公園" data-show="park0302.jpg" data-bind="park0302a.jpg"></a></li>
                 <li><p></p></li>
                 <li><a href="sheipa.html"><img src="park0303.jpg" alt="雪霸國家公園" data-show="park0303.jpg" data-bind="park0303a.jpg"></a></li>
                 <li><p></p></li>
@@ -20,23 +36,13 @@
                 <li><p></p></li>
                 <li><img src="park0305.jpg" alt="玉山國家公園" data-show="park0305.jpg" data-bind="park0305a.jpg"></li>
             </ul>
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('li img').mouseover(function () {
-                        var bind = $(this).data('bind');
-                        $(this).attr('src',bind);
-                    }).mouseout(function () {
-                        var show = $(this).data('show');
-                        $(this).attr('src',show);
-                    });
-                });
-            </script>
+            <script src="JavaScript.js"></script>            
             <a href="park.mp3" download="park.mp3"><p>檔案下載</p></a>
         </aside>
         <main>
             <div id="marquee"><div>歡迎進入國家公園介紹網，本網站有詳細的國家公園介紹哦！</div></div>
             <div id="content">
-                <img src="national_park.jpg">
+                <img src="national_park.jpg" usemap="#Map">
                 <map name="Map">
                     <area shape="rect" coords="214,50,344,75" href="yangmingshan.html" alt="陽明山國家公園"/>
                     <area shape="poly" coords="289,179,294,182,303,183,309,183,314,185,321,188,321,192,321,200,319,205,317,209,312,215,304,221,299,222,291,223,283,223,280,218,279,217,272,211,271,204,271,199,274,195,276,191,280,185,283,183,284,180,287,178" href="sheipa.html" alt="雪霸國家公園"/>

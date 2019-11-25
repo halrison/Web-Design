@@ -1,0 +1,109 @@
+﻿body {
+    width:1024px;
+    height:768px;
+    padding:12px;
+}
+header,aside,main,footer{
+    border:1px solid black;
+}
+header{
+    background-color:blue;
+    display:flex;
+    justify-content:center;
+    height:65px;
+}
+aside {
+    background-color: #00ffff;
+    float: left;
+    width: 196px;
+    height: 700px;
+}
+aside p{
+    text-align:center;
+}
+ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+}
+ul li img{
+    width:120px;
+    height:40px;
+}
+main{
+    float:right;
+    width:824px;
+    height:700px;
+}
+footer{
+    clear:both;
+    height:20px;
+    text-align:center;
+}
+#marquee {
+    height: 29px;
+    width: 824px;
+    overflow: hidden;
+    position: relative;
+    display:flex;
+    justify-content:center;
+}
+#marquee > div {
+    display: block;
+    width: 200%;
+    position: absolute;
+    overflow: hidden;
+    -webkit-animation: marquee 10s linear infinite;
+    -moz-animation: marquee 10s linear infinite;
+    -ms-animation: marquee 10s linear infinite;
+    -o-animation: marquee 10s linear infinite;
+    animation: marquee 10s linear infinite;
+}
+#content{
+    background-image:url('park0301.jpg');
+}
+#content p{
+    text-align:right;
+    color:purple;
+}
+@-webkit-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -100%;
+    }
+}
+@-moz-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -100%;
+    }
+}
+@-ms-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -100%;
+    }
+}
+@-o-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -100%;
+    }
+}
+@keyframes marquee {
+    0% {
+        left: 100%
+    }
+    100% {
+        left: -100%
+    }
+}

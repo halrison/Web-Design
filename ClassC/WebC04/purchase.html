@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>網路行銷購物網</title>
+    <link href="StyleSheet.css" rel="stylesheet">
+    <style>
+        main{
+            background-image:url('0402.jpg');
+            background-repeat:repeat;
+        }
+        table {
+            border-collapse: collapse;
+            text-align: center;
+        }
+        table tr:first-child, tr:last-child {
+            height: 100px;
+        }
+        table tr:nth-child(2) {
+            height: 150px;
+        }
+        table tr td {
+            border: 1px solid black;
+            width: 400px;
+        }
+        table tr td img {
+            height: 150px;
+            width: auto;
+            vertical-align: central;
+        }
+        form div {
+            display: flex;
+            justify-content: center;
+            margin:10px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body>
+    <audio controls="controls" autoplay>
+        <source src="0401.mp3" type="audio/mpeg" />
+    </audio>
+    <header><a href="index.html"><img src="0401a.jpg" /></a></header>
+    <main>
+        <div id="marquee"><div>大家來購物網！精品商品特價大拍賣！要買要快！</div></div>
+        <form>
+            <table>
+                <tr>
+                    <td>真皮皮包</td>
+                    <td>真皮短夾</td>
+                </tr>
+                <tr>
+                    <td><img src="0403.jpg" /></td>
+                    <td><img src="0404.jpg" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="radio" name="purchase1" value="購買" checked>購買
+                        <input type="radio" name="purchase1" value="不購買">不購買
+                        <input type="radio" name="purchase1" value="考慮中">考慮中
+                    </td>
+                    <td>
+                        <input type="radio" name="purchase2" value="購買">購買
+                        <input type="radio" name="purchase2" value="不購買">不購買
+                        <input type="radio" name="purchase2" value="考慮中" checked>考慮中
+                    </td>
+                </tr>
+            </table>
+            <div>
+                <input type="submit" value="送出">
+                <input type="reset" value="重置">
+            </div>
+        </form>
+        <script>
+            $(document).ready(function () {
+                $('form').on('submit', function (event) {
+                    event.preventDefault();
+                    var purchase1 = $("input[name='purchase1']:checked").val(), purchase2 = $("input[name='purchase2']:checked").val();
+                    confirm('流行皮件選購確認：\r\r●真皮皮包：' + purchase1 + '\r●真皮短夾：' + purchase2);
+                    return false;
+                });
+            });
+        </script>
+    </main>
+    <footer>
+        <a href="mseeage.html">訪客留言版</a>
+        <br>網頁設計及維護：XXOOO、最近更新日期：yyyy/mm/dd
+    </footer>
+</body>
+</html>

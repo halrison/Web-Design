@@ -2,9 +2,66 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>網路行銷購物網</title>
+    <link href="StyleSheet.css" rel="stylesheet">
+    <style>
+        main{
+            background-image:url('0402.jpg');
+            background-repeat:repeat;
+        }
+        table{
+            border-collapse:collapse;
+            text-align:center;            
+        }
+        table tr{
+            height:150px;
+        }
+        table tr,td{
+            border:1px solid black;
+        }
+        table tr td:first-child{
+            width:200px;
+        }
+        table tr td:nth-child(2),td:last-child{
+            width:300px;
+        }
+        table tr td img{
+            height:150px;
+            width:auto;
+            vertical-align:central;
+        }
+    </style>
 </head>
 <body>
-
+    <audio controls="controls" autoplay>
+        <source src="0401.mp3" type="audio/mpeg" />
+    </audio>
+    <header>
+        <a href="index.html"><img src="0401a.jpg" /></a>
+    </header>
+    <main>
+        <div id="marquee"><div>大家來購物網！精品商品特價大拍賣！要買要快！</div></div>
+        <table>
+            <tr>
+                <td><a href="purchase.html">流行皮件</a></td>
+                <td><a href="leather1.html" target="_blank"><img src="0403.jpg" /></a></td>
+                <td><a href="leather2.html" target="_blank"><img src="0404.jpg" /></a></td>
+            </tr>
+            <tr>
+                <td>流行鞋區</td>
+                <td><img src="0405.jpg" /></td>
+                <td><img src="0406.jpg" /></td>
+            </tr>
+            <tr>
+                <td>流行飾品</td>
+                <td><img src="0407.jpg" /></td>
+                <td><img src="0408.jpg" /></td>
+            </tr>
+        </table>
+    </main>
+    <footer>
+        <a href="message.html">訪客留言版</a>
+        <br>網頁設計及維護：XXOOO、最近更新日期：yyyy/mm/dd
+    </footer>
 </body>
 </html>

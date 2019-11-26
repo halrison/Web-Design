@@ -1,107 +1,101 @@
 ﻿body {
     width:1024px;
     height:768px;
-    padding:12px;
 }
-header,aside,main,footer{
-    border:1px solid black;
+audio{
+    display:none;
 }
 header{
-    background-color:blue;
-    display:flex;
-    justify-content:center;
-    height:65px;
-}
-aside {
-    background-color: #00ffff;
-    float: left;
-    width: 196px;
-    height: 700px;
-}
-aside p{
-    text-align:center;
-}
-ul {
-    list-style-type: none;
-    display: flex;
-    flex-direction:column;
-    justify-content: center;
-}
-ul li img{
-    width:120px;
-    height:40px;
+    height:120px;
+    width:100%;
 }
 main{
-    float:right;
-    width:824px;
-    height:700px;
+    width:100%;    
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
 footer{
     background-color:#666600;
-    clear:both;
-    height:20px;
-    text-align:center;
-    font-size:medium;
+    width:100%;
+    color:white;
     font-family:'標楷體';
+    line-height:2em;
+    text-align:left;
+}
+footer a:link{
+    text-decoration:none;
+}
+footer a:visited{
+    color:#FF9999;
 }
 #marquee {
-    height: 29px;
-    width: 824px;
+    height: 30px;
+    width: 100%;
     overflow: hidden;
     position: relative;
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
 }
 #marquee > div {
     display: block;
     width: 200%;
     position: absolute;
     overflow: hidden;
+    color:blue;
+    font-size:large;
+    font-family:'標楷體';
     -webkit-animation: marquee 10s linear infinite;
     -moz-animation: marquee 10s linear infinite;
     -ms-animation: marquee 10s linear infinite;
     -o-animation: marquee 10s linear infinite;
     animation: marquee 10s linear infinite;
 }
-#content{
-    height:672px;
-}
 @-webkit-keyframes marquee {
     0% {
         left: 100%;
     }
+
     100% {
         left: -100%;
     }
 }
+
 @-moz-keyframes marquee {
     0% {
         left: 100%;
     }
+
     100% {
         left: -100%;
     }
 }
+
 @-ms-keyframes marquee {
     0% {
         left: 100%;
     }
+
     100% {
         left: -100%;
     }
 }
+
 @-o-keyframes marquee {
     0% {
         left: 100%;
     }
+
     100% {
         left: -100%;
     }
 }
+
 @keyframes marquee {
     0% {
         left: 100%
     }
+
     100% {
         left: -100%
     }

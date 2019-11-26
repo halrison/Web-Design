@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>網路行銷購物網</title>
+        <link href="StyleSheet.css" rel="stylesheet" />
+        <style>
+            main{
+                background-image:url('0402.jpg');
+                background-repeat:repeat;
+            }
+            table{
+                border-collapse:collapse;
+            }
+            table tr{
+                line-height:32px;
+            }
+            table tr:nth-child(-n+3){
+                background-color:#FFDDDD;
+            }
+            table tr:nth-last-child(-n+3){
+                background-color:#ffff99;                
+            }
+            table tr:not(:nth-child(4)) td{
+                border:1px solid black;
+            }
+            table tr td:first-child{
+                width:150px;
+            }
+            table tr td:last-child{
+                width:350px;
+            }
+            form div {
+                display: flex;
+                justify-content: center;
+                margin:10px;
+            }
+        </style>
+    </head>
+    <body>
+        <audio controls="controls" autoplay>
+            <source src="0401.mp3" type="audio/mpeg" />
+        </audio>
+        <header>
+            <a href="index.html"><img src="0401a.jpg" /></a>
+        </header>
+        <main>
+            <div id="marquee"><div>大家來購物網！精品商品特價大拍賣！要買要快！</div></div>
+            <form onsubmit="javascript: alert('歡迎蒞臨本網站，您的寶貴意見我們會儘速處理與回覆，謝謝！');">
+                <table>
+                    <tr>
+                        <td>公司名稱</td>
+                        <td>大家來購物有限公司</td>
+                    </tr>
+                    <tr>
+                        <td>公司電子信箱</td>
+                        <td>service@test.labor.gov.tw</td>
+                    </tr>
+                    <tr>
+                        <td>服務項目</td>
+                        <td>網路購物服務</td>
+                    </tr>
+                    <tr>
+                        <td><p></p></td>
+                        <td><p></p></td>
+                    </tr>
+                    <tr>
+                        <td>客戶姓名</td>
+                        <td align="left"><input type="text" size="20"></td>
+                    </tr>
+                    <tr>
+                        <td>電子信箱</td>
+                        <td align="left"><input type="email" size="30"></td>
+                    </tr>
+                    <tr>
+                        <td>意見留言</td>
+                        <td align="left"><textarea cols="30" rows="5"></textarea></td>
+                    </tr>
+                </table>
+                <div>
+                    <input type="submit" value="送出">
+                    <input type="reset" value="重置">
+                </div>
+            </form>
+        </main>   
+        <footer>
+            <a href="message.html">訪客留言版</a>
+            <br>網頁設計及維護：XXOOO、最近更新日期：yyyy/mm/dd
+        </footer>
+    </body>
+</html>

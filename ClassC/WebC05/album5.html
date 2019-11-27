@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="StyleSheet.css" rel="stylesheet" />
+    <style>
+        #fullsize {
+        width: 400px;
+        height: 300px;
+        border:5px solid blue;
+        }
+        aside{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:flex-start;
+        }
+        ul {
+            list-style-type: none;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            width:300px;
+        }
+        ul li {
+            margin: 1px;            
+        }
+        li a img{
+            width:60px;
+            height:45px;
+            border:medium solid blue;
+        }
+        li a img:hover{
+            border:medium solid #00ffff;
+        }
+        #content p{
+            font-family:'標楷體';
+            font-size:20px;
+            font-weight:bolder;
+            color:blue;
+            text-decoration:underline;
+            text-align:center;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <title></title>
+</head>
+<body>
+    <audio controls="controls" autoplay>
+        <source src="0501.mp3" type="audio/mpeg" />
+    </audio>
+    <main>
+        <menu>
+            <div><img src="0508.gif" width="125" height="20" alt="書曼的旅遊相簿" /></div>
+            <div><img src="0507.jpg" width="120" height="120" alt="書曼" /></div>
+            <div><p></p></div>  
+            <div><img src="0501b.gif" alt="金門逍遙遊" data-bind="0501r.gif" data-show="0501b.gif"/></div>
+            <div><img src="0502b.gif" alt="卡蹓到馬祖" data-bind="0502r.gif" data-show="0502b.gif" /></div>
+            <div><img src="0503b.gif" alt="踏浪澎湖行" data-bind="0503r.gif" data-show="0503b.gif" /></div>      
+            <div><img src="0504b.gif" alt="綠島唱夜曲" data-bind="0504r.gif" data-show="0504b.gif" /></div>
+            <div><a href="album5.html"><img src="0505b.gif" alt="蘭嶼賞魚去" data-bind="0505r.gif" data-show="0505b.gif" /></a></div>  
+            <div><p></p></div>
+            <div>日期：yyyy/mm/dd<br>維護：OOO</div>   
+            <div><p></p></div>
+            <div><a href="index.html" target="_top"><img src="0506b.gif" alt="回首頁" data-bind="0506r.gif" data-show="0506b.gif" /></a></div>
+        </menu>
+        <script src="JavaScript.js"></script>
+        <aside>
+            <div id="marquee">
+                <div>歡迎來到書曼的旅遊相簿，本網站有我的旅遊影像紀錄介紹耶！</div>
+            </div>
+            <div id="content">
+                <p>蘭嶼賞魚去</p>
+                <div id="fullsize"></div>
+                <ul>
+                    <li>
+                        <a class="thumbnail" href="0551.jpg"><img src="0551.jpg"></a>
+                    </li>
+                    <li>
+                        <a class="thumbnail" href="0552.jpg"><img src="0552.jpg"></a>
+                    </li>
+                    <li>
+                        <a class="thumbnail" href="0553.jpg"><img src="0553.jpg"></a>
+                    </li>
+                    <li>
+                        <a class="thumbnail" href="0554.jpg"><img src="0554.jpg"></a>
+                    </li>
+                    <li>
+                        <a class="thumbnail" href="0555.jpg"><img src="0555.jpg"></a>
+                    </li>
+                </ul>
+                <script type="text/javascript">
+                    $(document).on('click', '.thumbnail', function (event) {
+                        event.preventDefault();
+                        var filename = $(this).attr('href');
+                        $('#fullsize').empty().html('<img src=' + filename + ' width="380" height="280" style="padding:10px;">');
+                    });
+                </script>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>

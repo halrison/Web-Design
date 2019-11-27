@@ -1,0 +1,105 @@
+﻿body {    
+    width:100%;
+    height:100%;
+    background-color:#333333;
+}
+main{
+    width:1022px;
+    height:766px;
+    background-color:#FFFFCC;
+    border:1px solid black;
+}
+menu{
+    float:left;
+    width:150px;
+    height:766px;
+    display:flex;
+    padding:0;
+    margin:0;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+}
+
+aside{
+    float:right;
+    width:860px;
+    height:766px;
+}
+audio{
+    display:none;
+}
+#marquee {
+    height: 50px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+#marquee > div {
+    display: block;
+    width: 200%;
+    position: absolute;
+    overflow: hidden;
+    color: red;
+    font-size: x-large;
+    font-family: '標楷體';
+    font-weight:bold;
+    -webkit-animation: marquee 10s linear infinite;
+    -moz-animation: marquee 10s linear infinite;
+    -ms-animation: marquee 10s linear infinite;
+    -o-animation: marquee 10s linear infinite;
+    animation: marquee 10s linear infinite;
+}
+
+@-webkit-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+@-moz-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+@-ms-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+@-o-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+
+    100% {
+        left: -100%;
+    }
+}
+
+@keyframes marquee {
+    0% {
+        left: 100%
+    }
+
+    100% {
+        left: -100%
+    }
+}

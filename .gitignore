@@ -83,8 +83,8 @@ StyleCopReport.xml
 *.tli
 *.tlh
 *.tmp
-*.tmp_proj
-*_wpftmp.csproj
+*.vbproj
+*.csproj
 *.log
 *.vspscc
 *.vssscc
@@ -93,6 +93,7 @@ StyleCopReport.xml
 *.svclog
 *.scc
 *.config
+*.sln
 # Chutzpah Test files
 _Chutzpah*
 

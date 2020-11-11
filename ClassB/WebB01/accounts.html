@@ -1,0 +1,140 @@
+﻿<p class="botli cent t">管理者帳號管理</p>
+<table style="width: 100%;">
+	<thead>
+		<tr class="yel">
+			<th>帳號</th>
+			<th>密碼</th>
+			<th>刪除</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+<table style="margin-top:10px; width:70%;">
+	<tbody>
+		<tr>
+			<td style="width:200px">
+				<input type="button" id="btnadd" />
+			</td>
+			<td class="cent">
+				<input type="submit" value="修改確定" />
+				<input type="reset" value="重置" />
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+	jQuery(document).ready(
+		() => {
+			jQuery.getJSON(
+				'/ClassB/WebB01/Fetch.ashx',
+				{
+					item: 'Account'
+				},
+				responses => {
+					jQuery.each(
+						responses,
+						(key, value) => {
+							jQuery("tbody:nth-child(2)").append(
+								`<tr id="${value.Id}" class="trce">
+									<td>
+										<input name="username" type="text" value="${value.UserName}"/>
+									</td>
+									<td>
+										<input name="password" type="password" value="${value.PassWord}"/>
+									</td>
+									<td>
+										<input name="delete" type="checkbox" />
+									</td>
+								</tr>`
+							);
+						}
+					);
+				}
+			);
+			jQuery("#btnadd").val('新增管理員帳號').click(
+				() => {
+					jQuery("#cvr").html(
+						`<p class="botli t">新增管理員帳號</p>
+						帳號：<input id="username" type="text" autocomplete="off"/><br>
+						密碼：<input id="password" type="password" autocomplete="off"/><br>
+						確認密碼：<input id="confirm" type="password" autocomplete="off"/><br>
+						<button id="Insert">新增</button>
+						<button id="Clear">重置</button>`
+					);
+					jQuery("#cover").addClass('cent').fadeIn();
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Insert",
+				() => {
+					jQuery.post( '/ClassB/WebB01/Add.ashx',
+						 {
+							item: 'Account',
+							username: jQuery("#username").val(),
+							password: jQuery("#password").val()
+						},
+						returns => {
+							jQuery("tbody:nth-child(2)").prepend(
+								`<tr id="${returns}" class="trce">
+									<td>
+										<input name="username" type="text" value="${jQuery("#username").val()}"/>
+									</td>
+									<td>
+										<input name="password" type="password" value="${ jQuery("#password").val()}"/>
+									</td>
+									<td>
+										<input name="delete" type="checkbox" />
+									</td>
+								</tr>`
+							);
+							jQuery("#cover").fadeOut();
+						}
+					);
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Clear",
+				() => {
+					jQuery("#usesrname").empty();
+					jQuery("#password").empty();
+				}
+			);
+			jQuery("form").submit(
+				() => {
+					event.preventDefault();
+					jQuery("tbody:nth-child(2) tr").each(
+						function () {
+							if (jQuery(this).find("input[name='delete']").prop('checked')) {
+								jQuery.get(
+									'/ClassB/WebB01/Delete.ashx',
+									{
+										item: 'Account',
+										id: jQuery(this).attr('id')
+									},
+									responses => {
+										if (responses == 'success') {
+											jQuery(this).remove();
+										}
+									}
+								);
+							} else {
+								jQuery.post(
+									'/ClassB/WebB01/Modify.ashx',
+									 {
+										item: 'Account',
+										id: jQuery(this).attr('id'),
+										username: jQuery(this).find("input:text").val(),
+										password: jQuery(this).find("input:password").val()
+									}
+								);
+							}
+						}
+					);
+				}
+			);
+		}
+	);
+</script>

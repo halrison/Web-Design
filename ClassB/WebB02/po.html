@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            p{
+                display:block;
+            }
+            p a,li{
+                text-decoration:none;
+            }
+            ul{
+                list-style-type:none;
+            }
+            #category{
+                width:11%;
+                float:left;
+            }
+			#article {
+				width: 80%;
+				float:right;
+			}
+        </style>
+    </head>
+    <body>
+        <nav>目前位置：首頁>分類網誌><span></span></nav>
+        <fieldset id="category">
+            <legend>分類網誌</legend>
+                <p><a>健康新知</a></p>
+                <p><a>菸害防制</a></p>
+                <p><a>癌症防治</a></p>
+                <p><a>慢性病防治</a></p>
+        </fieldset>
+        <fieldset id="article">
+			<legend>文章列表</legend>
+            <ul></ul>
+            <div></div>
+        </fieldset>
+        <script type="text/javascript">
+            jQuery(document).ready(
+                function () {
+                    var content, title;
+                    jQuery("style").appendTo("head");
+                    jQuery("#article div").hide();
+                    jQuery("#category p a").click(
+                        function () {
+                            jQuery.ajax(
+                                {
+                                    url: '/ClassB/WebB02/Fetch.ashx',
+                                    method: 'get',
+                                    beforeSend: () => {
+							            jQuery("nav span").text(jQuery(this).text());
+							            jQuery("#article legend").text('文章列表');
+                                    },
+                                    data: {
+                                        item:'Article',
+                                        category: jQuery(this).text()
+                                    },
+                                    dataType:'json',
+                                    success: returns => {
+                                        title = returns[0].titles;
+                                        content = returns[0].contents;
+							            jQuery("#article div").empty().hide();
+                                        jQuery("#article ul").html(
+								            `<li>
+                                                <a>${title}</a>
+                                            </li>` 
+                                        ).show();
+						            }
+                                }
+                            );
+                        }
+                    );
+                    jQuery("#article ul").on(
+                        'click',
+                        "li",
+                        function () {
+					        jQuery("#article legend").text(`文章標題：${title}`);
+                            jQuery("#article ul").hide();
+					        jQuery("#article div").text(content).show();
+                        }
+                    );
+                }
+            );
+        </script>
+    </body>
+</html>

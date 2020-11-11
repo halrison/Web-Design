@@ -1,36 +1,10 @@
 ﻿@charset "utf-8";
 /* CSS Document */
-body {
-	padding: 0px;
-	margin: 0px;
+body
+{
+	padding:0px;
+	margin:0px;
 }
-
-marquee {
-	position: absolute;
-	width: 100%;
-	height: 40px;
-}
-
-input, button {
-	border: #999 1px solid;
-	border-radius: 3px;
-	background: #EFEFEF;
-	padding: 5px;
-	margin: 3px;
-}
-
-	input:active, button:active {
-		background: #E6E6E6;
-	}
-
-	input[type=text], input[type=password] {
-		width: 150px;
-	}
-
-	input:focus, button:focus {
-		box-shadow: #09C 0px 0px 3px .3px;
-	}
-
 button {
 	width: 100%;
 	margin-left: auto;
@@ -38,47 +12,66 @@ button {
 	margin-top: 2px;
 	height: 50px;
 }
-
-.ti {
+input, button {
+	border: #999 1px solid;
+	border-radius: 3px;
+	background: #EFEFEF;
+	padding: 5px;
+	margin: 3px;
+}
+	input:active, button:active {
+		background: #E6E6E6;
+	}
+input[type=text], input[type=password] {
+		width: 150px;
+}
+	input:focus, button:focus {
+		box-shadow: #09C 0px 0px 3px .3px;
+	}
+marquee {
+	position: absolute;
 	width: 100%;
-	height: 100px;
-	position: relative;
-	background-size: cover;
-	background-repeat: no-repeat;
+	height: 40px;
 }
-
-.dbor {
-	border: #EE7728 double 3px;
-	margin: 1px;
-	padding: 2px 10px 2px 10px;
+.ti
+{
+	width:100%;
+	height:100px;
+	position:relative;
+	background-size:cover;
+	background-repeat:no-repeat;
 }
-
-.t {
-	font-weight: 800;
-	display: block;
-	text-align: center;
-	padding: 10px 1px 10px 1px;
+.dbor
+{
+	border:#EE7728 double 3px;
+	margin:1px;
+	padding:2px 10px 2px 10px;
 }
-
-.botli {
-	border-bottom: #333 1px solid;
+.t
+{
+	font-weight:800;
+	display:block;
+	text-align:center;
+	padding:10px 1px 10px 1px;
 }
-
-.mainmu {
-	position: relative;
-	border-radius: 10px;
-	background: url(../Images/menu.fw.png) center no-repeat;
-	background-size: cover;
-	line-height: 30px;
-	padding: 2px 10px 2px 10px;
-	margin: 7px 1px 7px 1px;
+.botli
+{
+	border-bottom:#333 1px solid;
 }
-
+.mainmu
+{
+	position:relative;
+	border-radius:10px;
+	background:url(../Images/menu.fw.png) center no-repeat;
+	background-size:cover;
+	line-height:30px;
+	padding:2px 10px 2px 10px;
+	margin:7px 1px 7px 1px;
+}
 	.mainmu:hover {
 		background: url(../Images/menu2.fw.png) center no-repeat;
 		background-size: cover;
 	}
-
 .mw {
 	position: absolute;
 	top: 10px;
@@ -86,7 +79,6 @@ button {
 	width: 214px;
 	z-index: 99;
 }
-
 .mainmu2 {
 	position: relative;
 	border-radius: 10px;
@@ -96,68 +88,63 @@ button {
 	padding: 2px 10px 2px 10px;
 	margin: 7px 1px 7px 1px;
 }
-
 	.mainmu2:hover {
 		background: url(../Images/menu4.fw.png) center no-repeat;
 		background-size: cover;
 	}
-
-.di {
-	display: inline-block;
+.di
+{
+	display:inline-block;
 }
-
-.ad {
-	margin: 1px;
-	padding: 2px 10px 2px 10px;
+.ad
+{
+	margin:1px;
+	padding:2px 10px 2px 10px;
 }
-
-.cent {
-	text-align: center;
+.cent
+{
+	text-align:center;
 }
-
-.yel td {
-	background: #F3DA49;
-	text-align: center;
+.yel td
+{
+	background:#F3DA49;
+	text-align:center;
 }
-
-.trce td {
-	text-align: center;
+.trce td
+{
+	text-align:center;
 }
-
-.bl {
-	color: #0CF;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-.ssaa {
+.bl
+{
+	color:#0CF;
+	cursor:pointer;
+	text-decoration:none;
+}.ssaa {
 	list-style-type: decimal;
 }
-
-#main {
-	width: 1024px;
-	height: 768px;
-	margin: 10px auto 10px auto;
-	border: #EE7728 1px solid;
-	position: relative;
+#main
+{
+	width:1024px;
+	height:768px;
+	margin:10px auto 10px auto;
+	border:#EE7728 1px solid;
+	position:relative;
 }
-
 #left {
 	height: 540px;
 	width: 21%;
 	display: inline-block;
 	float: left;
 }
-
-#menuput {
-	width: 100%;
-	height: 75%;
-	position: relative;
-	padding: 5px;
-	display: block;
+#menuput
+{
+	width:100%;
+	height:75%;
+	position:relative;
+	padding:5px;
+	display:block;
 	margin: 3px;
 }
-
 #footer {
 	width: 1024px;
 	left: 0px;
@@ -167,14 +154,12 @@ button {
 	height: 123px;
 	display: block;
 }
-
 #counter {
 	margin: 3px;
 	width: 95%;
 	height: 20%;
 	line-height: 100px;
 }
-
 #middle {
 	height: 540px;
 	border: #999 1px solid;
@@ -184,24 +169,22 @@ button {
 	position: relative;
 	left: 20px;
 }
-
 #ap {
 	width: 100%;
 	padding: 2px;
 	height: 290px;
 }
-
 #mwww {
 	width: 100%;
 	height: 100%;
 }
-
 #news {
 	width: 95%;
 	padding: 2px;
 	height: 190px;
 	margin-top: 10px;
 	padding: 5px 10px 5px 10px;
+	border: #0C3 dashed 3px;
 	position: relative;
 }
 
@@ -219,7 +202,6 @@ button {
 	background-position: initial initial;
 	background-repeat: initial initial;
 }
-
 #alt {
 	position: absolute;
 	width: 350px;
@@ -236,12 +218,10 @@ button {
 	background-position: initial initial;
 	background-repeat: initial initial
 }
-
 #ci {
 	width: 89%;
 	height: 480px;
 }
-
 #right {
 	height: 540px;
 	width: 23%;
@@ -249,20 +229,62 @@ button {
 	margin-left: 22px;
 	float: left;
 }
-
-#pagination-bar {
-	list-style-type: none;
-	text-align: center;
+#marquee {
+	display:inline-block;
+	height: 32px;
+	width:100%;
+	overflow: hidden;
+	position: relative;
 }
-
-#pagination-item {
-	display: inline-block
-}
-
-	 #pagination-item li {
-		color: blue;
-		display: inline;
-		padding: 8px;
-		background - color: #dddddd;
-		font-size: 12px;
+	#marquee > span {
+		display: block;
+		width: 250%;
+		height: 25px;
+		position: absolute;
+		overflow: hidden;
+		-webkit-animation: marquee 20s linear infinite;
+		-moz-animation: marquee 20s linear infinite;
+		-ms-animation: marquee 20s linear infinite;
+		-o-animation: marquee 20s linear infinite;
+		animation: marquee 20s linear infinite;
 	}
+@-webkit-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -250%;
+    }
+}
+@-moz-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -250%;
+    }
+}
+@-ms-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -250%;
+    }
+}
+@-o-keyframes marquee {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -250%;
+    }
+}
+@keyframes marquee {
+    0% {
+        left: 100%
+    }
+    100% {
+        left: -250%
+    }
+}

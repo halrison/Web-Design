@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+			p{
+				font-weight:bold;
+			}			
+			th {
+				background-color: white;
+			}
+			td{
+				line-height:20px;
+			}
+			ul{
+				list-style-type:none;
+			}
+			#result a {
+				text-decoration: none;
+				border: 1px solid black;
+			}
+			#vote #Submit {
+				text-decoration: none;
+				border: 1px solid black;
+			}
+        </style>
+    </head>
+    <body>
+        <nav>目前位置：首頁>問卷調查<span></span></nav>
+		<div id="summary">
+			<table style="width:100%;">
+				<thead>
+					<tr>
+						<th>編號</th>
+						<th>問卷題目</th>
+						<th>投票總數</th>
+						<th>結果</th>
+						<th>狀態</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+		<div id="result"></div>
+		<div id="vote"></div>
+		<script type="text/javascript">
+			jQuery(document).ready(
+				() => {
+					jQuery("head").append(jQuery("style"));
+					jQuery("#result,#vote").hide();
+					jQuery.getJSON(
+						'/ClassB/WebB02/Fetch.ashx',
+						{
+							item: 'QuestionnaireTopic'
+						},
+						response => {
+							jQuery.each(
+								response,
+								(index, value) => {
+									let row =
+										`<tr id=${value.id}>
+											<td>${value.id}.</td>
+											<td>${value.topic}</td>
+											<td>${value.static}</td>
+											<td>
+												<a onclick="viewresult(${value.id},'${value.topic}',${value.static});">結果</a>
+											</td>
+											<td>`;
+									if (sessionStorage.getItem('user')===null) {
+										row +=
+											`請先登入`;
+									} else {
+										row +=
+											`<a onclick="votes(${value.id},'${value.topic}');">參與投票</a>`;
+									}
+									row += 
+											`</td>
+										</tr>`;
+									jQuery("tbody").append(row);
+								}
+							);
+						}
+					);
+					jQuery("#result").on(
+						'click',
+						"a",
+						() => {
+							jQuery("#result").hide();
+							jQuery("#summary").show();
+							jQuery("nav span").empty();
+						}
+					);
+					jQuery("#vote").on(
+						'click',
+						":submit",
+						() => {
+							jQuery.ajax(
+								{
+									url: '/ClassB/WebB02/Modify.ashx',
+									method: 'post',
+									data: {
+										item: 'QuestionnaireOption',
+										topic: jQuery("ul").data('id'),
+										option:jQuery(":checked").val()
+									},
+									async:false,
+									success: response => {
+										if (response === 'Success') {
+											jQuery.ajax(
+												{
+													url: '/ClassB/WebB02/Modify.ashx',
+													method: 'post',
+													data: {
+														item: 'QuestionnaireTopic',
+														id: jQuery("ul").data('id'),
+													},
+													async:false,
+													success: response => {
+														if (response === 'Success') {
+															jQuery("#vote").hide();
+															jQuery("#summary").show();
+															jQuery("nav span").empty();
+														}
+													}
+												}
+											);
+										}
+									}
+								}
+							);
+						}
+					);
+				}
+			); 
+			function viewresult(id, topic, total) {
+				jQuery.ajax(
+					{
+						url: '/ClassB/WebB02/Fetch.ashx',
+						method: 'get',
+						data: {
+							item: 'QuestionnaireOption',
+							topic: id
+						},
+						beforeSend: () => {
+							jQuery("nav span").text(`>${topic}`);
+							jQuery("#result").empty();
+						},
+						dataType: 'json',
+						success: response => {
+							var result =
+								`<p>${topic}</p>
+								<table>`;
+							jQuery.each(
+								response,
+								(index, value) => {
+									result +=
+									`<tr>
+										<td style='width:50%;'>${index + 1}.${value.options}</td>
+										<td>
+											<span style='width:${value.count / total * 100}%;	background-color:lightgray;height: 20px;display: inline-block;'></span>${value.count}票(${value.count / total * 100}%)	
+										</td>
+									</tr>`;
+								}
+							);
+							result +=
+								`</table>
+								<a>返回</a>`;
+							jQuery("#result").html(result).show();
+							jQuery("#summary").hide();
+						}
+					}
+				);
+			};
+			function votes(id, topic) {
+				jQuery.ajax(
+					{
+						url: '/ClassB/WebB02/Fetch.ashx',
+						method: 'get',
+						data: {
+							item: 'QuestionnaireOption',
+							topic: id
+						},
+						beforeSend: () => {
+							jQuery("nav span").text(`>${topic}`);
+							jQuery("#vote").empty();
+						},
+						dataType: 'json',
+						success: response => {
+							let vote =
+								`<p>${topic}</p>
+								<ul data-id='${id}'>`;
+							jQuery.each(
+								response,
+								(index, value) => {
+									vote +=
+									`<li>
+										<input type='radio' value='${value.options}'/>
+										${value.options}
+									</li>`;
+								}
+							);
+							vote +=
+								`</ul>
+								<input type="submit" value="我要投票" />`;
+							jQuery("#vote").html(vote).show(); 
+							jQuery("#summary").hide();
+						}
+					}
+				);
+			}
+		</script>
+    </body>
+</html>

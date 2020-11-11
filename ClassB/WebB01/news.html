@@ -1,0 +1,227 @@
+﻿<p class="t cent botli">最新消息管理</p>
+<table style="width:100%">
+	<thead>
+		<tr class="yel">
+			<th style="width:68%">最新消息資料內容</th>
+			<th style="width:7%">顯示</th>
+			<th style="width:7%">刪除</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+<nav id="pagination-bar">
+	<ul id="pagination-item"></ul>
+</nav>
+<table style="margin-top:10px; width:70%;">
+	<tbody>
+		<tr>
+			<td style="width:200px">
+				<input type="button" id="btnadd" />
+			</td>
+			<td class="cent">
+				<input type="submit" value="修改確定" />
+				<input type="reset" value="重置" />
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+	jQuery(document).ready(
+		() => {
+			var pagecount, rowcount, pagecurrent = 1;
+			jQuery.getJSON(
+				'/ClassB/WebB01/Fetch.ashx',
+				{
+					item: 'News'
+				},
+				returns => {
+					rowcount = returns.length;
+					pagecount = Math.ceil(rowcount / 4);
+					var paginationlink =
+						`<li>
+							<a href="" id="prev" style="text-decoration:none"><</a>
+						</li>`;
+					for (var i = 1; i <= pagecount; i++) {
+						paginationlink +=
+						`<li`;
+						if (i == pagecurrent) {
+							paginationlink +=
+								` style="font-size:20px"`;
+						}
+						paginationlink +=`>${i}</li>`;
+					}
+					paginationlink +=
+						`<li>
+							<a href="" id="next" style="text-decoration:none">></a>
+						</li>`;
+					jQuery("#pagination-item").html(paginationlink);
+					fetchrow(0, 4);
+				}
+			);
+			jQuery("#btnadd").val('新增最新消息資料').click(
+				() => {
+					jQuery("#cvr").html(
+						`<p class="cent botli t">新增最新消息資料</p>
+						最新消息資料：<textarea id="News" rows="2" cols="20"></textarea>
+						<button id="Insert" type="button">新增</button>
+						<button id="Clear" type="button">重置</button>`
+					);
+					jQuery("#cover").fadeIn();
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Insert",
+				() => {
+					jQuery.post(
+						'/ClassB/WebB01/Add.ashx',
+						{
+							item: 'News',
+							message: jQuery("#News").val(),
+							display: 'no'
+						},
+						returns => {
+							if (returns !== 'fail') {
+								jQuery("tbody:nth-child(2)").prepend(
+									`<tr id="${returns}" class="trce">
+										<td class="cent">
+											<textarea name="news" rows="3" cols="60%">${jQuery("#News").val()}</textarea>
+										</td>
+										<td>
+											<input type="checkbox" name="display"/>
+										</td>
+										<td>
+											<input name="delete" type="checkbox" />
+										</td>
+									</tr>`
+								);
+								jQuery("#cover").fadeOut();
+							}
+						}
+					);
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Clear",
+				() => {
+					jQuery("#News").empty();
+				}
+			);
+			jQuery("#pagination-item").on(
+				'click',
+				"#prev",
+				() => {
+					event.preventDefault();
+					pagecurrent--;
+					if (pagecurrent < 1) {
+						pagecurrent = 1;
+					} else {
+						jQuery("#pagination-item").children("li").each(
+							function () {
+								if (jQuery(this).text() == pagecurrent) {
+									jQuery(this).css('font-size', '20px');
+								} else {
+									jQuery(this).css('font-size', '12px');
+								}
+							}
+						);
+						fetchrow((pagecurrent - 1) * 4, 4);
+					}
+				}
+			);
+			jQuery("#pagination-item").on(
+				'click',
+				"#next",
+				() => {
+					event.preventDefault();
+					pagecurrent++;
+					if (pagecurrent > pagecount) {
+						pagecurrent = pagecount;
+					} else {
+						jQuery("#pagination-item").children("li").each(
+							function () {
+								if (jQuery(this).text() == pagecurrent) {
+									jQuery(this).css('font-size', '20px');
+								} else {
+									jQuery(this).css('font-size', '12px');
+								}
+							}
+						);
+						fetchrow((pagecurrent - 1) * 4, 4);
+					}
+				}
+			);
+			jQuery("form").submit(
+				()=> {
+					event.preventDefault();
+					jQuery("tbody:nth-child(2) tr").each(
+						function () {
+							if (jQuery(this).find("input[name='delete']").prop('checked')) {
+								jQuery.get(
+									'/ClassB/WebB01/Delete.ashx',
+									{
+										item: 'News',
+										id: jQuery(this).attr('id')
+									},
+									responses => {
+										if (responses == 'success') {
+											jQuery(this).remove();
+										}
+									}
+								);
+							} else {
+								jQuery.post(
+									'/ClassB/WebB01/Modify.ashx',
+									{
+										item: 'News',
+										id: jQuery(this).attr('id'),
+										message: jQuery(this).find("textarea").val(),
+										display: jQuery(this).find("input[name='display']").prop('checked') ? 'yes' : 'no'
+									}
+								);
+							}
+						}
+					);
+				}
+			);
+			function fetchrow(skipnum, fetchnum) {
+				jQuery("tbody:nth-child(2)").empty();
+				jQuery.getJSON(
+					'/ClassB/WebB01/Fetch.ashx',
+					{
+						item: 'News',
+						skipnum: skipnum,
+						fetchnum: fetchnum
+					},
+					returns => {
+						jQuery.each(
+							returns,
+							(key, value) => {
+								if (key < 4) {
+									let row =
+										`<tr id="${value.Id}" class="trce">
+											<td class="cent">
+												<textarea name="news" rows="3" cols="60%">${value.Message}</textarea>
+											</td>
+											<td>
+												<input type="checkbox" name="display"`;
+									if (value.Display == 'yes') { row +=` checked`; }
+									row += 
+												`/>
+											</td>
+											<td>
+												<input name="delete" type="checkbox" />
+											</td>
+										</tr>`;
+									jQuery("tbody:nth-child(2)").append(row);
+								}
+							}
+						);
+					}
+				);
+			}
+		}
+	);
+</script>

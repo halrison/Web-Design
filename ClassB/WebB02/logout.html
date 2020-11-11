@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+    
+    </head>
+    <body>
+        <script type="text/javascript">
+            jQuery(document).ready(
+                () => {
+                    sessionStorage.removeItem('user');
+                    location.assign('index.html?do=login');
+				}
+            );
+        </script>
+    </body>
+</html>

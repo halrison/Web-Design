@@ -1,0 +1,256 @@
+﻿<p class="t cent botli">動畫圖片管理</p>
+<table style="width:100%">
+	<thead>
+		<tr class="yel">
+			<th style="width:68%">校園映像圖片</th>
+			<th style="width:7%">顯示</th>
+			<th style="width:7%">刪除</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+<nav id="pagination-bar">
+	<ul id="pagination-item"></ul>
+</nav>
+<table style="margin-top:10px; width:70%;">
+	<tbody>
+		<tr>
+			<td style="width:200px">
+				<input type="button" id="btnadd" />
+			</td>
+			<td class="cent">
+				<input type="submit" value="修改確定" />
+				<input type="reset" value="重置" />
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+	jQuery(document).ready(
+		function () {
+			var pagecount, rowcount, pagecurrent = 1;
+			jQuery.getJSON(
+				'/ClassB/WebB01/Fetch.ashx',
+				{
+					item: 'CampusImage'
+				},
+				returns => {
+					rowcount = returns.length;
+					pagecount = Math.ceil(rowcount / 3);
+					var paginationlink = '<li><a href="" id="prev" style="text-decoration:none"><</a></li>';
+					for (var i = 1; i <= pagecount; i++) {
+						paginationlink += '<li';
+						if (i == pagecurrent) {
+							paginationlink += ' style="font-size:20px"';
+						}
+						paginationlink += '>' + i + '</li>';
+					}
+					paginationlink += '<li><a href="" id="next" style="text-decoration:none">></a></li>';
+					jQuery("#pagination-item").html(paginationlink);
+					fetchrow(0, 3);
+				}
+			);
+			jQuery("#pagination-item").on(
+				'click',
+				"#prev",
+				() => {
+					event.preventDefault();
+					pagecurrent--;
+					if (pagecurrent < 1) {
+						pagecurrent = 1;
+					} else {
+						jQuery("#pagination-item").children("li").each(
+							function () {
+								if (jQuery(this).text() == pagecurrent) {
+									jQuery(this).css('font-size', '20px');
+								} else {
+									jQuery(this).css('font-size', '12px');
+								}
+							}
+						);
+						fetchrow((pagecurrent - 1) * 3, 3);
+					}
+				}
+			);
+			jQuery("#pagination-item").on(
+				'click',
+				"#next",
+				()=> {
+					event.preventDefault();
+					pagecurrent++;
+					if (pagecurrent > pagecount) {
+						pagecurrent = pagecount;
+					} else {
+						jQuery("#pagination-item").children("li").each(
+							function () {
+								if (jQuery(this).text() == pagecurrent) {
+									jQuery(this).css('font-size', '20px');
+								}else {
+									jQuery(this).css('font-size', '12px');
+								}
+							}
+						);
+						fetchrow((pagecurrent - 1) * 3, 3);
+					}
+				}
+			);
+			jQuery("#btnadd").val('新增校園映像圖片').click(
+				() => {
+					jQuery("#cvr").html(
+						`<p class="t cent">新增校園映像圖片</p>
+						<hr/>
+						校園映像圖片：<input id="Picture" name="Picture" type="file" accept="image/*"/><br/>
+						<button id="Insert" type="button">新增</button>
+						<button id="Clear" type="button">重置</button>`
+					);
+					jQuery("#cover").fadeIn();
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"input[name='update']",
+				function () {
+					jQuery("#cvr").html(
+						`<p class="t cent">變更校園映像圖片</p><hr/>
+						<input id="rowid" type="hidden" value="${jQuery(this).parent("tr").attr('id')}"/>
+						校園映像圖片：<input id="Picture" name="Picture" type="file" accept="image/*"/><br/>
+						<button id="Update" type="button">變更</button>
+						<button id="Clear" type="button">重置</button>`
+					);
+					jQuery("#cover").fadeIn();
+				}
+			);
+			var form = new FormData();
+			jQuery("form").on(
+				'click',
+				"#Insert",
+				() => {
+					let file = jQuery("#Picture").get(0).files[0];
+					form.append('Picture', file);
+					fetch(
+						'/ClassB/WebB01/Upload.ashx',
+						{
+							method: 'post',
+							body: form
+						}
+					).then(
+						() => {
+							jQuery.post(
+								'/ClassB/WebB01/Add.ashx',
+								{
+									item: 'CampusImage',
+									filename: file.name,
+									display: 'no'
+								},
+								returns => {
+									jQuery("tbody:nth-child(2)").prepend(
+										`<tr id="${returns}">
+											<td>
+												<img src="/ClassB/WebB01/Images/${file.name}"/>
+											</td>
+											<td>
+												<input type="checkbox" name="display"/>
+											</td>
+											<td>
+												<input type="checkbox" name="delete"/>
+											</td>
+										</tr>`
+									);
+									jQuery("#cover").fadeOut();
+								}
+							);
+						}
+					);
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#update",
+				() => {
+					let file = jQuery("#Picture").get(0).files[0];
+					form.append('Picture', file);
+					fetch(
+						'/ClassB/WebB01/Upload.ashx',
+						{
+							method: 'post',
+							body: form
+						}
+					).then(
+						() => {
+							jQuery("#cover").fadeOut();
+						}
+					);
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Clear",
+				() => {
+					jQuery("#Picture").empty();
+				}
+			);
+			jQuery("form").submit(
+				() => {
+					event.preventDefault();
+					jQuery("tbody:nth-child(2) tr").each(
+						function () {
+							if (jQuery(this).find("input[name='delete']").prop('checked')) {
+								jQuery.get( '/ClassB/WebB01/Delete.ashx',
+									{
+										item: 'CampusImage',
+										id: jQuery(this).attr('id')
+									},
+									returns => {
+										if (returns == 'success') { jQuery(this).remove(); }
+									}
+								);
+							} else {
+								jQuery.post(
+									'/ClassB/WebB01/Modify.ashx',
+									{
+										item: 'CampusImage',
+										id: jQuery(this).attr('id'),
+										filename: jQuery(this).find("img").attr('src').replace('/ClassB/WebB01/Images/', ''),
+										display: jQuery(this).find("input[name='display']").prop('checked') ? 'yes' : 'no'
+									}
+								);
+							}
+						}
+					);
+				}
+			);
+			function fetchrow(skipnum, fetchnum) {
+				jQuery("tbody:nth-child(2)").empty();
+				jQuery.getJSON(
+					'/ClassB/WebB01/Fetch.ashx',
+					{
+						item: 'CampusImage',
+						skipnum: skipnum,
+						fetchnum: fetchnum
+					},
+					returns => {
+						jQuery.each(
+							returns,
+							(key, value) => {
+								if (key < 3) {
+									let row =
+										`<tr id="${value.Id}" class="trce">
+										<td><img src="/ClassB/WebB01/Images/${value.FileName}" height="100" width="68"/></td>
+										<td><input type="checkbox" name="display"`;
+									if (value.Display == 'yes') { row += ' checked'; }
+									row += `/></td>
+										<td><input type="checkbox" name="delete"/>
+										<td><input name="update" type="button" value="變更圖片" /></td>
+									'</tr>`;
+									jQuery("tbody:nth-child(2)").append(row);
+								}
+							}
+						);
+					}
+				);
+			}
+		}
+	);
+</script>

@@ -97,15 +97,15 @@ $(document).ready(function(e) {
             let detail = returns.filter(value => value.Display == 'yes');
             var  rowcount=detail.length, pagecount= Math.ceil(rowcount / 4),pagecurrent = 1;
             if (detail.length > 5) {
-                var paginationlink = '<a href="" id="newsprev"><</a>';
+                var paginationlink = '<li><a href="" id="newsprev" style="text-decoration:none"><</a></li>';
                 for (var i = 1; i <= pagecount; i++) {
                     paginationlink += '<li';
                     if (i == pagecurrent) {
-                        paginationlink += ' class="current"';
+                        paginationlink += ' style="font-size:20px"';
                     }
-                    paginationlink += '> ' + i + '</li>';
+                    paginationlink += '>' + i + '</li>';
                 }
-                paginationlink += '<a href="" id="newsnext">></a>';
+                paginationlink += '<li><a href="" id="newsnext" style="text-decoration:none">></a></li>';
                 $("#pagination-item").html(paginationlink);
             }
             fetchrow(0, 5);
@@ -141,9 +141,9 @@ $(document).ready(function(e) {
         } else {
             $("#pagination-item").children("li").each(function () {
                 if ($(this).text() == pagecurrent) {
-                    $(this).addClass('current');
+                    $(this).css('font-size', '20px');
                 } else {
-                    $(this).removeClass('current');
+                    $(this).css('font-size', '12px');
                 }
             });
             fetchrow((pagecurrent - 1) * 5,5);
@@ -157,10 +157,10 @@ $(document).ready(function(e) {
         } else {
             $("#pagination-item").children("li").each(function () {
                 if ($(this).text() == pagecurrent) {
-                    $(this).addClass( 'current');
+                    $(this).css('font-size', '20px');
                 } else {
-                    $(this).removeClass('current');
-                }
+                    $(this).css('font-size', '12px');
+				}
             });
             fetchrow((pagecurrent - 1) * 5, 5);
         }

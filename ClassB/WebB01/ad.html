@@ -1,0 +1,103 @@
+﻿<p class="t cent botli">動態文字廣告管理</p>
+<table style="width:100%">
+	<thead>
+		<tr class="yel">
+			<th style="width:68%">動態文字廣告</th>
+			<th style="width:7%">顯示</th>
+			<th style="width:7%">刪除</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+<table style="margin-top:10px; width:70%;">
+	<tbody>
+		<tr>
+			<td style="width:200px">
+				<input type="button" id="btnadd" />
+			</td>
+			<td class="cent">
+				<input type="submit" value="修改確定" />
+				<input type="reset" value="重置" />
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script>
+    jQuery(document).ready(function () {
+        jQuery.getJSON('/ClassB/WebB01/Fetch.ashx',
+            {
+                item: 'DynamicText'
+            },
+            returns => {
+                jQuery.each(returns, (key, value) => {
+                    let row =`<tr id='${value.Id}' class='trce'>
+                        <td><input type='text' value='${value.Message }'/></td>
+                        <td><input type='checkbox' name='display'`;
+                    if (value.Display == 'yes') { row += ` checked`; }
+                    row += `/></td>
+                        <td><input type='checkbox' name='delete'/></td>
+                        </tr>`;
+                    jQuery("tbody:nth-child(2)").append(row);
+                })
+            }
+        );
+		jQuery("#btnadd").val('新增動態文字廣告').click(() => {
+            jQuery("#cvr").html(
+                `<p class="t cent">新增動態文字廣告</p>
+                <hr/>
+                動態文字廣告：<input id="AdText" type="text" /><br/>
+                <button id="Insert" type="button">新增</button>
+                <button id="Clear" type="button">重置</button>`
+            );
+            jQuery("#cover").fadeIn();
+        })
+        jQuery("form").on('click',"#Insert", () => {
+            jQuery.post('/ClassB/WebB01/Add.ashx',
+                {
+                    item:'DynamicText',
+                    message: jQuery("#AdText").val(),
+                    display:'no'
+                },
+                returns => {
+                    jQuery("tbody:nth-child(2)").prepend(
+                        `<tr id='${returns}'>
+                            <td><input type='text' value='${jQuery("#AdText").val()}'/></td>
+                            <td><input type='checkbox' name='display'/></td>
+                            <td><input type='checkbox' name='delete'/></td>
+                        </tr>`
+                    );
+                    jQuery("#cover").fadeOut();
+                }
+            );
+        });
+        jQuery("form").on('click', "#Clear", () => {
+            jQuery("#AdText").empty();
+        })
+        jQuery("form").submit(()=> {
+            event.preventDefault();
+            jQuery.each(jQuery("tbody:nth-child(2) tr"), function () {
+                if (jQuery(this).find("input[name='delete']").prop('checked')) {
+                    jQuery.get('/ClassB/WebB01/Delete.ashx',
+                        {
+                            item: 'DynamicText',
+                            id: jQuery(this).attr('id')
+                        },
+                        result => {
+                            if (result == 'success') { jQuery(this).remove(); }
+                        }
+                    );
+                } else {
+                    jQuery.post( '/ClassB/WebB01/Modify.ashx',
+                        {
+                            item: 'DynamicText',
+                            id: jQuery(this).attr('id'),
+                            message: jQuery(this).find("input:text").val(),
+                            display: jQuery(this).find("input[name='display']").prop('checked') ? 'yes' : 'no'
+                        }
+                    );
+                }
+            });
+        });
+    });
+</script>

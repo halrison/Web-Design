@@ -266,3 +266,73 @@ button {
 		background - color: #dddddd;
 		font-size: 12px;
 	}
+#marquee {
+	display: inline-block;
+	height: 32px;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+}
+
+	#marquee > span {
+		display: block;
+		width: 250%;
+		height: 25px;
+		position: absolute;
+		overflow: hidden;
+		-webkit-animation: marquee 20s linear infinite;
+		-moz-animation: marquee 20s linear infinite;
+		-ms-animation: marquee 20s linear infinite;
+		-o-animation: marquee 20s linear infinite;
+		animation: marquee 20s linear infinite;
+	}
+
+@-webkit-keyframes marquee {
+	0% {
+		left: 100%;
+	}
+
+	100% {
+		left: -250%;
+	}
+}
+
+@-moz-keyframes marquee {
+	0% {
+		left: 100%;
+	}
+
+	100% {
+		left: -250%;
+	}
+}
+
+@-ms-keyframes marquee {
+	0% {
+		left: 100%;
+	}
+
+	100% {
+		left: -250%;
+	}
+}
+
+@-o-keyframes marquee {
+	0% {
+		left: 100%;
+	}
+
+	100% {
+		left: -250%;
+	}
+}
+
+@keyframes marquee {
+	0% {
+		left: 100%
+	}
+
+	100% {
+		left: -250%
+	}
+}

@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #buttons{
+                float:left;
+            }
+        </style>
+    </head>
+    <body>
+        <fieldset>
+            <legend>會員登入</legend>
+			<table style="width:100%;">
+                <tr>
+                    <th>帳號</th>
+                    <td>
+                        <input id="username" type="text" />
+                    </td>
+                  </tr>
+                <tr>
+                    <th>密碼</th>
+                    <td>
+                        <input id="password" type="password" />
+                    </td>
+                 </tr>
+             </table>
+            <div id="buttons">
+				<input id="submit" type="submit" value="登入" />
+                <input id="reset" type="reset" value="清除" />
+            </div>
+            <div id="links">
+                <a href="?do=forget">忘記密碼</a>|
+                <a href="?do=register">尚未註冊</a>
+            </div>
+        </fieldset>
+        <script type="text/javascript">
+            jQuery(document).ready(
+                () => {
+                    jQuery("head").append(jQuery("style"));
+                    jQuery("#submit").click(
+                        () => {
+                            event.preventDefault();
+                            var username = jQuery("#username").val(),password=jQuery("#password").val();
+                            if (username == 'admin' && password == '1234') {
+						        sessionStorage.setItem('user', 'admin');
+                                location.assign('manage.html');
+                            } else {
+                                jQuery.ajax(
+                                    {
+                                        url: '/ClassB/WebB02/Login.ashx',
+                                        method: 'post',
+                                        data: {
+								            username: username
+                                        },
+                                        dataType:'json',
+                                        success: response => {
+                                            if (response[0].username == username) {
+                                                if (response[0].password == password) {
+                                                    sessionStorage.setItem('user', username);
+                                                    location.assign('?do=ribbon');
+                                                } else {
+                                                    alert('密碼錯誤');
+                                                }
+                                            } else {
+									            alert('查無帳號');
+                                            }
+                                        },
+							            complete: (chr, status) => {
+                                            jQuery("#username,#password").empty();
+                                        }
+                                    }
+                                );
+					        }
+                        }
+                    );
+                }
+            );
+        </script>
+    </body>
+</html>

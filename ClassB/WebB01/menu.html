@@ -1,0 +1,283 @@
+﻿<p class="botli t cent">選單管理</p>
+<table style="width:100%">
+	<thead>
+		<tr class="yel">
+			<th style="width:40%">主選單名稱</th>
+			<th style="width:40%">選單連結網址</th>
+			<th style="width:10%">次選單數</th>
+			<th>顯示</th>
+			<th>刪除</th>
+			<th style="width:15%"></th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+<table style="margin-top:10px; width:70%;">
+	<tbody>
+		<tr>
+			<td style="width:200px">
+				<input type="button" id="btnadd" />
+			</td>
+			<td class="cent">
+				<input type="submit" value="修改確定" />
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+	jQuery(document).ready(
+		function () {
+			jQuery.getJSON(
+				'/ClassB/WebB01/Fetch.ashx',
+				{
+					item: 'Main'
+				},
+				returns => {
+					jQuery.each(
+						returns,
+						(key, value) =>{
+							let row =
+								`<tr id="main${value.Id}" class="trce">
+									<td>
+										<input name="main-name" type="text" value="${ value.Name }"/>
+									</td>
+									<td>
+										<input name="main-url" type="text" value="${value.Url}"/>
+									</td>
+									<td>${value.Counts}</td>
+									<td>
+										<input name="main-display" type="checkbox"`;
+							if (value.Display == 'yes') { row += ' ckecked'; }
+							row += `/>
+									</td>
+									<td>
+										<input name="main-delete" type="checkbox" />
+									</td>
+									<td>
+										<input name="Edit" type="button" value="編輯次選單" />
+									</td>
+								'</tr>`;
+							jQuery("tbody:nth-child(2)").append(row);
+						}
+					);
+				}
+			);
+			jQuery("#btnadd").val('新增主選單').click(
+				() => {
+					jQuery("#cvr").html(
+						`<p class="botli t cent">新增主選單</p>
+						主選單名稱：<input id="MainName" type="text" />
+						主選單連結網址：<input id="MainUrl" type="text" />
+						<button id="Insert">新增</button>'
+						<button id="Clear">重置</button>`
+					);
+					jQuery("#cover").fadeIn();
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Insert",
+				() => {
+					jQuery.post(
+						'/ClassB/WebB01/Add.ashx',
+						{
+							item: 'Main',
+							name: jQuery("#MainName").val(),
+							url: jQuery("#MainUrl").val(),
+							display: 'no',
+							counts: 0
+						},
+						returns => {
+							jQuery("tbody:nth-child(2)").append(
+								`<tr id="main-${returns}" class="trce">
+									<td>
+										<input name="main-name" type="text" value="${ jQuery("#MainName").val()}"/>
+									</td>
+									<td>
+										<input name="main-url" type="text" value="${ jQuery("#MainUrl").val()}"/>
+									</td>
+									<td>0</td>
+									<td>
+										<input name="main-display" type="checkbox" />
+									</td > 
+									<td>
+										<input name="main-delete" type="checkbox" />
+									</td>
+									<td>
+										<input name="Edit" type="button" value="編輯次選單" />
+									</td>
+								</tr>`
+							);
+							jQuery("#cover").fadeOut();
+						}
+					);
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"input[name='Edit']",
+				function () {
+					jQuery.getJSON(
+						'/ClassB/WebB01/Fetch.ashx',
+						{
+							item: 'Sub',
+							father: jQuery(this).parents("tr").attr('id').replace('main-', '')
+						},
+						returns => {
+							let row =
+								`<p class="botli t cent">編輯次選單</p>
+								<table>
+									<thead>
+										<tr>
+											<th>次選單名稱</th>
+											<th>次選單連結網址</th>
+											<th>刪除</th>
+										</tr>
+									</thead>
+									<tbody>`;
+							jQuery.each(
+								returns,
+								(key, value) => {
+									row +=
+										`<tr id="sub-' + value.Id + '" class="trce">
+											<td>
+												<input name="sub-name" type="text" value="${value.Name}" />
+											</td>
+											<td>
+												<input name="sub-url" type="text" value="${value.Url}"/>
+											</td>
+											<td>
+												<input name="sub-delete" type="checkbox" />	
+											</td>
+										</tr>`;
+								}
+							);
+							row +=
+									`</tbody >
+								</table>
+								<input id="main-id" type="hidden" value="${jQuery(this).parents("tr").attr('id')}"/>
+								<button id="Modify">修改確定</button>
+								<button id="btnins">更多次選單</button>`;
+							jQuery("#cvr").html(row);
+							jQuery("#cover").fadeIn();
+						}						
+					);
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Modify",
+				() => {
+					let count = 0;
+					jQuery("#cvr table tbody tr").each(
+						function () {
+							if (jQuery(this).find(":checkbox[name='sub-delete']").prop('checked')) {
+								if (jQuery(this).attr('id')) {
+									jQuery.get(
+										'/ClassB/WebB01/Delete.ashx',
+										{
+											item: 'Sub',
+											id: jQuery(this).attr('id').substr(4)
+										},
+										response => {
+											if (response == 'success') {
+												jQuery(this).remove();
+											}
+										}
+									);
+								} else {
+									jQuery(this).remove();
+								}
+							}
+							if (jQuery(this).attr('id')) {
+								jQuery.post(
+									'/ClassB/WebB01/Modify.ashx',
+									 {
+										item: 'Sub',
+										id: jQuery(this).attr('id').substr(4),
+										father: jQuery("#main-id").val().substr(5),
+										name: jQuery(this).find(":text[name='sub-name']"),
+										url: jQuery(this).find(":text[name='sub-url']")
+									},
+									() => {
+										count++;
+										jQuery("#cover").fadeOut();
+									}
+								);
+							} else {
+								jQuery.post(
+									'/ClassB/WebB01/Add.ashx',
+									{
+										item: 'Sub',
+										father: jQuery("#main-id").val().substr(5),
+										name: jQuery(this).find(":text[name='sub-name']"),
+										url: jQuery(this).find(":text[name='sub-url']")
+									},
+									() => {
+										count++;
+										jQuery("#cover").fadeOut();
+									}
+								);
+							}
+						}
+					);
+					jQuery(`tr#${jQuery("#main-id").val()}`).find("td:nth-child(3)").text(count);
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#btnins",
+				() => {
+					jQuery("#cvr table tbody").prepend(
+						`<tr class="trce">
+							<td> 
+								<input name="sub-name" type="text" />
+							</td > 
+							<td>
+								<input name="sub-url" type="text" />
+							</td>
+							<td>
+								<input name="sub-delete" type="checkbox" />
+							</td>
+						</tr>`
+					);
+				}
+			);
+			jQuery("form").submit(
+				() => {
+					event.preventDefault();
+					jQuery(".yel").parent("table").find("tbody tr").each(
+						function () {
+							if (jQuery(this).find(":checkbox[name='main-delete']").prop('checked')) {
+								jQuery.get(
+									'/ClassB/WebB01/Delete.ashx',
+									{
+										item: 'Main',
+										id: jQuery(this).attr('id'),
+									},
+									response => {
+										if (response == 'success') {
+											jQuery(this).remove();
+										}
+									}
+								);
+							} else {
+								jQuery.post(
+									'/ClassB/WebB01/Modify.ashx',
+									{
+										item: 'Main',
+										id: jQuery(this).attr('id').substr(5),
+										name: jQuery(this).find(":text[name='name']").val(),
+										url: jQuery(this).find(":text[name='url']"),
+										count: jQuery(this).find("td:nth-child(3)").text(),
+										display: jQuery(this).find(":checkbox[name='display']").prop('checked')
+									}
+								);
+							}
+						}
+					);
+				}
+			);
+		}
+	);
+</script>

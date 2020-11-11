@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <style>
+			th{
+				background-color:lightgrey;
+			}
+			input[type='button,reset,submit']{
+				border:1px solid black;
+			}
+		</style>
+    </head>
+	<body>
+		<fieldset>
+			<legend>帳號管理</legend>
+			<br>
+			<table>
+				<thead>
+					<tr>
+						<th>帳號</th>
+						<th>密碼</th>
+						<th>刪除</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<input id="Delete" type="button" value="確定刪除" />
+			<input id="Clear" type="reset" value="清空選取" />
+			<form>
+				<p>*請設定您要註冊的帳號及密碼 ( 最長12個字元 )</p>
+				<table style="width:100%;">
+					<tr>
+						<th>Step1:登入帳號</th>
+						<td><input id="Username" type="text" maxlength="12" /></td>
+					</tr>
+					<tr>
+						<th>Step2:登入密碼</th>
+						<td><input id="Password" type="password" maxlength="12" /></td>
+					</tr>
+					<tr>
+						<th>Step3:再次確認密碼</th>
+						<td><input id="Confirm" type="password" /></td>
+					</tr>
+					<tr>
+						<th>Step4:信箱(忘記密碼時使用)</th>
+						<td><input id="Email" type="email" /></td>
+					</tr>
+				</table>
+				<input id="Submit" type="submit" value="註冊" />
+				<input id="Reset" type="reset" value="清除" />
+			</form>
+		</fieldset>
+		<script type="text/javascript">
+			jQuery(document).ready(
+				() => {
+					jQuery("style").appendTo("head");
+					jQuery.getJSON(
+						'/ClassB/WebB02/Fetch.ashx',
+						{
+							item: 'Member'
+						},
+						response => {
+							jQuery.each(response, (key, value) => {
+								let row =
+									`<tr id="${value.id}">
+										<td>${value.username}</td>
+										<td>`;
+								for (let i = 1; i <= value.password.length; i++) {
+									row += `*`;
+								}
+								row+=
+										`</td>
+										<td>
+											<input name="delete" type="checkbox" />
+										</td>
+									</tr>`
+								jQuery("table").first().find("tbody").append(row);
+							});
+						}
+					);
+					jQuery("#Delete").click(
+						() => {
+							jQuery(":checked").each(
+								() => {
+									jQuery.get(
+										'/ClassB/WebB02/Remove.ashx',
+										{
+											item: 'member',
+											id:jQuery(this).parent('tr').attr('id')
+										},
+										response => {
+											if (response === 'Success') {
+												jQuery(this).parent('tr').remove();
+											}
+										}
+									);
+								}
+							);
+						}
+					);
+					jQuery("#Clear").click(
+						() => {
+							jQuery(":checked").each(
+								() => {
+									jQuery(this).removeProp('checked');
+								}
+							);
+						}
+					);
+					jQuery("form").submit(
+						() => {
+							event.preventDefault();
+							var username = jQuery("#Username"), password = jQuery("#Password"), confirm = jQuery("#Confirm"), email = jQuery("#Email");
+							if (username.val() == '' || password.val() == '' || confirm.val() == '' || email.val() == '') {
+								alert('不可空白');
+							} else {
+								if (confirm.val() == password.val()) {
+									$.post(
+										'/ClassB/WebB02/Add.ashx',
+										{
+											item: 'Member',
+											username: username.val(),
+											password: password.val(),
+											email: email.val()
+										},
+										response => {
+											if (response == 'Success') {
+												alert('註冊完成，歡迎加入');
+											} else {
+												alert('帳號重複');
+											}
+										}
+									);
+								} else {
+									alert('密碼錯誤');
+								}
+							}
+						}
+					);
+				}
+			);
+		</script>
+	</body>
+</html>

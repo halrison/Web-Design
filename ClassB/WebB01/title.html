@@ -1,0 +1,213 @@
+﻿<p class="t cent botli">網站標題管理</p>
+<table style="width:100%">
+	<thead>
+		<tr class="yel">
+			<th style="width:45%">網站標題</th>
+			<th style="width:32%">替代文字</th>
+			<th style="width:7%">顯示</th>
+			<th style="width:7%">刪除</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+<table style="margin-top:10px; width:70%;">
+	<tbody>
+		<tr>
+			<td style="width:200px">
+				<input type="button" id="btnadd" />
+			</td>
+			<td class="cent">
+				<input type="submit" value="修改確定" />
+				<input type="reset" value="重置" />
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+	jQuery(document).ready(
+		function () {
+			jQuerygetJSON(
+				 '/ClassB/WebB01/Fetch.ashx',
+				{
+					item: 'Title'
+				},
+				returns => {
+					let row = '';
+					jQuery.each(
+						returns,
+						(key, value) => {
+						row+=
+								`<tr id="${value.Id }" class="trce">
+									<td>
+										<img src="/ClassB/WebB01/Images/${ value.FileName }" width="300" height="30"/>
+									</td>
+									<td>
+										<input name="alt" type="text" value="${value.AlternativeText }"/>
+									</td>
+									<td>
+										<input type="radio" name="display"`;
+							if (value.Display == 'yes') { row +=` checked`; }
+							row +=
+										`/>
+									</td >
+									<td>
+										<input type="checkbox" name="delete"/>
+									</td>
+									<td>
+										<input name="change_image" type="button" value="更新圖片" />
+									</td>
+								</tr>`;
+							jQuery("tbody:nth-child(2)").append(row);
+						}
+					);
+				}
+			);
+			jQuery("#btnadd").val('新增網站標題圖片').click(
+				() => {
+					jQuery("#cvr").html(
+						`<p class="t cent">新增標題區圖片</p>
+						<hr/>
+						標題區圖片：<input id="Picture" name="Picture" type="file" accept="image/*"/><br/>
+						標題區替代文字：<input id="AltText" type="text"/><br/>
+						<button id="Insert" type="button">新增</button>
+						<button id="Clear" type="button">重置</button>`
+					);
+					jQuery("#cover").fadeIn();
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"input[name='change_image']",
+				function () {
+					jQuery("#cvr").empty().html(
+						`<p class="t cent">更改標題區圖片</p>
+						<hr/>
+						標題區圖片：<input id="Picture" name="Picture" type="file" accept="image/*"/><br/>
+						<input id="rowid" type="hidden" value="${jQuery(this).parent("tr").attr('id')}"/>
+						<button id="Update" type="button">更改</button>
+						<button id="Clear" type="button">重置</button>`
+					);
+					jQuery("#cover").fadeIn();
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Insert",
+				()=> {
+					event.preventDefault();
+					let form = new FormData, file = jQuery("#Picture").get(0).files[0];
+					form.set('Picture', file);
+					fetch(
+						'/ClassB/ClassB/WebB01/Upload.ashx',
+						{
+							method: 'post',
+							body: form
+						}
+					).then(
+						function () {
+							jQuery.ajax(
+								{
+									url: '/ClassB/WebB01/Add.ashx',
+									method: 'post',
+									async: false,
+									data: {
+										item: 'Title',
+										filename: file.name,
+										alternativetext: jQuery("#AltText").val(),
+										display: 'no'
+									},
+									success: returns => {
+										jQuery("tbody:nth-child(2)").prepend(
+											`<tr id="${returns}" class="trce">
+												<td>
+													<img src="/ClassB/WebB01/Images/' + file.name + '" width="300" height="30"/>
+												</td>
+												<td>
+													<input name="alt" type="text" />
+												</td>
+												<td>
+													<input type="radio" name="display">
+												</td>
+												<td>
+													<input type="checkbox" name="delete"/>
+												</td>
+												<td>
+													<input name="change_image" type="button" value="更新圖片" />
+												</td>
+											</tr>`
+										);
+										jQuery("#cover").fadeOut();
+									}
+								}
+							);
+						}
+					);
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Update",
+				() => {
+					let form = new FormData, file = jQuery("#Picture").get(0).files[0];
+					form.set('Picture', file);
+					fetch(
+						"/ClassB/WebB01/Upload.ashx",
+						{
+							method: "post",
+							body: form
+						}
+					).then(
+						function () {
+							jQuery("#cover").fadeOut();
+						}
+					);
+				}
+			);
+			jQuery("form").on(
+				'click',
+				"#Clear",
+				() => {
+					jQuery("#Picture").empty();
+					jQuery("#AltText").empty();
+					jQuery("#rowid").empty();
+				}
+			);
+			jQuery("form").submit(
+				()=>{
+					event.preventDefault();
+					jQuery("tbody:nth-child(2) tr").each(
+						function () {
+							if (jQuery(this).find("input:checkbox").prop('checked')) {
+								jQuery.get(
+									'/ClassB/WebB01/delete.ashx',
+									{
+										item: 'Title',
+										id: jQuery(this).attr('id')
+									},
+									returns => {
+										if (returns == 'success') {
+											jQuery("tr#" + value).remove();
+										}
+									}
+								);
+							} else {
+								jQuery.post(
+									'/ClassB/WebB01/Modify.ashx',
+									{
+										item: 'Title',
+										id: jQuery(this).attr('id'),
+										filename: jQuery(this).find("img").attr('src').replace('/ClassB/WebB01/Images/', ''),
+										alternativetext: jQuery(this).find("input:text").val(),
+										display: jQuery(this).find("input:radio").prop('checked') ? 'yes' : 'no'
+									}
+								);
+							}
+						}
+					);
+				}
+			);
+		}
+	);
+</script>

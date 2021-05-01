@@ -1,32 +1,22 @@
-// JavaScript Document
-$(document).ready(function(e) {
-    let counter = parseInt(localStorage.getItem('counter')) || 0;
-    if (performance.getEntriesByType('navigation')[0].type !== 'reload') {
-        counter++;
-        localStorage.setItem('counter', counter);
-    }
-    $.ajax(
-		{
-			url: '/ClassB/WebB01/Fetch.ashx',
-            method: 'get',
-            data: {
-                item: 'Title'
-			},
-			dataType: 'json',
-			success:
-				returns => {
-                    $.each(returns, (key, value) => {
-                        if (value.Display == 'yes') {
-                            $("#header").attr({
-                                'src': '/ClassB/WebB01/Images/' + value.FileName,
-                                'alt': value.Alt
-                            });
-                        }
+jQuery(document).ready(function(e) {
+    //顯示進站總人數
+    jQuery("#LabelCounter").text(localStorage.getItem('counter'));
+    //載入標題區
+    jQuery.getJSON(
+        '/ClassB/WebB01/Fetch.ashx?item=Title',
+		returns => {
+            jQuery.each(returns, (key, value) => {
+                if (value.Display === 'yes') {
+                    jQuery("#header").attr({
+                        'src': `/ClassB/WebB01/Images/${value.FileName}`,
+                        'alt': value.Alt
                     });
-				}
+                }
+            });
 		}
     );
-    $.ajax({
+    //載入並渲染主選單
+    jQuery.ajax({
         url: '/ClassB/WebB01/Fetch.ashx',
         method: 'get',
         data: {
@@ -35,14 +25,15 @@ $(document).ready(function(e) {
         dataType: 'json',
         async: false,
         success: returns => {
-            returns = returns.filter(value => value.Display == 'yes');
-            $.each(returns, (key, value) => {
+            returns = returns.filter(value => value.Display === 'yes');
+            jQuery.each(returns, (key, value) => {
                 let menuitem =
-                    '<div class="mainmu" id="main-' + value.Id + '">' +
-                    '<a href="' + value.Url + '">' + value.Name + '</a>';
+                    `<div class="mainmu" id="main-${value.Id}">
+                    <a href="${value.Url}">${value.Name}</a>`;
                 if (value.Counts) {
                     let father = value.Id;
-                    $.ajax({
+                    //載入並渲染子選單
+                    jQuery.ajax({
                         url: '/ClassB/WebB01/Fetch.ashx',
                         method: 'get',
                         data: {
@@ -52,40 +43,36 @@ $(document).ready(function(e) {
                         dataType: 'json',
                         async: false,
                         success: returns => {
-                            menuitem += '<div class="mw" style="display:none;">';
-                            $.each(returns, (key, value) => {
+                            menuitem += `<div class="mw" style="display:none;">`;
+                            jQuery.each(returns, (key, value) => {
                                 menuitem +=
-                                    '<div class="mainmu2" id="sub-' + value.Id + '">' +
-                                    '<a href="' + value.Url + '">' + value.Name + '</a>' +
-                                    '</div>';
+                                   `<div class="mainmu2" id="sub-${value.Id}">
+                                        <a href="${ value.Url}">${value.Name}</a>
+                                    </div>`;
                             });
-                            menuitem += '</div>';
+                            menuitem += `</div>`;
                         }
                     });
                 }
-                menuitem += '</div>';
-                $("#menuput").append(menuitem);
+                menuitem += `</div>`;
+                jQuery("#menuput").append(menuitem);
             });
         }
     });
-    $.ajax({
-        url: '/ClassB/WebB01/Fetch.ashx',
-        method: 'get',
-        data: {
-            item: 'DynamicText',
-            display: 'yes'
-        },
-        dataType: 'json',
-        success: returns => {
+    //載入動態文字廣告
+    jQuery.getJSON(
+        '/ClassB/WebB01/Fetch.ashx?item=DynamicText&display=yes',
+        returns => {
             let marquee = '';
-            $.each(returns, (key, value) => {
+            jQuery.each(returns, (key, value) => {
                 marquee += value.Message + ' ';
             });
-            $("marquee").text(marquee);
+            jQuery("marquee").text(marquee);
         }
-    });
+    );
     var pagecount, rowcount, pagecurrent = 1;
-    $.ajax({
+    //載入並渲染最新消息分頁
+    jQuery.ajax({
         url: '/ClassB/WebB01/Fetch.ashx',
         method: 'get',
         data: {
@@ -94,135 +81,149 @@ $(document).ready(function(e) {
         dataType: 'json',
         async: false,
         success: returns => {
-            let detail = returns.filter(value => value.Display == 'yes');
-            var  rowcount=detail.length, pagecount= Math.ceil(rowcount / 4),pagecurrent = 1;
+            let detail = returns.filter(value => value.Display === 'yes');
+            rowcount=detail.length, pagecount= Math.ceil(rowcount / 4),pagecurrent = 1;
             if (detail.length > 5) {
-                var paginationlink = '<li><a href="" id="newsprev" style="text-decoration:none"><</a></li>';
+                var paginationlink =
+                    `<li>
+                        <a href="" id="newsprev" style="text-decoration:none"><</a>
+                    </li>`;
                 for (var i = 1; i <= pagecount; i++) {
-                    paginationlink += '<li';
-                    if (i == pagecurrent) {
-                        paginationlink += ' style="font-size:20px"';
+                    paginationlink +=
+                    `<li`;
+                    if (i === pagecurrent) {
+                        paginationlink +=
+                            ` style="font-size:20px"`;
                     }
-                    paginationlink += '>' + i + '</li>';
+                    paginationlink +=
+                        `>${i}</li>`;
                 }
-                paginationlink += '<li><a href="" id="newsnext" style="text-decoration:none">></a></li>';
-                $("#pagination-item").html(paginationlink);
+                paginationlink +=
+                    `<li>
+                        <a href="" id="newsnext" style="text-decoration:none">></a>
+                    </li>`;
+                jQuery("#pagination-item").html(paginationlink);
             }
             fetchrow(0, 5);
         }
     });
     var num, nowpage = 1;
-    $.ajax({
-        url: '/ClassB/WebB01/Fetch.ashx',
-        method: 'get',
-        data: {
-            item: 'CampusImage',
-            display: 'yes'
-        },
-        dataType: 'json',
-        success: returns => {
-            var images = '<img src="/ClassB/WebB01/Images/01E01.jpg" id="imgprev"/><br/>';
+    //載入並渲染校園映像
+    jQuery.getJSON(
+        '/ClassB/WebB01/Fetch.ashx?item=CampusImage&display=yes',
+        returns => {
+            var images =`<img src="/ClassB/WebB01/Images/01E01.jpg" id="imgprev"/><br/>`;
             num = returns.length;
-            $.each(returns, (key, value) => {
-                images += '<img src="/ClassB/WebB01/Images/' + value.FileName + '" id="ssaa' + value.Id + '" class="im" width="150" height="103"/>';
+            jQuery.each(returns, (key, value) => {
+                images += `<img src="/ClassB/WebB01/Images/${value.FileName}" id="ssaa${value.Id}" class="im" width="150" height="103"/>`;
             });
-            images += '<br/><img src="/ClassB/WebB01/Images/01E02.jpg" id="imgnext" />';
-            $("#ci").append(images);
+            images += `<br/><img src="/ClassB/WebB01/Images/01E02.jpg" id="imgnext" />`;
+            jQuery("#ci").append(images);
             pp(1);
         }
-    });
-    $("#ci").on('click', "#imgprev", () => { pp(1); });
-    $("#ci").on('click', "#imgnext", () => { pp(2); });
-    $("#pagination-item").on('click', "#newsprev", function (event) {
+    );
+    //校園映像上一頁
+    jQuery("#ci").on('click', "#imgprev", () => { pp(1); });
+    //校園映像下一頁
+    jQuery("#ci").on('click', "#imgnext", () => { pp(2); });
+    //最新消息上一頁
+    jQuery("#pagination-item").on('click', "#newsprev", function (event) {
         event.preventDefault();
         pagecurrent--;
         if (pagecurrent < 1) {
             pagecurrent = 1;
         } else {
-            $("#pagination-item").children("li").each(function () {
-                if ($(this).text() == pagecurrent) {
-                    $(this).css('font-size', '20px');
+            jQuery("#pagination-item").children("li").each(function () {
+                if (jQuery(this).text() === pagecurrent) {
+                    jQuery(this).css('font-size', '20px');
                 } else {
-                    $(this).css('font-size', '12px');
+                    jQuery(this).css('font-size', '12px');
                 }
             });
             fetchrow((pagecurrent - 1) * 5,5);
         }
     });
-    $("#pagination-item").on('click', "#newsnext", function (event) {
+    //最新消息下一頁
+    jQuery("#pagination-item").on('click', "#newsnext", function (event) {
         event.preventDefault();
         pagecurrent++;
         if (pagecurrent > pagecount) {
             pagecurrent = pagecount;
         } else {
-            $("#pagination-item").children("li").each(function () {
-                if ($(this).text() == pagecurrent) {
-                    $(this).css('font-size', '20px');
+            jQuery("#pagination-item").children("li").each(function () {
+                if (jQuery(this).text() === pagecurrent) {
+                    jQuery(this).css('font-size', '20px');
                 } else {
-                    $(this).css('font-size', '12px');
+                    jQuery(this).css('font-size', '12px');
 				}
             });
             fetchrow((pagecurrent - 1) * 5, 5);
         }
     });
-    $("#LabelCounter").text(localStorage.getItem('counter'));
-    $("#footer .t").text(localStorage.getItem('footer'));
-    $("button").click(() => {
+    //頁尾版權
+    jQuery("#footer .t").text(localStorage.getItem('footer'));
+    //管理登入
+    jQuery("button").click(() => {
         location.assign("/ClassB/WebB01/login.html");
     });
-	$(".mainmu").mouseover(
+    //顯示或隱藏子選單
+	jQuery(".mainmu").mouseover(
 		function()
 		{
-			$(this).children(".mw").stop().show()
+			jQuery(this).children(".mw").stop().show()
 		}
 	)
-	$(".mainmu").mouseout(
+	jQuery(".mainmu").mouseout(
 		function ()
 		{
-			$(this).children(".mw").hide()
+			jQuery(this).children(".mw").hide()
 		}
     );
-    $(".ssaa").on('mouseover',"li",
+    //顯示或隱藏最新消息
+    jQuery(".ssaa").on('mouseover',"li",
         function () {
-            $("#alt").html("" + $(this).children(".all").html() + "");
-            $("#alt").css({
-                "top": $(this).offset().top - 50,
+            jQuery("#alt").html(`<pre>${jQuery(this).children(".all").html()}</pre>`);
+            jQuery("#alt").css({
+                "top": jQuery(this).offset().top - 50,
                 'visibility':'visible'
             });
         }
     );
-    $(".ssaa").on('mouseout',"li",
+    jQuery(".ssaa").on('mouseout',"li",
         function () {
-            $("#alt").empty().css('visibility','hidden');
+            jQuery("#alt").empty().css('visibility','hidden');
         }
     );
     function op(x, y, url) {
-        $(x).fadeIn();
+        jQuery(x).fadeIn();
         if (y)
-            $(y).fadeIn();
+            jQuery(y).fadeIn();
         if (y && url)
-            $(y).load(url);
+            jQuery(y).load(url);
     }
+    //渲染最新消息
     function mnl(detail) {
         let brief = detail.substr(0, 10);
-        $("ol").append('<li><span class="sswww">' + brief + '</span><p class="all" style="display:none;">' + detail + '</p></li>');
+        jQuery("ol").append(`<li><span class="sswww">${brief}</span><p class="all" style="display:none;">${detail}</p></li>`);
     }
+    //顯示校園映像
     function pp(x) {
-        if (x == 1 && nowpage > 1) {
+        if (x === 1 && nowpage > 1) {
             nowpage--;
         }
-        if (x == 2 && nowpage < num - 2) {
+        if (x === 2 && nowpage < num - 2) {
             nowpage++;
         }
-        $(".im").hide();
+        jQuery(".im").hide();
         for (let s = 0; s <= 2; s++) {
             let t = s + nowpage;
-            $("#ssaa" + t).show();
+            jQuery(`#ssaa${t}`).show();
         }
     }
+    //載入最新消息
     function fetchrow(skipnum, fetchnum) {
-        $("ol").empty().attr('start', skipnum + 1);
-        $.ajax({
+        jQuery("ol").empty().attr('start', skipnum + 1);
+        jQuery.ajax({
             url: '/ClassB/WebB01/Fetch.ashx',
             method: 'get',
             data: {
@@ -233,7 +234,7 @@ $(document).ready(function(e) {
             async:false,
             dataType: 'json',
             success: returns => {
-                $.each(returns, (key, value) => {
+                jQuery.each(returns, (key, value) => {
                     if (key < 5) {
                         mnl(value.Message);
                     }

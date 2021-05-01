@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <script src="Scripts/form.js"></script>
+		<style>
+			span{
+				color:red;
+			}
+			table {
+				width: 100%;
+			}
+		</style>
+    </head>
+    <body>
+        <form enctype="multipart/form-data">
+            <fieldset>
+				<legend>影片資料</legend>
+                <table>
+                    <tr>
+                        <td>片名：</td>
+                        <td>
+                            <input id="name" type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>分級</td>
+                        <td>
+							<select id="level">
+								<option value="general">普遍級</option>
+                                <option value="protected">保護級</option>
+                                <option value="couching">輔導級</option>
+                                <option value="restricted">限制級</option>
+							</select>
+                            請選擇分級
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>片長</td>
+                        <td>
+                            <input id="length" type="number"/>
+                        </td>
+                    </tr>
+                    <tr>
+						<td>上映日期</td>
+						<td>
+							<select id="year"></select>年
+							<select id="month"></select>月
+							<select id="date"></select>日
+						</td>
+                    </tr>
+                    <tr>
+						<td>發行商</td>
+                        <td>
+							<input id="publisher" type="text" />
+                        </td>
+                    </tr>
+					<tr>
+						<td>導演</td>
+						<td>
+							<input id="director" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td>預告影片</td>
+						<td>
+							<input id="trailer" type="file" accept="video/*"/>
+							<br />
+							<span>檔名請使用英文檔名</span>
+						</td>
+					</tr>
+					<tr>
+						<td>電影海報</td>
+						<td>
+							<input id="poster" type="file" accept="image/*"/>
+							<br />
+							<span>檔名請使用英文檔名</span>
+						</td>
+					</tr>
+					<tr>
+						<td>顯示</td>
+						<td>
+							<input id="display" type="checkbox" />
+						</td>
+					</tr>
+					<tr>
+						<td>動畫</td>
+						<td>
+							<select id="animation">
+								<option value="fadein">淡入</option>
+								<option value="slidedown">滑出</option>
+								<option value="resize">縮放</option>
+							</select>
+						</td>
+					</tr>
+                </table>
+            </fieldset>
+			<fieldset>
+				<legend>劇情簡介</legend>
+				<textarea id="brief" rows="2" cols="20"></textarea>
+			</fieldset>
+			<hr />
+			<input id="Submit" type="submit" />
+			<input id="Reset" type="reset" value="重置" />
+        </form>
+    </body>
+</html>

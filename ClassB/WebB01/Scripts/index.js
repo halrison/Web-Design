@@ -1,7 +1,7 @@
-// JavaScript Document
 jQuery(document).ready(
     function () {
         let counter = 0;
+        //顯示進站總人數
         if (sessionStorage.getItem('first view') === 'true' || sessionStorage.getItem('first view') === null) {
             jQuery.get('/ClassB/WebB01/Counter.ashx', response => {
                 jQuery("#LabelCounter").text(response);                
@@ -11,13 +11,16 @@ jQuery(document).ready(
         } else {
             counter= localStorage.getItem('counter');
             jQuery("#LabelCounter").text(counter);
-        } 
+        }
+        //顯示頁尾版權
         jQuery("#footer .t").text(localStorage.getItem('footer'));
-        jQuery.getJSON('/ClassB/WebB01/Fetch.ashx',
+        //載入標題區
+        jQuery.getJSON(
+            '/ClassB/WebB01/Fetch.ashx',
             { item: 'Title' },
             returns => {
                 jQuery.each(returns, (key, value) => {
-                    if (value.Display == 'yes') {
+                    if (value.Display === 'yes') {
                         jQuery("#header").attr({
                             'src': `/ClassB/WebB01/Images/${value.FileName}`,
                             'alt': value.Alt
@@ -26,6 +29,7 @@ jQuery(document).ready(
                 });
             }
         );
+        //載入並渲染主選單
         jQuery.ajax({
             url: '/ClassB/WebB01/Fetch.ashx',
             method: 'get',
@@ -36,12 +40,13 @@ jQuery(document).ready(
             async: false,
             success: returns => {
                 jQuery.each(returns, (key, value) => {
-                    if (value.Display == 'yes') {
+                    if (value.Display === 'yes') {
                         let menuitem =
                             `<div class="mainmu" id="main${value.Id}">
                             <a href="${ value.Url }">${value.Name}</a>`;
                         if (value.Counts) {
                             let father = value.Id;
+                            //載入並渲染子選單
                             jQuery.ajax({
                                 url: '/ClassB/WebB01/Fetch.ashx',
                                 method: 'get',
@@ -69,18 +74,25 @@ jQuery(document).ready(
                 });
             }
         });
-        jQuery.getJSON('/ClassB/WebB01/Fetch.ashx?item=DynamicText',
+        //載入動態文字廣告
+        jQuery.getJSON(
+            '/ClassB/WebB01/Fetch.ashx',
+            {
+                item: 'DynamicText'
+            },
             returns => {
                 let marquee = '';
                 jQuery.each(returns, (key, value) => {
-                    if (value.Display == 'yes') {
+                    if (value.Display === 'yes') {
                         marquee += value.Message+' ';
                     }
                 });
                 jQuery("#marquee span").text(marquee);
             }
         );
-        jQuery.getJSON('/ClassB/WebB01/Fetch.ashx',
+        //載入動畫圖片
+        jQuery.getJSON(
+            '/ClassB/WebB01/Fetch.ashx',
             { item: 'AnimatePicture' },
             returns => {
                 var lin = returns.filter(value => value.Display === 'yes'), now = 0;
@@ -97,6 +109,7 @@ jQuery(document).ready(
                 }
             }
         );
+        //載入最新消息
         jQuery.ajax({
             url: '/ClassB/WebB01/Fetch.ashx',
             method: 'get',
@@ -106,7 +119,7 @@ jQuery(document).ready(
             dataType: 'json',
             async: false,
             success: returns => {
-                let detail = returns.filter(value => value.Display == 'yes');
+                let detail = returns.filter(value => value.Display === 'yes');
                 if (detail.length > 5) {
                     jQuery("#news .botli span").after('<a href="detail.html" style="float:right;">More...</a>');
                     for (let i = 0; i < 5; i++) {
@@ -120,26 +133,34 @@ jQuery(document).ready(
             }
         });
         var num = 0, nowpage = 1;
-        jQuery.getJSON('/ClassB/WebB01/Fetch.ashx',
-            { item: 'CampusImage' },
+        //載入並渲染校園映像
+        jQuery.getJSON(
+            '/ClassB/WebB01/Fetch.ashx',
+            {
+                item: 'CampusImage'
+            },
             returns => {
-                var images = '<img src="/ClassB/WebB01/Images/01E01.jpg" id="prev"/><br/>';
+                var images =`<img src="/ClassB/WebB01/Images/01E01.jpg" id="prev"/><br/>`;
                 jQuery.each(returns, (key, value) => {
-                    if (value.Display == 'yes') {
+                    if (value.Display === 'yes') {
                         images +=`<img src="/ClassB/WebB01/Images/${ value.FileName }" id="ssaa${ value.Id }" class="im" width="150" height="103"/>`;
                         num++;
                     }
                 });
-                images += '<br/><img src="/ClassB/WebB01/Images/01E02.jpg" id="next" />';
+                images += `<br/><img src="/ClassB/WebB01/Images/01E02.jpg" id="next" />`;
                 jQuery("#ci").append(images);
                 pp(1);
             }
         );
+        //上一頁
         jQuery("#ci").on('click', "#prev", () => { pp(1); });
+        //下一頁
         jQuery("#ci").on('click', "#next", () => { pp(2); });
+        //管理登入按鈕
         jQuery("button").click(() => {
             location.assign("/ClassB/WebB01/login.html");
         });
+        //顯示或隱藏子選單
         jQuery(".mainmu").mouseover(
             function () {
                 jQuery(this).children(".mw").stop().show();
@@ -150,6 +171,7 @@ jQuery(document).ready(
                 jQuery(this).children(".mw").hide();
             }
         );
+        //顯示或隱藏最新消息
         jQuery(".ssaa").on('mouseover', "li",
             function () {
                 jQuery("#alt").html(`<pre>${jQuery(this).children(".all").html()}</pre>`);
@@ -164,6 +186,7 @@ jQuery(document).ready(
                 jQuery("#alt").empty().css('visibility', 'hidden');
             }
         );
+        //渲染動態圖片
         function ww(filename) {
             jQuery("#mwww").html(`<embed loop="true" src="/ClassB/WebB01/Images/${ filename }" style="width:99%; height:100%;"></embed>`);
         }
@@ -176,11 +199,12 @@ jQuery(document).ready(
                 jQuery(y).load(url);
             }
         }
+        //顯示校園映像
         function pp(x) {
-            if (x == 1 && nowpage > 1) {
+            if (x === 1 && nowpage > 1) {
                 nowpage--;
             }
-            if (x == 2 && nowpage < num - 2) {
+            if (x === 2 && nowpage < num - 2) {
                 nowpage++;
             }
             jQuery(".im").hide();
@@ -189,6 +213,7 @@ jQuery(document).ready(
                 jQuery(`#ssaa${t}`).show();
             }
         }
+        //渲染最新消息
         function mnl(detail) {
             let brief = detail.substr(0, 10);
             jQuery("ol").append(`<li><span class="sswww">${ brief }</span><p class="all" style="display:none;">${ detail }</p></li>`);

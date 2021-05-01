@@ -19,10 +19,12 @@
 <script type="text/javascript">
 	jQuery(document).ready(
 		() => {
+			//載入並顯示頁尾版權
 			jQuery("#TextboxFooter").val(localStorage.getItem('footer'));
 			jQuery("form").submit(
 				() => {
 					event.preventDefault();
+					//修改頁尾版權
 					localStorage.setItem('footer', jQuery("#TextboxFooter").val());
 				}
 			);

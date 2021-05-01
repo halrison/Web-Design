@@ -27,6 +27,7 @@
 <script type="text/javascript">
 	jQuery(document).ready(
 		function () {
+			//載入並渲染主選單
 			jQuery.getJSON(
 				'/ClassB/WebB01/Fetch.ashx',
 				{
@@ -64,6 +65,7 @@
 			);
 			jQuery("#btnadd").val('新增主選單').click(
 				() => {
+					//渲染並顯示modal(主選單)
 					jQuery("#cvr").html(
 						`<p class="botli t cent">新增主選單</p>
 						主選單名稱：<input id="MainName" type="text" />
@@ -78,6 +80,7 @@
 				'click',
 				"#Insert",
 				() => {
+					//新增主選單，並在表格增加一列
 					jQuery.post(
 						'/ClassB/WebB01/Add.ashx',
 						{
@@ -117,6 +120,7 @@
 				'click',
 				"input[name='Edit']",
 				function () {
+					//載入並渲染子選單
 					jQuery.getJSON(
 						'/ClassB/WebB01/Fetch.ashx',
 						{
@@ -171,6 +175,7 @@
 					let count = 0;
 					jQuery("#cvr table tbody tr").each(
 						function () {
+							//批次刪除(子選單)
 							if (jQuery(this).find(":checkbox[name='sub-delete']").prop('checked')) {
 								if (jQuery(this).attr('id')) {
 									jQuery.get(
@@ -190,6 +195,7 @@
 								}
 							}
 							if (jQuery(this).attr('id')) {
+								//批次修改(子選單)
 								jQuery.post(
 									'/ClassB/WebB01/Modify.ashx',
 									 {
@@ -205,6 +211,7 @@
 									}
 								);
 							} else {
+								//新增子選單
 								jQuery.post(
 									'/ClassB/WebB01/Add.ashx',
 									{
@@ -228,6 +235,7 @@
 				'click',
 				"#btnins",
 				() => {
+					//在modal的表格內新增一列
 					jQuery("#cvr table tbody").prepend(
 						`<tr class="trce">
 							<td> 
@@ -249,6 +257,7 @@
 					jQuery(".yel").parent("table").find("tbody tr").each(
 						function () {
 							if (jQuery(this).find(":checkbox[name='main-delete']").prop('checked')) {
+								//批次刪除(主選單)
 								jQuery.get(
 									'/ClassB/WebB01/Delete.ashx',
 									{
@@ -262,6 +271,7 @@
 									}
 								);
 							} else {
+								//批次修改(主選單)
 								jQuery.post(
 									'/ClassB/WebB01/Modify.ashx',
 									{

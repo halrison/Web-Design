@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<script src="Scripts/poster.js"></script>
+		<form>
+			<div class="rb">預告片清單</div>
+			<table style="width:100%;">
+				<thead>
+					<tr>
+						<th>預告片海報</th>
+						<th>預告片片名</th>
+						<th>預告片排序</th>
+						<th>預告片動畫</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<hr />
+			<input id="Submit1" type="submit" value="編輯確定" />
+			<input id="Reset1" type="reset" value="重置" />
+		</form>
+		<form enctype="multipart/form-data">
+			<div class="rb">新增預告片海報</div>
+			預告片海報：<input id="poster" type="file" accept="image/*"/>
+			預告片片名：<input id="name" type="text" />
+			<br />
+			<input id="Submit2" type="submit" value="新增" />
+			<input id="Reset2" type="reset" value="重置" />
+		</form>
+	</body>
+</html>

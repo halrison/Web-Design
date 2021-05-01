@@ -27,6 +27,7 @@
 <script type="text/javascript">
     jQuery(document).ready(
         function () {
+            //載入並渲染動畫圖片
             jQuery.getJSON(
                 '/ClassB/WebB01/Fetch.ashx',
                 {
@@ -63,6 +64,7 @@
             var form = new FormData();
             jQuery("#btnadd").val('新增動畫圖片').click(
                 () => {
+                    //渲染並顯示modal
                     jQuery("#cvr").html(
                         `<p class="t cent botli">新增動畫圖片</p>
                         動畫圖片：<input id="Picture" name="Picture" type="file" accept="image/*"/><br/>
@@ -76,6 +78,7 @@
                 'click',
                 "#Insert",
                 ()=> {
+                    //上傳動態圖片，並於表格內增加一列以顯示
                     let file = jQuery("#Picture").get(0).files[0];
                     form.append('Picture', file);
                     fetch(
@@ -112,6 +115,7 @@
                 'click',
                 "input[name='Update']",
                 function () {
+                    //渲染並顯示modal
                     jQuery("#cvr").html(
                         `<p class="t cent">變更動畫圖片</p>
                         <hr/>
@@ -127,6 +131,7 @@
                 'click',
                 "#Modify",
                 ()=> {
+                    //重新上傳圖片，並將新圖片顯示於表格中
                     let file = jQuery("#File").get(0).files[0];
                     form.append('Picture', file);
                     fetch(
@@ -149,6 +154,7 @@
                     jQuery("tbody:nth-child(2) tr").each(
                         function () {
                             if (jQuery(this).find("input[name='delete']").prop('checked')) {
+                                //批次刪除
                                 jQuery.get(
                                     '/ClassB/WebB01/Delete.ashx',
                                     {
@@ -162,6 +168,7 @@
                                     }
                                 );
                             } else {
+                                //批次修改
                                 jQuery.post(
                                     '/ClassB/WebB01/Modify.ashx',
                                     {

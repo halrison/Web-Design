@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html >
+<!-- saved from url=(0063)?do=viewmore&id=4 -->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>影城</title>
+        <link rel="stylesheet" href="Content/Site.css">
+        <link href="Content/s2.css" rel="stylesheet" />
+        <script src="Scripts/jquery-3.5.1.js"></script>
+        <style>
+			#mm .rb {
+				width: 87%;
+			}
+				#mm .rb > div {
+					background: #FFF;
+					width: 100%;
+					color: #333;
+					text-align: left
+				}
+			#ticket {
+				margin-left: 50px;
+				padding: 2px 4px
+			}
+			font {
+				font-size: 24px
+			}
+				font p {
+					margin: 3px
+				}
+			video {
+				float: right;
+			}
+        </style>
+    </head>
+    <body>
+        <script src="Scripts/info.js"></script>
+        <div id="main">
+            <div id="top" class="ct" title="替代文字">
+                <h1>ABC影城</h1>
+            </div>
+            <div id="top2">
+                <a href="index.html">首頁</a>
+                <a href="ticket.html">線上訂票</a>
+                <a href="#">會員系統</a>
+                <a href="admin.html">管理系統</a>
+            </div>
+            <div id="text">
+                <span class="ct">最新活動</span>
+                <div id="marquee">
+                    <span>ABC影城票價全面八折優惠1個月</span>
+                </div>
+            </div>
+            <div id="mm">
+                <div class="tab rb">
+                    <div>
+                        <video width="300" height="250" controls="controls"></video>
+                        <font>
+                            <img width="200" height="250" style="margin:10px; float:left" />
+                            <p>
+                                影片名稱 ：<span id="name"></span>
+                                <input type="button" id="ticket" value="線上訂票" class="b2_btu" />
+                            </p>
+                            <p>
+                                影片分級 ：
+                                <span id="level"></span>
+                            </p>
+                            <p>
+                                影片片長 ：<span id="length"></span>分
+                            </p>
+                            <p>
+                                上映日期：<span id="date"></span>
+                            </p>
+                            <p>
+                                發行商 ：<span id="publisher"></span>
+                            </p>
+                            <p>
+                                導演 ：<span id="director"></span>
+                            </p>
+                            <br>
+                            <br>
+                            <p style="margin-top:10px; word-break:break-all">
+                                劇情簡介：<br/>
+                                <span id="brief"></span>
+                            </p>
+                        </font>
+                        <table width="100%" border="0">
+                            <tbody>
+                                <tr>
+                                    <td align="center">
+                                        <input type="button" id="list" value="院線片清單" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="bo"> ©Copyright 2010~2014 ABC影城 版權所有 </div>
+        </div>
+    </body>
+</html>

@@ -31,6 +31,7 @@
 	jQuery(document).ready(
 		function () {
 			var pagecount, rowcount, pagecurrent = 1;
+			//載入並渲染分頁頁碼
 			jQuery.getJSON(
 				'/ClassB/WebB01/Fetch.ashx',
 				{
@@ -39,15 +40,30 @@
 				returns => {
 					rowcount = returns.length;
 					pagecount = Math.ceil(rowcount / 3);
-					var paginationlink = '<li><a href="" id="prev" style="text-decoration:none"><</a></li>';
+					var paginationlink = 
+						`<li>
+							<a href="" id="prev" style="text-decoration:none">
+								<
+							</a>
+						</li>`;
 					for (var i = 1; i <= pagecount; i++) {
-						paginationlink += '<li';
+						paginationlink +=
+						`<li`;
 						if (i == pagecurrent) {
-							paginationlink += ' style="font-size:20px"';
+							paginationlink +=
+								` style="font-size:20px"`;
 						}
-						paginationlink += '>' + i + '</li>';
+						paginationlink +=
+						`>
+							${i}
+						</li>`;
 					}
-					paginationlink += '<li><a href="" id="next" style="text-decoration:none">></a></li>';
+					paginationlink +=
+						`<li>
+							<a href="" id="next" style="text-decoration:none">
+								>
+							</a>
+						</li>`;
 					jQuery("#pagination-item").html(paginationlink);
 					fetchrow(0, 3);
 				}
@@ -56,6 +72,7 @@
 				'click',
 				"#prev",
 				() => {
+					//上一頁
 					event.preventDefault();
 					pagecurrent--;
 					if (pagecurrent < 1) {
@@ -78,6 +95,7 @@
 				'click',
 				"#next",
 				()=> {
+					//下一頁
 					event.preventDefault();
 					pagecurrent++;
 					if (pagecurrent > pagecount) {
@@ -98,6 +116,7 @@
 			);
 			jQuery("#btnadd").val('新增校園映像圖片').click(
 				() => {
+					//渲染並顯示modal(新增)
 					jQuery("#cvr").html(
 						`<p class="t cent">新增校園映像圖片</p>
 						<hr/>
@@ -112,6 +131,7 @@
 				'click',
 				"input[name='update']",
 				function () {
+					//渲染並顯示modal(修改)
 					jQuery("#cvr").html(
 						`<p class="t cent">變更校園映像圖片</p><hr/>
 						<input id="rowid" type="hidden" value="${jQuery(this).parent("tr").attr('id')}"/>
@@ -127,6 +147,7 @@
 				'click',
 				"#Insert",
 				() => {
+					//上傳新的校園映像，並在表格增加一列以顯示
 					let file = jQuery("#Picture").get(0).files[0];
 					form.append('Picture', file);
 					fetch(
@@ -169,6 +190,7 @@
 				'click',
 				"#update",
 				() => {
+					//重新上傳校園映像，並在表格內顯示
 					let file = jQuery("#Picture").get(0).files[0];
 					form.append('Picture', file);
 					fetch(
@@ -188,6 +210,7 @@
 				'click',
 				"#Clear",
 				() => {
+					//清除校園映像
 					jQuery("#Picture").empty();
 				}
 			);
@@ -197,7 +220,8 @@
 					jQuery("tbody:nth-child(2) tr").each(
 						function () {
 							if (jQuery(this).find("input[name='delete']").prop('checked')) {
-								jQuery.get( '/ClassB/WebB01/Delete.ashx',
+								//批次刪除
+								jQuery.get('/ClassB/WebB01/Delete.ashx',
 									{
 										item: 'CampusImage',
 										id: jQuery(this).attr('id')
@@ -207,6 +231,7 @@
 									}
 								);
 							} else {
+								//批次修改
 								jQuery.post(
 									'/ClassB/WebB01/Modify.ashx',
 									{
@@ -221,6 +246,7 @@
 					);
 				}
 			);
+			//渲染表格
 			function fetchrow(skipnum, fetchnum) {
 				jQuery("tbody:nth-child(2)").empty();
 				jQuery.getJSON(

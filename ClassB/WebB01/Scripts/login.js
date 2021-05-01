@@ -1,6 +1,9 @@
 jQuery(document).ready(function() {
+    //顯示進站總人數
     jQuery("#LabelCounter").text(localStorage.getItem('counter'));
+    //顯示頁尾版權
     jQuery("#footer .t").text(localStorage.getItem('footer'));
+    //載入標題區
     jQuery.getJSON('/ClassB/WebB01/Fetch.ashx',
         {
             item:'Title'
@@ -16,6 +19,7 @@ jQuery(document).ready(function() {
             });
         }
     );
+    //載入並渲染主選單
     jQuery.ajax({
         url: '/ClassB/WebB01/Fetch.ashx',
         method: 'get',
@@ -31,7 +35,8 @@ jQuery(document).ready(function() {
                     `<div class="mainmu" id="main-${value.Id}">
                         <a href="${value.Url}">${value.Name}</a>`;
                 if (value.Counts) {
-                    let father = value.Id;
+                    let father = value.Id;            
+                    //載入並渲染子選單
                     jQuery.ajax({
                         url: '/ClassB/WebB01/Fetch.ashx',
                         method: 'get',
@@ -58,6 +63,7 @@ jQuery(document).ready(function() {
             });
         }
     });
+    //載入動態文字廣告
     jQuery.getJSON('/ClassB/WebB01/Fetch.ashx?item=DynamicText',
         returns => {
             let marquee = '';
@@ -68,6 +74,7 @@ jQuery(document).ready(function() {
         }
     );
     var num = 0, nowpage = 1;
+    //載入並渲染校園映像
     jQuery.getJSON('/ClassB/WebB01/Fetch.ashx',
         {
             item: 'CampusImage'
@@ -85,23 +92,28 @@ jQuery(document).ready(function() {
             pp(1);
         }
     ); 
+    //上一頁
     jQuery("#ci").on('click', "#prev", () => { pp(1); });
+    //下一頁
     jQuery("#ci").on('click', "#next", () => { pp(2); });
-    jQuery("button").click(() => {
-        location.reload();
-    })
+    //管理登入
+    jQuery("button").click(
+        () => {
+            location.reload();
+        }
+    );
+    //顯示或隱藏子選單
     jQuery(".mainmu").mouseover(
-		function()
-		{
-			jQuery(this).children(".mw").stop().show()
-		}
-	)
-	jQuery(".mainmu").mouseout(
-		function ()
-		{
-			jQuery(this).children(".mw").hide()
-		}
-	)
+        function () {
+            jQuery(this).children(".mw").stop().show()
+        }
+    );
+    jQuery(".mainmu").mouseout(
+        function () {
+            jQuery(this).children(".mw").hide()
+        }
+    );
+    //驗證登入
     jQuery("form").submit(
         ()=>{
             event.preventDefault();
@@ -123,6 +135,7 @@ jQuery(document).ready(function() {
             );
         }
     );
+    //顯示校園映像
     function pp(x) {
         if (x === 1 && nowpage > 1) {
             nowpage--;

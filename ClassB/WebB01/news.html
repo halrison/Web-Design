@@ -30,6 +30,7 @@
 	jQuery(document).ready(
 		() => {
 			var pagecount, rowcount, pagecurrent = 1;
+			//載入與顯示分頁頁碼
 			jQuery.getJSON(
 				'/ClassB/WebB01/Fetch.ashx',
 				{
@@ -61,6 +62,7 @@
 			);
 			jQuery("#btnadd").val('新增最新消息資料').click(
 				() => {
+					//渲染並顯示modal
 					jQuery("#cvr").html(
 						`<p class="cent botli t">新增最新消息資料</p>
 						最新消息資料：<textarea id="News" rows="2" cols="20"></textarea>
@@ -74,6 +76,7 @@
 				'click',
 				"#Insert",
 				() => {
+					//新增一筆最新消息，並在表格頂端插入一列
 					jQuery.post(
 						'/ClassB/WebB01/Add.ashx',
 						{
@@ -106,6 +109,7 @@
 				'click',
 				"#Clear",
 				() => {
+					//清除最新消息
 					jQuery("#News").empty();
 				}
 			);
@@ -113,6 +117,7 @@
 				'click',
 				"#prev",
 				() => {
+					//上一頁
 					event.preventDefault();
 					pagecurrent--;
 					if (pagecurrent < 1) {
@@ -135,6 +140,7 @@
 				'click',
 				"#next",
 				() => {
+					下一頁
 					event.preventDefault();
 					pagecurrent++;
 					if (pagecurrent > pagecount) {
@@ -159,6 +165,7 @@
 					jQuery("tbody:nth-child(2) tr").each(
 						function () {
 							if (jQuery(this).find("input[name='delete']").prop('checked')) {
+								//批次刪除
 								jQuery.get(
 									'/ClassB/WebB01/Delete.ashx',
 									{
@@ -172,6 +179,7 @@
 									}
 								);
 							} else {
+								//批次修改
 								jQuery.post(
 									'/ClassB/WebB01/Modify.ashx',
 									{
@@ -186,6 +194,7 @@
 					);
 				}
 			);
+			//渲染表格
 			function fetchrow(skipnum, fetchnum) {
 				jQuery("tbody:nth-child(2)").empty();
 				jQuery.getJSON(

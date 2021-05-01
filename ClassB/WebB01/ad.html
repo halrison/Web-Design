@@ -25,6 +25,7 @@
 </table>
 <script>
     jQuery(document).ready(function () {
+        //載入並渲染動態文字廣告
         jQuery.getJSON('/ClassB/WebB01/Fetch.ashx',
             {
                 item: 'DynamicText'
@@ -42,7 +43,8 @@
                 })
             }
         );
-		jQuery("#btnadd").val('新增動態文字廣告').click(() => {
+        //渲染並顯示modal
+        jQuery("#btnadd").val('新增動態文字廣告').click(() => {
             jQuery("#cvr").html(
                 `<p class="t cent">新增動態文字廣告</p>
                 <hr/>
@@ -51,7 +53,8 @@
                 <button id="Clear" type="button">重置</button>`
             );
             jQuery("#cover").fadeIn();
-        })
+        });
+        //新增動態文字廣告，並新增一列表格以顯示
         jQuery("form").on('click',"#Insert", () => {
             jQuery.post('/ClassB/WebB01/Add.ashx',
                 {
@@ -72,12 +75,14 @@
             );
         });
         jQuery("form").on('click', "#Clear", () => {
+            //清除動態文字廣告
             jQuery("#AdText").empty();
         })
         jQuery("form").submit(()=> {
             event.preventDefault();
             jQuery.each(jQuery("tbody:nth-child(2) tr"), function () {
                 if (jQuery(this).find("input[name='delete']").prop('checked')) {
+                    //批次刪除
                     jQuery.get('/ClassB/WebB01/Delete.ashx',
                         {
                             item: 'DynamicText',
@@ -88,7 +93,8 @@
                         }
                     );
                 } else {
-                    jQuery.post( '/ClassB/WebB01/Modify.ashx',
+                    //批次修改
+                    jQuery.post('/ClassB/WebB01/Modify.ashx',
                         {
                             item: 'DynamicText',
                             id: jQuery(this).attr('id'),

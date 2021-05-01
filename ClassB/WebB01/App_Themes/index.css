@@ -28,11 +28,6 @@ input[type=text], input[type=password] {
 	input:focus, button:focus {
 		box-shadow: #09C 0px 0px 3px .3px;
 	}
-marquee {
-	position: absolute;
-	width: 100%;
-	height: 40px;
-}
 .ti
 {
 	width:100%;

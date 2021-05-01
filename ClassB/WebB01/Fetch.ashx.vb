@@ -6,23 +6,26 @@ Public Class Fetch
     Dim command As New SqlCommand
     Dim result As New StringBuilder
     Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
-        connection.ConnectionString = ConfigurationManager.ConnectionStrings("Connection").ToString
+        connection.ConnectionString = ConfigurationManager.ConnectionStrings("Connection").ToString()
         connection.Open()
         command.Connection = connection
         command.CommandType = CommandType.Text
         If context.Request.QueryString.HasKeys Then
             Dim item = context.Request.QueryString("item")
             command.CommandText = "select * from " & item.ToString()
+            '子選單
             If item = "Sub" Then
                 command.CommandText &= " where Father=@father"
                 command.Parameters.AddWithValue("@father", context.Request.QueryString("father"))
             Else
+                '分頁
                 If context.Request.QueryString("skipnum") IsNot vbNullString And context.Request.QueryString("fetchnum") IsNot vbNullString Then
                     command.CommandText &= " order by Id ASC offset @skipnum rows fetch next @fetchnum rows only"
                     command.Parameters.AddWithValue("@skipnum", Convert.ToInt16(context.Request.QueryString("skipnum")))
                     command.Parameters.AddWithValue("@fetchnum", Convert.ToInt16(context.Request.QueryString("fetchnum")))
                 End If
             End If
+            '轉換成JSON格式
             command.CommandText &= " for json auto"
             Dim reader = command.ExecuteReader()
             If reader.HasRows Then

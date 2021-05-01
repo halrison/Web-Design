@@ -2,9 +2,11 @@
 Public Class Upload
     Implements IHttpHandler
     Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
+        '取得上傳的檔案
         Dim ImageFile = context.Request.Files.Get("Picture")
         If ImageFile IsNot Nothing Then
             If ImageFile.ContentLength > 0 Then
+                '存入Images目錄
                 Dim ImageName = Path.GetFileName(ImageFile.FileName)
                 Dim ImagePath = context.Server.MapPath("Images/")
                 ImageFile.SaveAs(ImagePath + ImageName)

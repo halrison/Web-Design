@@ -14,31 +14,38 @@ Public Class Add
             Dim form = context.Request.Form
             command.CommandText = "insert into " & form.Item("item")
             Select Case form.Item("item")
+                '標題
                 Case "Title"
                     command.CommandText &= " (FileName,AlternativeText,Display) values(@filename,@alternativetext,@display)"
                     command.Parameters.AddWithValue("@filename", form.Item("filename"))
                     command.Parameters.AddWithValue("@alternativetext", form.Item("alternativetext"))
                     command.Parameters.AddWithValue("@display", form.Item("display"))
+                '動態文字廣告
                 Case "DynamicText"
                     command.CommandText &= " (Message,Display) values(@message,@display)"
                     command.Parameters.AddWithValue("@message", form.Item("message"))
                     command.Parameters.AddWithValue("@display", form.Item("display"))
+                '動畫圖片
                 Case "AnimatePicture"
                     command.CommandText &= " (FileName,Display) values(@filename,@display)"
                     command.Parameters.AddWithValue("@filename", form.Item("filename"))
                     command.Parameters.AddWithValue("@display", form.Item("display"))
+                '校園映像
                 Case "CampusImage"
                     command.CommandText &= " (FileName,Display) values(@filename,@display)"
                     command.Parameters.AddWithValue("@filename", form.Item("filename"))
                     command.Parameters.AddWithValue("@display", form.Item("display"))
+                '最新消息
                 Case "News"
                     command.CommandText &= " (Message,Display) values(@message,@display)"
                     command.Parameters.AddWithValue("@message", form.Item("message"))
                     command.Parameters.AddWithValue("@display", form.Item("display"))
+                '管理者帳號
                 Case "Account"
                     command.CommandText &= " (UserName,PassWord) values(@username,@password)"
                     command.Parameters.AddWithValue("@username", form.Item("username"))
                     command.Parameters.AddWithValue("@password", form.Item("password"))
+                '主選單
                 Case "Main"
                     command.CommandText &= " (Name,Url,Display,Counts) values(@name,@url,@display,@count)"
                     command.Parameters.AddWithValue("@name", form.Item("name"))
@@ -48,6 +55,7 @@ Public Class Add
             End Select
             context.Response.ContentType = "text/plain"
             If command.ExecuteNonQuery() Then
+                '取得最後一筆新增資料的ID
                 command.CommandText = "select SCOPE_IDENTITY()"
                 Dim id = command.ExecuteScalar()
                 context.Response.Write(id.ToString())

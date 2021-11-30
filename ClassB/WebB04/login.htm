@@ -1,0 +1,84 @@
+﻿<div id="ForMember">
+	<h1>第一次購物</h1>
+	<a href="?do=register">
+		<img src="Images/0413.jpg" alt="按此註冊" />
+	</a>
+	<h1>會員登入</h1>
+</div>
+<table style="width:100%;">
+	<tr>
+		<td class="pp">
+			帳號
+		</td>
+		<td class="tt">
+			<input id="Account" type="text" />
+		</td>
+	</tr>
+	<tr>
+		<td class="pp">
+			密碼
+		</td>
+		<td class="tt">
+			<input id="Password" type="password" />
+		</td>
+	</tr>
+	<tr>
+		<td class="pp">
+			驗證碼
+		</td>
+		<td class="tt">
+			<span id="AuthCode1"></span>+<span id="AuthCode2"></span>=
+			<input id="AuthCode" type="text" inputmode="numeric" />
+		</td>
+	</tr>
+</table>
+<img src="Images/0414.jpg" />
+<script>
+	jQuery(document).ready(
+		() => {
+			const param = new URLSearchParams(location.search);
+			let url = '/ClassB/WebB04';
+			if (param.get('user') === 'member') {
+				jQuery("#ForMember").show();
+				url += '/Member.ashx';
+			} else if (param.get('user') === 'admin') {
+				jQuery("#ForMember").hide();
+				url += '/Admin.ashx'
+			}
+			jQuery.get(
+				'/ClassB/WebB04/Auth.ashx',
+				response => {
+					response = response.split(' ');
+					jQuery("#AuthCode1").text(response[0]);
+					jQuery("#AuthCode2").text(response[1]);
+				}
+			);
+			jQuery("img").click(
+				() => {
+					event.preventDefault();
+					if (jQuery("#Account").val() && jQuery("#Password").val() && jQuery("#AuthCode").val()) {
+						jQuery.post(
+							url,
+							{
+								action: 'login',
+								account: jQuery("#Account").val(),
+								password: jQuery("#Password").val(),
+								authcode: jQuery("#AuthCode").val()
+							},
+							response => {
+								if (response === 'Success') {
+									sessionStorage.setItem('account', jQuery("#Account").val());
+									if (param.get('user') === 'member') {
+										location.assign('index.htm');
+									} else if (param.get('user') === 'admin') {
+										location.assign('admin.htm?do=permit');
+									}
+								}
+							}
+						);
+					}
+				}
+			);
+		}
+	);
+</script>

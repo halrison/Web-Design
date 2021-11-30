@@ -1,0 +1,78 @@
+﻿<h1></h1>
+<table class="all"></table>
+<script>
+	var searchParam = new URLSearchParams(location.search), action='',big,medium, table = '', nav = '';
+	//if (searchParam.has('big')) {
+	//	big = sessionStorage.getItem('big');
+	//	action =  === null || sessionStorage.getItem('big') === undefined || sessionStorage.getItem('big') === '全部商品'?'fetchall': 'fetchsome';
+	//	nav += big;
+	//} if (searchParam.has('medium')) {
+	//	medium = sessionStorage.getItem('medium');
+	//	nav +=
+	//}
+	jQuery.getJSON(
+		'/ClassB/WebB04/Commodity.ashx',
+		{
+			action: 'fetchall',
+			status:'up'
+		},
+		responses => {
+			if (searchParam.has('big') && [null, undefined].indexOf(sessionStorage.getItem('big')===-1)) {
+				responses = responses.filter(response => response.big === sessionStorage.getItem('big'));
+				nav += sessionStorage.getItem('big') || '全部商品';
+			} if (searchParam.has('medium') && [null, undefined].indexOf(sessionStorage.getItem('medium') === -1)) {
+				responses = responses.filter(response => response.medium === sessionStorage.getItem('medium'));
+				nav += `>${sessionStorage.getItem('medium')}`;
+			}
+			responses.forEach(
+				response => {
+					table +=
+						`<tr class="pp">
+							<td rowspan="4" width="40%" class="ct">
+								<input name="number" type="hidden" value="${response.number}"/>
+								<img src="/ClassB/WebB04/Images/${response.picture}" class="icon" />
+							</td>
+							<td class="tt ct">${response.name}</td>
+						</tr>
+						<tr class="pp">
+							<td>
+								價錢：${response.price}
+								<img src="/ClassB/WebB04/Images/0402.jpg"  class="i-wanna-buy" />
+							</td>
+						</tr>
+						<tr class="pp">
+							<td>規格：${response.specification}</td>
+						</tr>
+						<tr class="pp">
+							<td>簡介：${response.description}</td>
+						</tr>`
+				}
+			);
+			jQuery("table").html(table); 
+			jQuery("h1").text(nav);
+		}
+	);
+	jQuery("table").on(
+		'click',
+		".icon",
+		function() {
+			location.assign(`?do=detail&number=${jQuery(this).prev().val()}`);
+		}
+	).on(
+		'click',
+		".i-wanna-buy",
+		function(){
+			let orders = JSON.parse(sessionStorage.getItem('orders')) || [];
+			if (orders.findIndex(order => order.number === jQuery(this).parents("tr").prev().find("[name='number']").val())=== -1) {
+				orders.push(
+					{
+						number: jQuery(this).parents("tr").prev().find("[name='number']").val(),
+						amount:0
+					}
+				);
+			}
+			sessionStorage.setItem('orders', JSON.stringify(orders));
+			location.assign(`?do=detail&number=${jQuery(this).parents("tr").prev().find("[name='number']").val()}`);
+		}
+	);
+</script>

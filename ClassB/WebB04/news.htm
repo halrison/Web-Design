@@ -1,0 +1,57 @@
+﻿<h1>最新消息</h1>
+<p style="color:red">*點擊標題查看詳細資訊</p>
+<table style="width:100%;"></table>
+<input id="Back" type="button" value="返回" />
+<script type="text/javascript">
+	drawTitleTable();
+	jQuery("table").on(
+		'click',
+		"td:first-child",
+		() => {
+			drawDetailTable('情人節特惠活動', '為了慶祝七夕情人節，將舉辦情人兩人到現場有七七折之特惠活動~');
+		}
+	);
+	jQuery("table").on(
+		'click',
+		"td:last-child",
+		() => {
+			drawDetailTable('年終特賣會開跑了', '即日期至年底，凡會員購物滿仟送佰，買越多送越多~');
+		}
+	);
+	jQuery("#Back").click(
+		() => {
+			drawTitleTable();
+		}
+	);
+	function drawTitleTable() {
+		jQuery("table").empty().html(
+			`
+				<tr class="ct pp">
+					<th>標題</th>
+				</tr>
+				<tr class="tt">
+					<td>情人節特惠活動</td>
+				</tr>
+				<tr class="tt">
+					<td>年終特賣會開跑了</td>
+				</tr>
+			`
+		);
+		jQuery("#Back").hide();
+	}
+	function drawDetailTable(title,detail) {
+		jQuery("table").empty().html(
+			`
+				<tr>
+					<th class="ct pp">標題</th>
+					<td class='tt'>${title}</td>
+				</tr>
+				<tr>
+					<td class="ct pp">內容</td>
+					<td class="tt">${detail}</td>
+				</tr>
+			`
+		);
+		jQuery("#Back").show();
+	}
+</script>

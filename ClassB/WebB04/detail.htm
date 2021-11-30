@@ -1,0 +1,96 @@
+﻿<h1></h1>
+<table style="width:100%;">
+	<tr class="pp">
+		<td rowspan="5">
+			<img src="" alt="" id="icon"/>
+		</td>
+		<td>
+			分類:
+			<span id="category"></span>
+		</td>
+	</tr>
+	<tr class="pp">
+		<td>
+			編號:
+			<span id="number"></span>
+		</td>
+	</tr>
+	<tr class="pp">
+		<td>
+			價格:
+			<span id="price"></span>
+		</td>
+	</tr>
+	<tr class="pp">
+		<td>
+			詳細說明:
+			<span id="description"></span>
+		</td>
+	</tr>
+	<tr class="pp">
+		<td>
+			庫存量:
+			<span id="quantity"></span>
+		</td>
+	</tr>
+	<tr class="tt">
+		<td colspan="2" class="ct">
+			購買數量
+			<input id="amount" type="number" />
+			<img src="Images/0402.jpg" alt="我要購買" id="i_wanna_buy"/>
+		</td>
+	</tr>
+</table>
+<button>返回</button>
+<style>
+	#icon{
+		width:100%;
+	}
+</style>
+<script>
+	jQuery.getJSON(
+		'/ClassB/WebB04/Commodity.ashx',
+		{
+			action: 'fetchone',
+			number: new URLSearchParams(location.search).get('number')
+		}
+	).done(
+		response => {
+			let selectedCommodity = response[0];
+			jQuery("#icon").attr('src', `/ClassB/WebB04/Images/${selectedCommodity.picture}`);
+			jQuery("h1").text(selectedCommodity.name);
+			jQuery("#number").text(selectedCommodity.number);
+			jQuery("#category").text(`${selectedCommodity.big}>${selectedCommodity.medium}`);
+			jQuery("#price").text(selectedCommodity.price);
+			jQuery("#description").text(selectedCommodity.description);
+			jQuery("#quantity").text(selectedCommodity.quantity);
+		}
+	);
+	jQuery("style").appendTo("head");
+	jQuery("button").click(
+		() => {
+			history.back();
+		}
+	);
+	jQuery("#i_wanna_buy").click(
+		() => {
+			if (sessionStorage.getItem('account') === null || sessionStorage.getItem('account') === undefined) {
+				location.assign('?do=login&user=member');
+			} else {
+				let orders = JSON.parse(sessionStorage.getItem('orders')) || [], searchIndex = orders.findIndex(order => order.number === jQuery("#number").text());
+				if (searchIndex> -1) {
+					orders[searchIndex].amount = jQuery("#amount").val();
+				} else {
+					orders.push(
+						{
+							number: jQuery("#number").text(),
+							amount: jQuery("#amount").val()
+						}
+					);
+				}
+				sessionStorage.setItem('orders', JSON.stringify(orders));
+				location.assign('?do=buycart');
+			}
+		}
+	);
+</script>

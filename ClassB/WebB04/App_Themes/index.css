@@ -1,0 +1,206 @@
+@charset "utf-8";
+/* CSS Document */
+#main
+{
+	width:1034px;
+	padding:10px;
+	margin:20px auto 20px auto;
+	border:#000 solid 1px;
+	min-height:768px;
+}
+#top{
+	display:inline-block;
+	width:100%;
+}
+#top a
+{
+	color:#CE631C;
+	text-decoration:none;
+	display:block;
+}
+#top img{
+	width:40%;
+	float:left;
+}
+#top div {
+	padding: 10px;
+	display:inline-flex;
+	float:right;
+	align-items:flex-start;
+}
+#counter {
+	color: #f00;
+	font-size: 28px;
+}
+#marquee
+ {
+	display: inline-block;
+	height: 32px;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+}
+	#marquee > span 
+{
+		display: block;
+		width: 250%;
+		height: 25px;
+		position: absolute;
+		overflow: hidden;
+		-webkit-animation: marquee 20s linear infinite;
+		-moz-animation: marquee 20s linear infinite;
+		-ms-animation: marquee 20s linear infinite;
+		-o-animation: marquee 20s linear infinite;
+		animation: marquee 20s linear infinite;
+	}
+#left
+{
+	display:inline-block;
+	clear:both;
+	width:20%;
+	padding:2%;
+	height:550px;
+	vertical-align:top;
+	border:#000 1px solid;
+}
+#content{
+display:block;
+}
+#main-menu {
+	min-height: 400px;
+}
+#right
+{
+	display:inline-block;
+	width:70.2%;
+	padding:2%;
+	min-height:550px;
+	border:#000 1px solid;
+}
+#bottom {
+	line-height: 70px;
+	height: 70px;
+	width:99%;
+	background: url(../Images/bot.png);
+	background-size: cover;
+	color: #FFF;
+}
+.al
+{
+	padding:10px;
+	text-align:center;
+}
+.all
+{
+	width:100%;
+	margin:10px auto 10px auto;
+}
+.all td
+{
+	min-width:70px;
+	padding:10px;
+}
+.ct
+{
+	text-align:center;
+}
+.tt
+{
+	background:#EF7429;
+}
+.pp
+{
+	background:#EFCA85;
+}
+.s {
+	padding: 20px 5px 20px 5px;
+	text-decoration: none;
+	margin: 10px auto 10px auto;
+	color: #65350A;
+	background: skyblue;
+	position: relative;
+	left: 20px;	
+	z-index: 99;
+}
+.sub-menu {
+	display: none;
+	position: absolute;
+/*	left: 150px;
+*/	width: 214px;
+	z-index: 9;
+}
+.ww
+{
+	display:block;
+	padding:20px 5px 20px 5px;
+	text-decoration:none;
+	background:#F4C591;
+	margin:10px auto 10px auto;
+	color:#65350A;
+}
+.ww:hover > .sub-menu
+{
+	display:block;
+}
+.sb button
+{
+	font-size:12px;
+}
+body
+{
+	font-family:"微軟正黑體";
+}
+input[type=text],input[type=password],input[type=submit],button,.button,input[type=reset],input[type=button],select，textarea,input[type=number],input[type=tel],input[type=email]
+{
+	background:#F3F3F3;
+	border:#CCC 1px solid;
+	border-radius:3px;
+	padding:5px 8px 5px 8px;
+	text-decoration:none;
+	margin:3px;
+	color:#333;
+}
+input[type=text],input[type=password]
+{
+	width:170px;
+}
+@-webkit-keyframes marquee {
+	0% {
+		left: 100%;
+	}
+	100% {
+		left: -100%;
+	}
+}
+@-moz-keyframes marquee {
+	0% {
+		left: 100%;
+	}
+	100% {
+		left: -100%;
+	}
+}
+@-ms-keyframes marquee {
+	0% {
+		left: 100%;
+	}
+	100% {
+		left: -100%;
+	}
+}
+@-o-keyframes marquee {
+	0% {
+		left: 100%;
+	}
+	100% {
+		left: -100%;
+	}
+}
+@keyframes marquee {
+	0% {
+		left: 100%
+	}
+	100% {
+		left: -100%
+	}
+}

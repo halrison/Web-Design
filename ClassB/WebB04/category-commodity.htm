@@ -1,0 +1,274 @@
+﻿<h1 id="toCategory">商品分類</h1>
+<div id="CategoryManage">
+	<form>
+		<label>新增大分類</label><input id="BigCategory" type="text" />
+		<input id="AddBigCategory" type="button" value="新增" /><br />
+		<label>新增中分類</label>
+		<select id="SelectCategory">
+			<option></option>
+		</select>
+		<input id="MediumCategory" type="text" />
+		<input id="AddMediumCategory" type="button" value="新增" /><br />
+	</form>
+	<table id="Categories"></table>
+</div>
+<h1 id="toCommodity">商品管理</h1>
+<div id="CommodityManage">
+	<button id="AddCommodity">新增商品</button>
+	<table id="Commodities">
+		<thead>
+			<tr class="tt ct">
+				<td>編號</td>
+				<td>商品名稱</td>
+				<td>庫存量</td>
+				<td>狀態</td>
+				<td>操作</td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>
+<script type="text/javascript">
+	var categories1, categories2,commodities,currentRow;
+	jQuery("#CommodityManage").hide();
+	jQuery.ajax(
+		{
+			url: '/ClassB/WebB04/Big.ashx',
+			method: 'get',
+			data:
+			{
+				action: 'fetch'
+			},
+			dataType: 'json',
+			async: false,
+			success:
+				response => {
+					let row ='';
+					categories1 = response;
+					categories1.forEach(
+						category1 => {
+							var big = category1.id;
+							row += `
+										<tr class='pp' data-big='${category1.id}'>
+											<td>${category1.name}</td>
+											<td>
+												<button name='modify'>修改</button>
+												<button name='delete'>刪除</button>
+											</td>
+										</tr>
+									`;
+							jQuery.ajax(
+								{
+									url: '/ClassB/WebB04/Medium.ashx',
+									method: 'get',
+									data: {
+										action: 'fetch',
+										big: big
+									},
+									dataType: 'json',
+									async: false,
+									success: response => {
+										categories2 = response;
+										categories2.forEach(
+											category2 => {
+												row += `
+													<tr class='tt ct' data-medium='${category2.medium}'>
+														<td>${category2.name}</td>
+														<td>
+															<button name='modify'>修改</button>
+															<button name='delete'>刪除</button>
+														</td>
+													</tr>`;
+											}
+										);
+									}
+								}
+							);
+							jQuery("#SelectCategory").append(`<option value='${category1.id}'>${category1.name}</option>`);
+						}
+					);
+					jQuery("#Categories").html(row);
+				}
+		}
+	);
+	jQuery.getJSON(
+		'/ClassB/WebB04/Commodity.ashx',
+		{
+			action:'fetchall'
+		},
+		response => {
+			let row = '';
+			response.forEach(
+				commodity => {
+					row += `
+						<tr class='pp' id='${commodity.id}'>
+							<td class='ct'>${commodity.number}</td>
+							<td>${commodity.name}</td>
+							<td class='ct'>${commodity.quantity}</td>
+							<td class='ct'>${commodity.status === 'up' ? '販售中' : '已下架'}</td>
+							<td class='ct'>
+								<button name='modify'>修改</button>
+								<button name='remove'>刪除</button>
+								<br/>
+								<button name='up'>上架</button>
+								<button name='down'>下架</button>
+							</td>
+						</tr>
+					`;
+				}
+			);
+			jQuery("#Commodities tbody").html(row);
+		}
+	);
+	jQuery("#Categories").on(
+		'click',
+		".pp [name='delete']",
+		function () {
+			currentRow = jQuery(this).parents(".pp");
+			jQuery.get(
+				'/ClassB/WebB04/Big.ashx',
+				{
+					action: 'remove',
+					id:jQuery(currentRow).data('big')
+				},
+				response => {
+					if (response === 'Success') jQuery(currentrow).remove();
+				}
+			);
+		}
+	).on(
+		'click',
+		".pp [name='modify']",
+		function () {
+			let tempCategoryName = prompt('將大分類名稱變更為', jQuery(currentRow).find("td:first-child").text());
+			jQuery.post(
+				'/ClassB/WebB04/Big.ashx',
+				{
+					action: 'modify',
+					name: tempCategoryName  ,
+					id:jQuery(currentRow).data('big')
+				},
+				response => {
+					if (response === 'Success') jQuery(currentRow).find("td:first-child").text(tempCategoryName);
+				}
+			);
+		}
+	).on(
+		'click',
+		".tt [name='delete']",
+		function () {
+			currentRow = jQuery(this).parents(".tt");
+			let parentRow = jQuery(currentRow).prev(".pp");
+			jQuery.get(
+				'/ClassB/WebB04/Medium.ashx',
+				{
+					action: 'remove',
+					big:jQuery(parentRow).data('big'),
+					medium: jQuery(currentRow).data('medium')
+				},
+				response => {
+					if (response === 'Success') jQuery(currentRow).remove();
+				}
+			);
+		}
+	).on(
+		'click',
+		".tt [name='modify']",
+		function () {
+			currentRow = jQuery(this).parents(".tt");
+			let parentRow = jQuery(currentRow).prev(".pp");
+			let tempCategoryName = prompt('將中分類名稱變更為', jQuery(currentRow).find("td:first-child").text());
+			jQuery.post(
+				'/ClassB/WebB04/Medium.ashx',
+				{
+					action: 'modify',
+					name: tempCategoryName,
+					big: jQuery(parentRow).data('big'),
+					medium:jQuery(currentRow).data('medium')
+				},
+				response => {
+					if (response === 'Success') jQuery(currentRow).find("td:first-child").text(tempCategoryName);
+				}
+			);
+		}
+	);
+	jQuery("#Commodities").on(
+		'click',
+		"[name='modify']",
+		function () {
+			currentRow = jQuery(this).parents("tr");
+			jQuery.getJSON(
+				'/ClassB/WebB04/Commodity.ashx',
+				{
+					action: 'fetchone',
+					number: jQuery(currentRow).find("td").first().text()
+				},
+				response => {
+					sessionStorage.setItem('selected_commodity', JSON.stringify(response[0]));
+					location.assign('?do=commodity-form');
+				}
+			);
+		}
+	).on(
+		'click',
+		"[name='remove']",
+		function () {
+			jQuery.get(
+				'/ClassB/WebB04/Commodity.ashx',
+				{
+					action: 'remove',
+					number: jQuery(currentRow).find("td").first().text()
+				},
+				response => {
+					if (response === 'Success') {
+						jQuery(currentRow).remove();
+					}
+				}
+			);
+		}
+	).on(
+		'click',
+		"[name='up']",
+		function () {
+			currentRow = jQuery(this).parents("tr");
+			jQuery.post(
+				'/ClassB/WebB04/Commodity.ashx',
+				{
+					action: 'up',
+					number: jQuery(currentRow).find("td").first().text()
+				},
+				response => {
+					if (response === 'Success') jQuery(currentRow).find("td:nth-last-child(2)").text('販售中');
+				}
+			);
+		}
+	).on(
+		'click',
+		"[name='down']",
+		function () {
+			currentRow = jQuery(this).parents("tr");
+			jQuery.post(
+				'/ClassB/WebB04/Commodity.ashx',
+				{
+					action: 'down',
+					number: jQuery(currentRow).find("td").first().text()
+				},
+				response => {
+					if (response === 'Success') jQuery(currentRow).find("td:nth-last-child(2)").text('已下架');
+				}
+			);
+		}
+	);
+	jQuery("#toCategory,#toCommodity").click(
+		() => {
+			jQuery("#CategoryManage").toggle();
+			jQuery("#CommodityManage").toggle();
+		}
+	);
+	jQuery("#AddCommodity").click(
+		() => {
+			sessionStorage.removeItem('selected_commodity');
+			location.assign('?do=commodity-form');
+		}
+	);
+</script>

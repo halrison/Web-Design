@@ -1,0 +1,107 @@
+﻿<h1>編輯會員資料</h1>
+<table style="width:100%;">
+    <tr>
+        <td class="pp ct">帳號</td>
+        <td class="tt">
+            <span id="Account"></span>
+        </td>
+    </tr>
+    <tr>
+        <td class="pp ct">密碼</td>
+        <td class="tt">
+            <span id="Password"></span>
+        </td>
+    </tr>
+    <tr>
+        <td class="pp ct">累計交易額</td>
+        <td class="tt">
+            <span id="Total"></span>
+        </td>
+    </tr>
+    <tr>
+        <td class="pp ct">姓名</td>
+        <td class="tt">
+            <input id="Name" type="text" />
+        </td>
+    </tr>
+    <tr>
+        <td class="pp ct">電話</td>
+        <td class="tt">
+            <input id="Phone" type="tel" />
+        </td>
+    </tr>
+    <tr>
+        <td class="pp ct">住址</td>
+        <td class="tt">
+            <input id="Address" type="text" />
+        </td>
+    </tr>
+    <tr>
+        <td class="pp ct">電子信箱</td>
+        <td class="tt">
+            <input id="Email" type="email" />
+        </td>
+    </tr>
+</table>
+<p class="ct">
+    <input type="submit" value="編輯" />|
+    <input type="reset" value="重置" />|
+    <input type="button" value="取消" />
+</p>
+<script type="text/javascript">
+    jQuery.getJSON(
+        '/ClassB/WebB04/Member.ashx',
+        {
+            action: 'fetchone',
+            account:sessionStorage.getItem('member')
+        },
+        response => {
+            jQuery("#Name").val(response[0].name);
+            jQuery("#Account").text(response[0].account);
+            jQuery("#Password").text(Array(response[0].password.length + 1).join('*'));
+            jQuery("#Phone").val(response[0].phone);
+            jQuery("#Address").val(response[0].address);
+            jQuery("#Email").val(response[0].email);
+        }
+    );
+    jQuery.getJSON(
+        '/ClassB/WebB04/OrderSummary.ashx',
+        {
+            action: 'fetch',
+            account:sessionStorage.getItem('member')
+        },
+        response => {
+            const total = response.reduce(
+                (count, order) => count + order.total,
+                0
+            );
+            jQuery("#Total").text(total);
+        }
+    );
+    jQuery(":submit").click(
+        () => {
+            event.preventDefault();
+            jQuery.post(
+                '/ClassB/WebB04/Member.ashx',
+                {
+                    action: 'modify',
+                    name: jQuery("#Name").val(),
+                    phone: jQuery("#Phone").val(),
+                    address: jQuery("#Address").val(),
+                    email: jQuery("#Email").val(),
+                    account: jQuery("#Account").text()
+                },
+                response => {
+                    if (response === 'Success') {
+                        location.replace('?do=member');
+                    }
+                }
+            );
+        }
+    );
+    jQuery(":button").click(
+        () => {
+            location.replace('?do=member');
+        }
+    );
+</script>

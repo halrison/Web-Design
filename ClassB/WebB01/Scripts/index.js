@@ -42,7 +42,7 @@ jQuery(document).ready(
                 jQuery.each(returns, (key, value) => {
                     if (value.Display === 'yes') {
                         let menuitem =
-                            `<div class="mainmu" id="main${value.Id}">
+                        `<div class="mainmu" id="main${value.Id}">
                             <a href="${ value.Url }">${value.Name}</a>`;
                         if (value.Counts) {
                             let father = value.Id;

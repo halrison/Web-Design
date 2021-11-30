@@ -1,0 +1,238 @@
+﻿<div id="Summary" class="ct">
+	<h1>訂單管理</h1>
+	<table style="width:100%;">
+		<thead>
+			<tr class="tt">
+				<th>訂單編號</th>
+				<th>金額</th>
+				<th>會員帳號</th>
+				<th>姓名</th>
+				<th>下單時間</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>
+<div id="Detail" class="ct">
+	<h2>
+		訂單編號<span id="number" style="color:red;"></span>的詳細資料
+	</h2>	
+	<table style="width:100%;"></table>
+	<button>返回</button>
+</div>
+<script type="text/javascript">
+	jQuery.ajax(
+		{
+			url: '/ClassB/WebB04/OrderSummary.ashx',
+			method: 'get',
+			data: {
+				action: 'fetch'
+			},
+			dataType: 'json',
+			async:false
+		}
+	).done(
+		orders => {
+			let table = '';
+			orders.forEach(
+				order => {					
+					table +=
+						`<tr class='pp'>
+								<td>${order.number}</td>
+								<td>${order.total}</td>
+								<td>${order.account}</td>`;
+					jQuery.ajax(
+						{
+							url: '/ClassB/WebB04/Member.ashx',
+							method: 'get',
+							data: 
+							{
+								action: 'fetchone',
+								account: order.account
+							},
+							dataType:'json',
+							async:false
+						}
+					).done(
+						member => {
+							table +=
+								`<td>${member[0].name}</td>`;
+						}						
+					);
+					table +=
+								`<td> ${order.number.substr(0, 4)}/${order.number.substr(4, 2)}/${order.number.substr(6, 2) }</td>
+								<td><button>刪除</button></td>
+							</tr >`;
+				}
+			);
+			jQuery("#Summary table tbody").html(table);
+			jQuery("#Detail").hide();
+		}
+	);
+	jQuery("#Summary").on(
+		'click',
+		"td:first-child",
+		function () {
+			let number = jQuery(this).text(), cartInfo = '';
+			jQuery.ajax(
+				{
+					url: '/ClassB/WebB04/Member.ashx',
+					method: 'get',
+					data:
+					{
+						action: 'fetchone',
+						account: jQuery(this).next().next().text()
+					},
+					beforeSend: () => {
+						jQuery("#number").text(number);
+					},
+					dataType: 'json',
+					async: false
+				}
+			).done(
+				member => {
+					cartInfo = `
+									<thead>
+										<tr>
+											<th class='tt'>會員帳號</th>
+											<th class='pp' colspan=4>${member[0].account}</th>
+										</tr>
+										<tr>
+											<th class='tt'>姓名</th>
+											<th class='pp' colspan=4>${member[0].name}</th>
+										</tr>
+											<th class='tt'>電子信箱</th>
+											<th class='pp' colspan=4>${member[0].email}</th>
+										<tr>
+											<th class='tt'>聯絡地址</th>
+											<th class='pp' colspan=4>${member[0].address}</th>
+										</tr>
+										<tr>
+											<th class='tt'>聯絡電話</th>
+											<th class='pp' colspan=4>${member[0].phone}</th>
+										</tr>
+								</thead>
+								<tbody>
+									<tr class='tt'>
+										<td>商品名稱</td>
+										<td>編號</td>
+										<td>數量</td>
+										<td>單價</td>
+										<td>小計</td>
+									</tr>
+						`;
+					jQuery.ajax(
+						{
+							url: '/ClassB/WebB04/OrderDetail.ashx',
+							method: 'get',
+							data:
+							{
+								action: 'fetch',
+								order_number: number
+							},
+							dataType: 'json',
+							async: false
+						}
+					).done(
+						orders => {
+							orders.forEach(
+								order => {
+									jQuery.ajax(
+										{
+											url: '/ClassB/WebB04/Commodity.ashx',
+											method: 'get',
+											data:
+											{
+												action: 'fetchone',
+												number: order.commodity_number
+											},
+											dataType: 'json',
+											async: false
+										}
+									).done(
+										commodity => {
+											cartInfo += `
+										<tr class='pp'>
+											<td>${commodity[0].name}</td>
+											<td>${commodity[0].number}</td>
+											<td>${order.amount}</td>
+											<td>${commodity[0].price}</td>
+											<td>${commodity[0].price * order.amount}</td>
+										</tr>
+									`;
+										}
+									);
+								}
+							);
+						}
+					);
+					cartInfo += `
+									<tr class='tt'>
+										<td colspan=5>總計:${jQuery(this).next().text()}</td>
+									</tr>
+								</tbody>`
+					jQuery("#Detail table").html(cartInfo);
+					jQuery("#Summary,#Detail").toggle();
+				}
+			);
+		}
+	).on(
+		'click',
+		"td:last-child button",
+		function () {
+			let promises = [];
+			jQuery.getJSON(
+				'/ClassB/WebB04/OrderDetail.ashx',
+				{
+					action: 'fetch',
+					order_number: jQuery(this).parents("tr").find("td:first").text()
+				}
+			).done(
+				details => {
+					details.forEach(
+						detail => {
+							promises.push(
+								jQuery.post(
+									'/ClassB/WebB04/Commodity.ashx',
+									{
+										action: 'fetchone',
+										number:detail.commodity_number
+									}
+								)
+							);
+						}
+					);
+				}
+			);
+			Promise.all(promises).then(
+				jQuery.get(
+					'/ClassB/WebB04/OrderDetail.ashx',
+					{
+						action: 'remove',
+						order_number: jQuery(this).parents("tr").find("td:first").text()
+					}
+				).done(
+					() => {
+						return jQuery.get(
+							'/ClassB/WebB04/OrderSummary.ashx',
+							{
+								action: 'remove',
+								number: jQuery(this).parents("tr").find("td:first").text()
+							}
+						);
+					}
+				).done(
+					response => {
+						if (response === 'Success') location.reload();
+					}
+				)
+			);
+		}
+	);
+	jQuery("#Detail button").click(
+		() => {
+			jQuery("#Summary,#Detail").toggle();
+		}
+	);
+</script>

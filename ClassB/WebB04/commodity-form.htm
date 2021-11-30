@@ -1,0 +1,171 @@
+﻿<h1></h1>
+<table style="width:100%;">
+	<tr>
+		<td class="pp ct">所屬大分類</td>
+		<td class="tt">
+			<select id="BigCategory"></select>
+		</td>
+	</tr>
+	<tr>
+		<td class="pp ct">所屬中分類</td>
+		<td class="tt">
+			<select id="MediumCategory"></select>
+		</td>
+	</tr>
+	<tr>
+		<td class="pp ct">商品編號</td>
+		<td class="tt">
+			<span id="Number"></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="pp ct">商品名稱</td>
+		<td class="tt">
+			<input id="Name" type="text" />
+		</td>
+	</tr>
+	<tr>
+		<td class="pp ct">商品價格</td>
+		<td class="tt">
+			<input id="Price" type="number" />
+		</td>
+	</tr>
+	<tr>
+		<td class="pp ct">規格</td>
+		<td class="tt">
+			<input id="Specification" type="text" />
+		</td>
+	</tr>
+	<tr>
+		<td class="pp ct">庫存量</td>
+		<td class="tt">
+			<input id="Quantity" type="number" />
+		</td>
+	</tr>
+	<tr>
+		<td class="pp ct">商品圖片</td>
+		<td class="tt">
+			<input id="Picture" type="file" />	
+		</td>
+	</tr>
+	<tr>
+		<td class="pp ct">商品介紹</td>
+		<td class="tt">
+			<textarea id="Description" rows="2" cols="20"></textarea>
+		</td>
+	</tr>
+</table>
+<input id="Submit" type="submit" />|<input id="Reset" type="reset" value="重置" />|<input id="Back" type="button" value="返回" />
+<script type="text/javascript">
+	var selectedCommodity;
+	if (sessionStorage.getItem('selected_commodity') === null || sessionStorage.getItem('selected_commodity') === undefined) {
+		jQuery("h1").text('新增商品');
+		jQuery("#Number").text('完成分類後自動分配');
+		jQuery("#Submit").val('新增')
+	}
+	else {
+		jQuery("h1").text('修改商品');
+		selectedCommodity = JSON.parse(sessionStorage.getItem('selected_commodity'));
+		jQuery("#Number").text(selectedCommodity.number);
+		jQuery("#Name").val(selectedCommodity.name);
+		jQuery("#Price").val(selectedCommodity.price);
+		jQuery("#Specification").val(selectedCommodity.specification);
+		jQuery("#Quantity").val(selectedCommodity.quantity);
+		jQuery("#Description").val(selectedCommodity.description);
+		jQuery("#Submit").val('修改');
+	}
+	jQuery.getJSON(
+		'/ClassB/WebB04/Big.ashx',
+		{
+			action:'fetch'
+		}		
+	).done(
+		response => {
+			jQuery("#BigCategory").append(`<option>請選擇一項</option>`);
+			response.forEach(
+				bigCategory => {
+					jQuery("#BigCategory").append(`<option ${selectedCommodity?.big === bigCategory.name?'selected':''}>${bigCategory.name}</option>`);
+				}
+			);
+			jQuery("#BigCategory").trigger('change');
+			jQuery("#MediumCategory").append(`<option>請選擇一項</option>`);
+		}
+	);
+	jQuery("#BigCategory").change(
+		() => {
+			loadMediumCategory();
+		}
+	);
+	jQuery("#Back").click(
+		() => {
+			history.back();
+		}
+	); 
+	jQuery("#Submit").click(
+		function(){
+			let action ='' , number='',picture='';
+			event.preventDefault();
+			if (jQuery(this).val() === '新增') {
+				action = 'add';
+				number = jQuery("#BigCategory :selected").index().toString().padStart(2, 0) + jQuery("#MediumCategory :selected").index().toString().padStart(2, 0) + Math.floor(Math.random() * 100).toString().padStart(2, 0)
+			} else {
+				action= 'modify';
+				number = jQuery("#Number").text();
+			} if (jQuery("#Picture").get(0).files.length > 0) {
+				let file = jQuery("#Picture").get(0).files[0], form = new FormData;
+				form.append('Picture', file);
+				fetch(
+					'/ClassB/WebB04/Upload.ashx',
+					{
+						method: 'post',
+						body: form
+					}
+				).then(
+					() => {
+						picture = file.name;
+					}
+				);
+			} else {
+				picture = selectedCommodity.picture;
+			}
+			jQuery.post(
+				'/ClassB/WebB04/Commodity.ashx',
+				{
+					action:action,
+					big: jQuery("#BigCategory").val(),
+					medium: jQuery("#MediumCategory").val(),
+					number:number,
+					name: jQuery("#Name").val(),
+					price: jQuery("#Price").val(),
+					picture:picture,
+					specification: jQuery("#Specification").val(),
+					quantity: jQuery("#Quantity").val(),
+					description: jQuery("#Description").val()
+				},
+				response => {
+					if (response === 'Success') {
+						history.back();
+					}
+				}
+			);
+		}
+	);
+	function loadMediumCategory() {
+		jQuery("#MediumCategory").html(`<option>請選擇一項</option>`);
+		jQuery.getJSON(
+			'/ClassB/WebB04/Medium.ashx',
+			{
+				action: 'fetch',
+				big: jQuery("#BigCategory").find(":checked").index()+1
+			}
+		).done(
+			response => {
+				response.forEach(
+					mediumCategory => {
+						jQuery("#MediumCategory").append(`<option data-big='${mediumCategory.big}' ${selectedCommodity?.medium === mediumCategory.name ? 'selected' : ''}>${mediumCategory.name}</option>`);
+					}
+				);
+			}
+		);
+	}
+</script>

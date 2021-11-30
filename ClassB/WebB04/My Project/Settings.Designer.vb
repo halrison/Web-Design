@@ -53,6 +53,33 @@ Namespace My
                 Return defaultInstance
             End Get
         End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public ReadOnly Property auth_code1() As Integer
+            Get
+                Return CType(Me("auth_code1"),Integer)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public ReadOnly Property auth_code2() As Integer
+            Get
+                Return CType(Me("auth_code2"),Integer)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2021頁尾版權宣告")>  _
+        Public ReadOnly Property footer() As String
+            Get
+                Return CType(Me("footer"),String)
+            End Get
+        End Property
     End Class
 End Namespace
 
@@ -64,9 +91,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.WebB03.My.MySettings
+        Friend ReadOnly Property Settings() As Global.WebB04.My.MySettings
             Get
-                Return Global.WebB03.My.MySettings.Default
+                Return Global.WebB04.My.MySettings.Default
             End Get
         End Property
     End Module

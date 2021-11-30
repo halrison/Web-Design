@@ -1,7 +1,7 @@
 ﻿Imports Microsoft.AspNet.FriendlyUrls.Resolvers
 
 Public Class ViewSwitcher
-	Inherits System.Web.UI.UserControl
+	Inherits UserControl
 
 	Protected Property CurrentView() As String
 		Get

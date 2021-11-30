@@ -39,7 +39,7 @@ Namespace My.Resources
         Friend ReadOnly Property ResourceManager() As Global.System.Resources.ResourceManager
             Get
                 If Object.ReferenceEquals(resourceMan, Nothing) Then
-                    Dim temp As Global.System.Resources.ResourceManager = New Global.System.Resources.ResourceManager("WebB03.Resources", GetType(Resources).Assembly)
+                    Dim temp As Global.System.Resources.ResourceManager = New Global.System.Resources.ResourceManager("WebB04.Resources", GetType(Resources).Assembly)
                     resourceMan = temp
                 End If
                 Return resourceMan
@@ -58,6 +58,24 @@ Namespace My.Resources
             Set
                 resourceCulture = value
             End Set
+        End Property
+        
+        '''<summary>
+        '''  查詢類似 2021頁尾版權宣告 的當地語系化字串。
+        '''</summary>
+        Friend ReadOnly Property footer() As String
+            Get
+                Return ResourceManager.GetString("footer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  查詢類似 2021葉偉版權宣告 的當地語系化字串。
+        '''</summary>
+        Friend ReadOnly Property Footer1() As String
+            Get
+                Return ResourceManager.GetString("Footer1", resourceCulture)
+            End Get
         End Property
     End Module
 End Namespace

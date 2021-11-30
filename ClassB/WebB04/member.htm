@@ -1,0 +1,66 @@
+﻿<div id="Summary">
+	<h1>會員管理</h1>
+	<table style="width:100%;">
+		<thead>
+			<tr class="tt">
+				<th>姓名</th>
+				<th>會員帳號</th>
+				<th>註冊日期</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+</div>
+<div id="Detail">
+</div>
+<script type="text/javascript">
+    jQuery.getJSON(
+        '/ClassB/WebB04/Member.ashx',
+        {
+            action: 'fetchall'
+        },
+        response => {
+            let table = '';
+            response.forEach(
+                row => {
+                    table += `
+						<tr>
+							<td>${row.name}</td>
+							<td>${row.account}</td>
+							<td>${row.registered_at}</td>
+							<td>
+								<input name="Edit" type="button" value="修改" />
+								<input name="Delete" type="button" value="刪除" />
+							</td>
+						</tr>
+					`;
+                }
+            );
+            jQuery("#Summary tbody").html(table);
+        }
+    );
+	jQuery("tbody").on(
+		'click',
+		"[name='Edit']",
+		function () {
+			sessionStorage.setItem('member', jQuery(this).parent().parents("tr").find("td:nth-child(2)").text());
+			location.assign('?do=member-form');
+		}
+	).on(
+		'click',
+		"[name='Delete']",
+		function () {
+			jQuery.get(
+				'/ClassB/WebB04/Member.ashx',
+				{
+					action: 'remove',
+					account: jQuery(this).parent().prev().prev().text()
+				},
+				response => {
+					if (response === 'Success') jQuery(this).parents("tr").remove();
+				}
+			);
+		}
+	);
+</script>

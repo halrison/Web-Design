@@ -1,0 +1,89 @@
+﻿<h1 class="ct">會員註冊</h1>
+<form>
+	<table style="width:100%;">
+		<tr>
+			<td class="pp ct">姓名</td>
+			<td class="tt">
+				<input id="Name" type="text" />
+			</td>
+		</tr>
+		<tr>
+			<td class="pp ct">帳號</td>
+			<td class="tt">
+				<input id="Account" type="text" />
+				<input id="DetectAccount" type="button" value="檢測帳號" />
+			</td>
+		</tr>
+		<tr>
+			<td class="pp ct">密碼</td>
+			<td class="tt">
+				<input id="Password" type="password" />
+			</td>
+		</tr>
+		<tr>
+			<td class="pp ct">電話</td>
+			<td class="tt">
+				<input id="Phone" type="tel" />
+			</td>
+		</tr>
+		<tr>
+			<td class="pp ct">住址</td>
+			<td class="tt">
+				<input id="Address" type="text" />
+			</td>
+		</tr>
+		<tr>
+			<td class="pp ct">電子信箱</td>
+			<td class="tt">
+				<input id="Email" type="email" />
+			</td>
+		</tr>
+	</table>
+	<p class="ct">
+		<input type="submit" value="註冊" />|
+		<input type="reset" value="重置" />
+	</p>
+</form>
+<script type="text/javascript">
+	jQuery("#DetectAccount").click(
+		() => {
+			jQuery.get(
+				'/ClassB/WebB04/Member.ashx',
+				{
+					action: 'fetchone',
+					account: jQuery("#Account").val()
+				},
+				response => {
+					if (response || jQuery("#Account").val() === 'admin') {
+						alert('帳號已被註冊');
+					} else {
+						alert('帳號未被註冊');
+					}
+				}
+			);
+		}
+	);
+	jQuery("form").submit(
+		() => {
+			event.preventDefault();
+			jQuery.post(
+				'/ClassB/WebB04/Member.ashx',
+				{
+					action: 'add',
+					name: jQuery("#Name").val(),
+					account: jQuery("#Account").val(),
+					password: jQuery("#Password").val(),
+					phone: jQuery("#Phone").val(),
+					address: jQuery("#Address").val(),
+					email: jQuery("#Email").val(),
+					registered_at:new Date().toLocaleDateString()
+				},
+				response => {
+					if (response === 'Success') {
+						location.assign('?do=login&user=member');
+					}
+				}
+			);
+		}
+	);
+</script>

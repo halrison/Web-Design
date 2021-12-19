@@ -58,12 +58,14 @@
 <input id="Submit" type="submit" />|<input id="Reset" type="reset" value="重置" />|<input id="Back" type="button" value="返回" />
 <script type="text/javascript">
 	var selectedCommodity;
+	//自 '新增商品按鈕' 進入
 	if (sessionStorage.getItem('selected_commodity') === null || sessionStorage.getItem('selected_commodity') === undefined) {
 		jQuery("h1").text('新增商品');
 		jQuery("#Number").text('完成分類後自動分配');
 		jQuery("#Submit").val('新增')
-	}
-	else {
+	//自 '修改商品按鈕' 進入
+	} else {
+		//載入商品資訊
 		jQuery("h1").text('修改商品');
 		selectedCommodity = JSON.parse(sessionStorage.getItem('selected_commodity'));
 		jQuery("#Number").text(selectedCommodity.number);
@@ -74,6 +76,7 @@
 		jQuery("#Description").val(selectedCommodity.description);
 		jQuery("#Submit").val('修改');
 	}
+	//載入大分類選單
 	jQuery.getJSON(
 		'/ClassB/WebB04/Big.ashx',
 		{
@@ -96,6 +99,7 @@
 			loadMediumCategory();
 		}
 	);
+	//回上一頁
 	jQuery("#Back").click(
 		() => {
 			history.back();
@@ -107,10 +111,13 @@
 			event.preventDefault();
 			if (jQuery(this).val() === '新增') {
 				action = 'add';
+				//產生商品編號
 				number = jQuery("#BigCategory :selected").index().toString().padStart(2, 0) + jQuery("#MediumCategory :selected").index().toString().padStart(2, 0) + Math.floor(Math.random() * 100).toString().padStart(2, 0)
 			} else {
-				action= 'modify';
+				action = 'modify';
+				//取得商品編號
 				number = jQuery("#Number").text();
+			//上傳商品圖片
 			} if (jQuery("#Picture").get(0).files.length > 0) {
 				let file = jQuery("#Picture").get(0).files[0], form = new FormData;
 				form.append('Picture', file);
@@ -150,6 +157,7 @@
 			);
 		}
 	);
+	//載入中分類選單
 	function loadMediumCategory() {
 		jQuery("#MediumCategory").html(`<option>請選擇一項</option>`);
 		jQuery.getJSON(

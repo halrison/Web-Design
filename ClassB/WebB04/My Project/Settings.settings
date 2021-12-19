@@ -8,8 +8,5 @@
     <Setting Name="auth_code2" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="footer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">2021頁尾版權宣告</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

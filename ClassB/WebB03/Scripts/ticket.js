@@ -1,6 +1,7 @@
 ﻿jQuery(document).ready(
 	() => {
-		var today = new Date(), days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], orderedDate,ondate, seatList, restOfSeats = [20, 20, 20, 20, 20];
+		var today = new Date(), days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], orderedDate, ondate, seatList, restOfSeats = [20, 20, 20, 20, 20];
+		//載入片名選單
 		jQuery.getJSON(
 			'/ClassB/WebB03/Fetch.ashx',
 			{
@@ -27,6 +28,7 @@
 				}
 			}
 		);
+		//載入日期選單
 		jQuery("#Movie").change(
 			function(){
 				jQuery.getJSON(
@@ -50,6 +52,7 @@
 				jQuery("#Date").empty().append(dateList);
 			}
 		);
+		//載入時段選單
 		jQuery("#Date").change(
 			function(){
 				seatList = seatList.filter(value => value.date === jQuery(this).val());
@@ -89,6 +92,7 @@
 				jQuery("#Time").empty().append(showing);
 			}
 		);
+		//篩選座位
 		jQuery("#Time").change(
 			function(){
 				seatList = seatList.filter(value =>  value.time === Number(jQuery(this).val()));
@@ -99,6 +103,7 @@
 				event.preventDefault();
 				let chosenSeats=[],seatTable =
 					`<tr>`;
+				//紀錄已訂位座位
 				seatList.forEach(
 					value1 => {
 						console.info(value1.seat.split(' '))
@@ -108,7 +113,8 @@
 							}
 						);
 					}
-				);	
+				);			
+				//載入座位分布圖
 				for (let i = 1; i <=20; i++) {
 					seatTable +=
 							`<td>
@@ -133,7 +139,9 @@
 				jQuery("#ChooseSeat table").empty().append(seatTable);
 				jQuery("#Step1").hide();
 				jQuery("#Step2").show();
+				//顯示片名
 				jQuery("#SelectedMovie").text(jQuery("#Movie :checked").text());
+				//顯示日期與時段
 				jQuery("#SelectedTime").text(`${jQuery("#Date :checked").text().slice(0,6)} ${jQuery("#Time :checked").text().slice(0,11)}`);
 			}
 		);
@@ -144,6 +152,7 @@
 			function () {
 				if (jQuery(this).prop('checked')) {
 					seatCount++;
+					//限制最多勾選4個座位
 					if (seatCount > 4) {
 						jQuery(this).prop('checked', false);
 						seatCount = 4;
@@ -166,6 +175,7 @@
 		jQuery("#ToStep3").click(
 			() => {
 				event.preventDefault();
+				//依日期篩選座位，並產生訂單編號
 				let seatFilter = seatList.filter(value => value.date === jQuery("#Date").val()),
 					id = seatFilter?.[seatFilter.length - 1]?.number+1 ?? parseInt(`${orderedDate.getFullYear()}${(orderedDate.getMonth() + 1).toString().padStart(2, 0)}${orderedDate.getDate()}0001`);
 				jQuery.post(
@@ -180,16 +190,22 @@
 					},
 					response => {
 						if (response !== 'failed') {
+							//訂單編號
 							jQuery("#TicketNo").text(id);
+							//片名
 							jQuery("#OrderedMovie").text(jQuery("#Movie :checked").text());
-							jQuery("#OrderedDate").text(`${orderedDate.getFullYear()}/${orderedDate.getMonth()+1}/${orderedDate.getDate()}`);
+							//日期
+							jQuery("#OrderedDate").text(`${orderedDate.getFullYear()}/${orderedDate.getMonth() + 1}/${orderedDate.getDate()}`);
+							//時段
 							jQuery("#OrderedTime").text(jQuery("#Time :checked").text().slice(0, 11));
 							let orderedSeat = ``;
+							//座位
 							selectedSeat.forEach(
 								seat => {
 									orderedSeat+=`${Math.ceil(seat/5)}排${seat%5===0?5:seat%5}號<br/>`
 								}
 							);
+							//票數
 							jQuery("#SelectedSeats").html(`${orderedSeat}<br/>共${selectedSeat.length}張電影票`);				
 							jQuery("#Step2").hide();
 							jQuery("#Step3").show();
@@ -198,6 +214,7 @@
 				);
 			}
 		);
+		//回首頁
 		jQuery("form").submit(
 			() => {
 				event.preventDefault();

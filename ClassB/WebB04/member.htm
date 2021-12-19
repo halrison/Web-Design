@@ -15,6 +15,7 @@
 <div id="Detail">
 </div>
 <script type="text/javascript">
+	//載入會員列表
     jQuery.getJSON(
         '/ClassB/WebB04/Member.ashx',
         {
@@ -39,14 +40,17 @@
             );
             jQuery("#Summary tbody").html(table);
         }
-    );
+	);
+	//編輯按鈕
 	jQuery("tbody").on(
 		'click',
 		"[name='Edit']",
 		function () {
 			sessionStorage.setItem('member', jQuery(this).parent().parents("tr").find("td:nth-child(2)").text());
+			//導向會員編輯頁
 			location.assign('?do=member-form');
 		}
+	//刪除按鈕
 	).on(
 		'click',
 		"[name='Delete']",

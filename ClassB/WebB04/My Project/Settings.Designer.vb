@@ -71,15 +71,6 @@ Namespace My
                 Return CType(Me("auth_code2"),Integer)
             End Get
         End Property
-        
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("2021頁尾版權宣告")>  _
-        Public ReadOnly Property footer() As String
-            Get
-                Return CType(Me("footer"),String)
-            End Get
-        End Property
     End Class
 End Namespace
 

@@ -1,6 +1,7 @@
 ﻿jQuery(document).ready(
 	() => {
 		var trailerName = '', posterName = '';
+		//日期選單
 		for (let y = 1970; y <= new Date().getFullYear(); y++) {
 			jQuery("#year").append(
 				`<option value='${y}'>${y}</option>`
@@ -16,6 +17,7 @@
 				`<option value='${d}'>${d}</option>`
 			);
 		}
+		//若是從列表進入，則預先載入電影資訊
 		if (sessionStorage.length > 1) {
 			var info = JSON.parse(sessionStorage.getItem('info'));
 			jQuery("#name").val(info.name);
@@ -37,11 +39,14 @@
 		jQuery("form").submit(
 			async() => {
 				event.preventDefault();
+				//根據提交按鈕文字決定網址
 				var url = jQuery("#Submit").val() === '新增' ? 'Add' : 'Modify',
 					trailer = jQuery("#trailer").get(0),
 					poster = jQuery("#poster").get(0),
 					formData = new FormData;
+				//若有上傳預告檔案
 				if (trailer.files.length > 0) {
+					//移除海報檔案，以免重複上傳
 					if (formData.has('poster')) {
 						formData.delete('poster');
 					}
@@ -62,7 +67,9 @@
 				} else {
 					trailerName = info.trailer;
 				}
+				//若有上傳海報檔案
 				if (poster.files.length > 0) {
+					//移除預告檔案，以免重複上傳
 					if (formData.has('trailer')) {
 						formData.delete('trailer');
 					}					

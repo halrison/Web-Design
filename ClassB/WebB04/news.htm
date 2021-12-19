@@ -4,6 +4,7 @@
 <input id="Back" type="button" value="返回" />
 <script type="text/javascript">
 	drawTitleTable();
+	//第一列跑馬燈
 	jQuery("table").on(
 		'click',
 		"td:first-child",
@@ -11,6 +12,7 @@
 			drawDetailTable('情人節特惠活動', '為了慶祝七夕情人節，將舉辦情人兩人到現場有七七折之特惠活動~');
 		}
 	);
+	//第二列跑馬燈
 	jQuery("table").on(
 		'click',
 		"td:last-child",
@@ -18,11 +20,13 @@
 			drawDetailTable('年終特賣會開跑了', '即日期至年底，凡會員購物滿仟送佰，買越多送越多~');
 		}
 	);
+	//返回按鈕
 	jQuery("#Back").click(
 		() => {
 			drawTitleTable();
 		}
 	);
+	//載入跑馬燈標題
 	function drawTitleTable() {
 		jQuery("table").empty().html(
 			`
@@ -39,6 +43,7 @@
 		);
 		jQuery("#Back").hide();
 	}
+	//載入跑馬燈內容
 	function drawDetailTable(title,detail) {
 		jQuery("table").empty().html(
 			`

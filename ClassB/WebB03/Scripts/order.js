@@ -1,6 +1,7 @@
 ﻿jQuery(document).ready(
 	() => {
-		var nameMap,ticketList;
+		var nameMap, ticketList;
+		//片名選單
 		jQuery.getJSON(
 			'/ClassB/WebB03/Fetch.ashx',
 			{
@@ -23,6 +24,7 @@
 				jQuery("#NameFilter").append(nameList);
 			}
 		);
+		//訂單列表
 		jQuery.getJSON(
 			'/ClassB/WebB03/Fetch.ashx',
 			{
@@ -60,6 +62,7 @@
 				jQuery("tbody").html(orderTable);
 			}
 		);
+		//刪除單筆訂單
 		jQuery("tbody").on(
 			'click',
 			"input:button[name='delete']",
@@ -81,10 +84,12 @@
 				}
 			}
 		);
+		//批次刪除訂單
 		jQuery("form").submit(
 			() => {
 				event.preventDefault();
 				if (confirm('確定要刪除這些訂單嗎')) {
+					//根據日期
 					if (jQuery("[value='ByDate']").prop('checked')) {
 						let dateFilter = new Date(jQuery("#DateFilter").val());
 						ticketList = ticketList.filter(ticket => ticket.date === `${dateFilter.getFullYear()}-${(dateFilter.getMonth() + 1).toString().padStart(2, 0)}-${dateFilter.getDate()}`);
@@ -104,6 +109,7 @@
 								);
 							}
 						);
+					//根據片名
 					} else if (jQuery("[value='ByName']").prop('checked')) {
 						let nameFilter = jQuery("#NameFilter").val();
 						ticketList = ticketList.filter(ticket => ticket.movie === parseInt(nameFilter));

@@ -49,6 +49,7 @@
     <input type="button" value="取消" />
 </p>
 <script type="text/javascript">
+    //載入會員資料
     jQuery.getJSON(
         '/ClassB/WebB04/Member.ashx',
         {
@@ -64,6 +65,7 @@
             jQuery("#Email").val(response[0].email);
         }
     );
+    //計算累計交易額
     jQuery.getJSON(
         '/ClassB/WebB04/OrderSummary.ashx',
         {
@@ -78,6 +80,7 @@
             jQuery("#Total").text(total);
         }
     );
+    //編輯成功才導回會員列表
     jQuery(":submit").click(
         () => {
             event.preventDefault();
@@ -99,6 +102,7 @@
             );
         }
     );
+    //直接回到會員列表
     jQuery(":button").click(
         () => {
             location.replace('?do=member');

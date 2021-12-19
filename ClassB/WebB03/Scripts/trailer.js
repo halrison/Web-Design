@@ -1,7 +1,8 @@
 ﻿jQuery(document).ready(
 	function(){
 		var table;
-		sessionStorage.removeItem('info'); 
+		sessionStorage.removeItem('info');
+		//載入預告片列表
 		jQuery.getJSON(
 			'/ClassB/WebB03/Fetch.ashx',
 			{
@@ -50,6 +51,7 @@
 				);
 			}
 		);
+		//編輯電影按鈕
 		jQuery("tbody").on(
 			'click',
 			".edit",
@@ -60,6 +62,7 @@
 				sessionStorage.setItem('info', JSON.stringify(row));
 				location.assign('?do=form');
 			}
+		//刪除電影按鈕
 		).on(
 			'click',
 			".remove",
@@ -78,6 +81,7 @@
 					}
 				);
 			}
+		//上移按鈕
 		).on(
 			'click',
 			".up",
@@ -125,6 +129,7 @@
 				);
 				if (currentAjax.responseText === 'Success' && previosAjax.responseText === 'Success') location.reload();
 			}
+		//下移按鈕
 		).on(
 			'click',
 			".down",
@@ -173,6 +178,7 @@
 				if (currentAjax.responseText === 'Success' && nextAjax.responseText === 'Success') location.reload();
 			}
 		);
+		//新增按鈕
 		jQuery("#add").click(
 			() => {
 				sessionStorage.removeItem('info'); 

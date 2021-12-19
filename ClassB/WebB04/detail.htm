@@ -48,6 +48,7 @@
 	}
 </style>
 <script>
+	//載入商品資訊
 	jQuery.getJSON(
 		'/ClassB/WebB04/Commodity.ashx',
 		{
@@ -67,6 +68,7 @@
 		}
 	);
 	jQuery("style").appendTo("head");
+	//回上一頁
 	jQuery("button").click(
 		() => {
 			history.back();
@@ -74,6 +76,7 @@
 	);
 	jQuery("#i_wanna_buy").click(
 		() => {
+			//未登入就導向登入頁
 			if (sessionStorage.getItem('account') === null || sessionStorage.getItem('account') === undefined) {
 				location.assign('?do=login&user=member');
 			} else {
@@ -81,6 +84,7 @@
 				if (searchIndex> -1) {
 					orders[searchIndex].amount = jQuery("#amount").val();
 				} else {
+					//加入購物車
 					orders.push(
 						{
 							number: jQuery("#number").text(),
@@ -89,6 +93,7 @@
 					);
 				}
 				sessionStorage.setItem('orders', JSON.stringify(orders));
+				//導向購物車頁
 				location.assign('?do=buycart');
 			}
 		}

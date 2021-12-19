@@ -13,8 +13,10 @@ Public Class Add
 			command.CommandType = CommandType.Text
 			command.CommandText = "insert into " & item
 			Select Case item
+				'新增電影
 				Case "Movie"
 					Dim keys = context.Request.Params.AllKeys
+					'完整新增
 					If keys.Contains("levels") AndAlso keys.Contains("length") AndAlso keys.Contains("date") AndAlso keys.Contains("publisher") AndAlso keys.Contains("director") AndAlso keys.Contains("trailer") AndAlso keys.Contains("brief") AndAlso keys.Contains("animation") Then
 						command.CommandText &= " (name,levels,length,date,publisher,director,trailer,poster,brief,display,animation) values (@name,@levels,@length,@date,@publisher,@director,@trailer,@poster,@brief,@display,@animation)"
 						command.Parameters.AddWithValue("@name", context.Request.Params.Get("name"))
@@ -28,12 +30,14 @@ Public Class Add
 						command.Parameters.AddWithValue("@brief", context.Request.Params.Get("brief"))
 						command.Parameters.AddWithValue("@display", context.Request.Params.Get("display"))
 						command.Parameters.AddWithValue("@animation", context.Request.Params.Get("animation"))
+						'部分新增
 					Else
 						command.CommandText &= " (name,poster,display) values(@name,@poster,@display)"
 						command.Parameters.AddWithValue("@name", context.Request.Params.Get("name"))
 						command.Parameters.AddWithValue("@poster", context.Request.Params.Get("poster"))
 						command.Parameters.AddWithValue("@display", context.Request.Params.Get("display"))
 					End If
+				'新增訂票
 				Case "Ticket"
 					command.CommandText &= " (movie,date,time,seat,number) values (@movie,@date,@time,@seat,@number)"
 					command.Parameters.AddWithValue("@movie", context.Request.Params.Get("movie"))

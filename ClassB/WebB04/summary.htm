@@ -2,14 +2,7 @@
 <table class="all"></table>
 <script>
 	var searchParam = new URLSearchParams(location.search), action='',big,medium, table = '', nav = '';
-	//if (searchParam.has('big')) {
-	//	big = sessionStorage.getItem('big');
-	//	action =  === null || sessionStorage.getItem('big') === undefined || sessionStorage.getItem('big') === '全部商品'?'fetchall': 'fetchsome';
-	//	nav += big;
-	//} if (searchParam.has('medium')) {
-	//	medium = sessionStorage.getItem('medium');
-	//	nav +=
-	//}
+	//載入已上架商品列表
 	jQuery.getJSON(
 		'/ClassB/WebB04/Commodity.ashx',
 		{
@@ -52,17 +45,21 @@
 			jQuery("h1").text(nav);
 		}
 	);
+	//商品圖片
 	jQuery("table").on(
 		'click',
 		".icon",
-		function() {
+		function () {
+			//導向商品介紹頁
 			location.assign(`?do=detail&number=${jQuery(this).prev().val()}`);
 		}
+	//我要購買按鈕
 	).on(
 		'click',
 		".i-wanna-buy",
 		function(){
 			let orders = JSON.parse(sessionStorage.getItem('orders')) || [];
+			//若購物車內未發現該商品則加入購物車
 			if (orders.findIndex(order => order.number === jQuery(this).parents("tr").prev().find("[name='number']").val())=== -1) {
 				orders.push(
 					{
@@ -72,6 +69,7 @@
 				);
 			}
 			sessionStorage.setItem('orders', JSON.stringify(orders));
+			//導向商品介紹頁
 			location.assign(`?do=detail&number=${jQuery(this).parents("tr").prev().find("[name='number']").val()}`);
 		}
 	);

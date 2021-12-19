@@ -13,10 +13,12 @@ Public Class Footer
             command.CommandType = 1
             Select Case context.Request.Params.Get("action")
                 Case "get"
+                    '取得頁尾
                     command.CommandText = "select footer from Setting"
                     Dim footer = command.ExecuteScalar()
                     context.Response.Write(footer)
                 Case "set"
+                    '設定頁尾
                     Dim footer = context.Request.Params.Get("newFooter")
                     command.CommandText = "update Setting set footer=@footer"
                     command.Parameters.AddWithValue("@footer", footer)

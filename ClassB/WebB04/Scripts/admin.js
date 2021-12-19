@@ -1,6 +1,8 @@
 jQuery(document).ready(
 	() => {
+		//側邊選單
 		let menu = '';
+		//admin全部顯示
 		if (sessionStorage.getItem('account') === 'admin') {
 			menu += `
 				<a href='?do=permit'>管理權限設置</a>
@@ -10,6 +12,7 @@ jQuery(document).ready(
 				<a href='?do=footer'>頁尾版權管理</a>
 				<a href='?do=news'>最新消息管理</a>
 		`;
+		//根據賦予的權限顯示
 		} else {
 			jQuery.ajax(
 				{
@@ -40,15 +43,18 @@ jQuery(document).ready(
 					}
 				}
 			);
-        }
+		}
+		//登出連結
 		menu += "<a onclick='logout()' style='color:#f00;'>登出</a>";
 		jQuery("#menu").html(menu);
+		//簡易路由
 		let param = new URLSearchParams(location.search);
 		if (param.has('do')) {
 			jQuery("#right").load(`${param.get('do')}.htm`);
 		}
 	}
-); 
+);
+//顯示頁尾
 jQuery.get(
 	'/ClassB/WebB04/Footer.ashx',
 	{
@@ -58,6 +64,7 @@ jQuery.get(
 		jQuery("#bottom").append(response);
 	}
 );
+//回登入頁
 function logout() {
 	sessionStorage.removeItem('account');
 	location.assign('/ClassB/WebB04/index.htm?do=login&user=admin')

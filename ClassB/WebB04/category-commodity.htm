@@ -31,6 +31,7 @@
 <script type="text/javascript">
 	var categories1, categories2,commodities,currentRow;
 	jQuery("#CommodityManage").hide();
+	//載入分類列表
 	jQuery.ajax(
 		{
 			url: '/ClassB/WebB04/Big.ashx',
@@ -91,6 +92,7 @@
 				}
 		}
 	);
+	//載入商品列表
 	jQuery.getJSON(
 		'/ClassB/WebB04/Commodity.ashx',
 		{
@@ -120,6 +122,7 @@
 			jQuery("#Commodities tbody").html(row);
 		}
 	);
+	//刪除大分類
 	jQuery("#Categories").on(
 		'click',
 		".pp [name='delete']",
@@ -136,6 +139,7 @@
 				}
 			);
 		}
+	//修改大分類
 	).on(
 		'click',
 		".pp [name='modify']",
@@ -153,6 +157,7 @@
 				}
 			);
 		}
+	//刪除中分類
 	).on(
 		'click',
 		".tt [name='delete']",
@@ -171,6 +176,7 @@
 				}
 			);
 		}
+	//修改中分類
 	).on(
 		'click',
 		".tt [name='modify']",
@@ -192,6 +198,7 @@
 			);
 		}
 	);
+	//修改商品
 	jQuery("#Commodities").on(
 		'click',
 		"[name='modify']",
@@ -209,6 +216,7 @@
 				}
 			);
 		}
+	//刪除商品
 	).on(
 		'click',
 		"[name='remove']",
@@ -226,6 +234,7 @@
 				}
 			);
 		}
+	//上架商品
 	).on(
 		'click',
 		"[name='up']",
@@ -242,6 +251,7 @@
 				}
 			);
 		}
+	//下架商品
 	).on(
 		'click',
 		"[name='down']",
@@ -259,12 +269,14 @@
 			);
 		}
 	);
+	//切換分類列表與商品列表
 	jQuery("#toCategory,#toCommodity").click(
 		() => {
 			jQuery("#CategoryManage").toggle();
 			jQuery("#CommodityManage").toggle();
 		}
 	);
+	//新增商品
 	jQuery("#AddCommodity").click(
 		() => {
 			sessionStorage.removeItem('selected_commodity');

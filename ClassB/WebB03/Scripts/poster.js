@@ -1,6 +1,7 @@
 ﻿jQuery(document).ready(
 	() => {
 		var table;
+		//海報列表
 		jQuery.getJSON(
 			'/ClassB/WebB03/Fetch.ashx',
 			{
@@ -33,6 +34,7 @@
 				);
 			}
 		);
+		//上移按鈕
 		jQuery("tbody").on(
 			'click',
 			".up",
@@ -80,6 +82,7 @@
 				);
 				if (currentAjax.responseText === 'Success' && previosAjax.responseText === 'Success') location.reload();
 			}
+		//下移按鈕
 		).on(
 			'click',
 			".down",
@@ -128,6 +131,7 @@
 				if (currentAjax.responseText === 'Success' && nextAjax.responseText === 'Success') location.reload();
 			}
 		);
+		//批次刪除
 		jQuery('#Submit1').click(
 			() => {
 				event.preventDefault();

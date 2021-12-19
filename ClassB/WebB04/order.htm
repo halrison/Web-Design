@@ -22,6 +22,7 @@
 	<button>返回</button>
 </div>
 <script type="text/javascript">
+	//載入訂單列表
 	jQuery.ajax(
 		{
 			url: '/ClassB/WebB04/OrderSummary.ashx',
@@ -42,6 +43,7 @@
 								<td>${order.number}</td>
 								<td>${order.total}</td>
 								<td>${order.account}</td>`;
+					//取得會員姓名
 					jQuery.ajax(
 						{
 							url: '/ClassB/WebB04/Member.ashx',
@@ -70,11 +72,13 @@
 			jQuery("#Detail").hide();
 		}
 	);
+	//按下訂單編號
 	jQuery("#Summary").on(
 		'click',
 		"td:first-child",
 		function () {
 			let number = jQuery(this).text(), cartInfo = '';
+			//載入會員資訊
 			jQuery.ajax(
 				{
 					url: '/ClassB/WebB04/Member.ashx',
@@ -122,6 +126,7 @@
 										<td>小計</td>
 									</tr>
 						`;
+					//載入訂單明細
 					jQuery.ajax(
 						{
 							url: '/ClassB/WebB04/OrderDetail.ashx',
@@ -138,6 +143,7 @@
 						orders => {
 							orders.forEach(
 								order => {
+									//載入商品資訊
 									jQuery.ajax(
 										{
 											url: '/ClassB/WebB04/Commodity.ashx',
@@ -182,6 +188,7 @@
 		"td:last-child button",
 		function () {
 			let promises = [];
+			//取得訂單明細
 			jQuery.getJSON(
 				'/ClassB/WebB04/OrderDetail.ashx',
 				{
@@ -193,6 +200,7 @@
 					details.forEach(
 						detail => {
 							promises.push(
+								//逐筆取得商品編號
 								jQuery.post(
 									'/ClassB/WebB04/Commodity.ashx',
 									{
@@ -206,6 +214,7 @@
 				}
 			);
 			Promise.all(promises).then(
+				//刪除訂單明細
 				jQuery.get(
 					'/ClassB/WebB04/OrderDetail.ashx',
 					{
@@ -214,6 +223,7 @@
 					}
 				).done(
 					() => {
+						//刪除訂單摘要
 						return jQuery.get(
 							'/ClassB/WebB04/OrderSummary.ashx',
 							{
@@ -224,12 +234,14 @@
 					}
 				).done(
 					response => {
+						//成功就重新載入頁面
 						if (response === 'Success') location.reload();
 					}
 				)
 			);
 		}
 	);
+	//切換區域
 	jQuery("#Detail button").click(
 		() => {
 			jQuery("#Summary,#Detail").toggle();

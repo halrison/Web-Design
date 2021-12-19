@@ -13,38 +13,47 @@ Public Class Admin
 		command.CommandType = CommandType.Text
 		If context.Request.Params.HasKeys() Then
 			Select Case context.Request.Params.Get("action")
+				'新增
 				Case "add"
 					command.CommandText = "insert into Admin(account,password,permittion) values(@account,@password,@permittion)"
 					command.Parameters.AddWithValue("@account", context.Request.Params.Item("account"))
 					command.Parameters.AddWithValue("@password", context.Request.Params.Item("password"))
 					command.Parameters.AddWithValue("@permittion", context.Request.Params.Item("permittion"))
 					Output(command, response)
+				'全選
 				Case "fetchall"
 					command.CommandText = "select * from Admin for json auto"
 					Output(command, response)
+				'單選
 				Case "fetchone"
 					command.CommandText = "select * from Admin where account=@account for json auto"
 					command.Parameters.AddWithValue("@account", context.Request.Params.Item("account"))
 					Output(command, response)
+				'登入
 				Case "login"
+					'帳admin密1234直接產生驗證碼
 					If context.Request.Params.Get("account") = "admin" AndAlso context.Request.Params.Get("password") = "1234" Then
 						Verify(context.Request.Params.Get("authcode"))
 					Else
+						'先進資料庫查詢
 						command.CommandText = "select password from Admin where account=@account"
 						command.Parameters.AddWithValue("@account", context.Request.Params.Item("account"))
 						Dim password = command.ExecuteScalar()
 						If context.Request.Params.Get("password") = password.ToString() Then
+							'再產生驗證碼
 							Verify(context.Request.Params.Get("authcode"))
 						Else
 							response.Append("Fail")
 						End If
 					End If
+				'編輯
 				Case "modify"
-						command.CommandText = "update Admin set password=@password,permittion=@permittion where account=@account"
+					command.CommandText = "update Admin set password=@password,permittion=@permittion where account=@account"
 					command.Parameters.AddWithValue("@account", context.Request.Params.Item("account"))
 					command.Parameters.AddWithValue("@password", context.Request.Params.Item("password"))
 					command.Parameters.AddWithValue("@permittion", context.Request.Params.Item("permittion"))
 					Output(command, response)
+				'刪除
 				Case "remove"
 					command.CommandText = "delete from Admin where account=@account"
 					command.Parameters.AddWithValue("@account", context.Request.Params.Item("account"))
@@ -56,12 +65,14 @@ Public Class Admin
 		connection.Close()
 	End Sub
 	Sub Verify(authcode)
+		'取得兩個驗證碼
 		command.CommandText = "select authNumber1,authNumber2 from Setting"
 		Dim reader = command.ExecuteReader()
 		If reader.HasRows Then
 			Do While reader.Read()
 				authCode1 = reader.GetValue(0)
 				authCode2 = reader.GetValue(1)
+				'比對驗證碼的和
 				If CType(authcode, Integer) = authCode1 + authCode2 Then
 					response.Append("Success")
 				Else
@@ -71,6 +82,7 @@ Public Class Admin
 		End If
 	End Sub
 	Sub Output(ByVal command As SqlCommand, ByVal response As StringBuilder)
+		'查詢
 		If command.CommandText.StartsWith("select") Then
 			Dim reader = command.ExecuteReader()
 			If reader.HasRows Then
@@ -79,6 +91,7 @@ Public Class Admin
 				Loop
 			End If
 		Else
+			'新增/修改/刪除
 			Dim result = IIf(command.ExecuteNonQuery() > 0, "Success", "Fail")
 			response.Append(result)
 		End If

@@ -45,8 +45,10 @@
 	</p>
 </form>
 <script type="text/javascript">
+	//偵測帳號按鈕
 	jQuery("#DetectAccount").click(
 		() => {
+			//取得會員資訊
 			jQuery.get(
 				'/ClassB/WebB04/Member.ashx',
 				{
@@ -63,6 +65,7 @@
 			);
 		}
 	);
+	//新增按鈕
 	jQuery("form").submit(
 		() => {
 			event.preventDefault();
@@ -80,6 +83,7 @@
 				},
 				response => {
 					if (response === 'Success') {
+						//成功就導向登入頁
 						location.assign('?do=login&user=member');
 					}
 				}

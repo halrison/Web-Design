@@ -69,11 +69,13 @@
 <script type="text/javascript">
 	loadTable();
 	jQuery("#Detail").hide();
+	//編輯按鈕
 	jQuery("#Summary").on(
 		'click',
 		"[name='Edit']",
 		function() {
-            jQuery("#Submit").val('修改');
+			jQuery("#Submit").val('修改');
+			//載入管理員資訊
 			jQuery.getJSON(
 				'/ClassB/WebB04/Admin.ashx',
 				{
@@ -93,6 +95,7 @@
 			);
 		}
 	).on(
+	//移除按鈕
 		'click',
 		"[name='Remove']",
 		function () {
@@ -111,6 +114,7 @@
 	jQuery(":submit").click(
 		function () {
 			event.preventDefault();
+			//根據按鈕名稱決定新增或編輯
 			jQuery.post(
 				'/ClassB/WebB04/Admin.ashx',
 				{
@@ -120,15 +124,15 @@
                     permittion: `${jQuery("#CategoryAndCommodity").prop('checked') ? 'category,commodity,' : ''}${jQuery("#Order").prop('checked') ? 'order,' : ''}${jQuery("#Member").prop('checked') ? 'member,' : ''}${jQuery("#Footer").prop('checked') ? 'footer,' : ''}${jQuery("#News").prop('checked') ? 'news' : ''}`
                 },
 				response => {
+					//成功就重新載入頁面
 					if (response === 'Success') {
 						location.reload();
-					//	jQuery("#Summary tbody").empty();
-					//	loadTable();
 					}
                 }
 			);
         }
 	);
+	//新增按鈕
 	jQuery("#Add").click(
 		() => {
 			event.preventDefault();
@@ -137,6 +141,7 @@
 			jQuery("#Summary,#Detail").toggle();
 		}
 	);
+	//載入管理員列表
     function loadTable() {
         jQuery.getJSON(
             '/ClassB/WebB04/Admin.ashx',

@@ -5,11 +5,13 @@ Public Class Upload
         Dim FilePath = context.Server.MapPath("/ClassB/WebB03/")
         If context.Request.Files.Count > 0 Then
             Dim files = context.Request.Files, name As String, file
+            '上傳海報檔
             If files.Get("poster") IsNot Nothing Then
                 file = files.Get("poster")
                 FilePath &= "Images/"
                 name = Path.GetFileName(file.FileName)
                 file.SaveAs(Path.Combine(FilePath, name))
+                '上傳預告檔
             ElseIf files.Get("trailer") IsNot Nothing Then
                 file = files.Get("trailer")
                 FilePath &= "Videos/"

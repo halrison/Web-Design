@@ -1,17 +1,19 @@
 ﻿jQuery(document).ready(
 	() => {
-		var nameMap, ticketList;
+		//根據網域決定路徑
+    const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB03' : '..';
+    let nameMap, ticketList;
 		//片名選單
 		jQuery.getJSON(
-			'/ClassB/WebB03/Fetch.ashx',
+			`${API_PATH}/Fetch.ashx`,
 			{
 				item:'Movie'
 			},
 			response => {
 				let nameList = response.reduce(
-					(list, movie) =>list + `<option value='${movie.id}'>${movie.name}</option>`
+					(list, movie) => list + `<option value='${movie.id}'>${movie.name}</option>`
 					,
-					''
+					"<option value=''>請選擇</option>"
 				);
 				nameMap = response.map(
 					movie => {
@@ -21,25 +23,25 @@
 						}
 					}
 				);
-				jQuery("#NameFilter").append(nameList);
+				jQuery("#NameFilter").append(nameList).val('').change();
 			}
 		);
 		//訂單列表
 		jQuery.getJSON(
-			'/ClassB/WebB03/Fetch.ashx',
+			`${API_PATH}/Fetch.ashx`,
 			{
 				item:'Ticket'
 			},
 			response => {
-				ticketList= response.sort(
+				ticketList = response.sort(
 					(prev, next) => parseInt(next.number) - parseInt(prev.number)
 				);
-				let orderTable =ticketList.reduce(
+				let orderTable = ticketList.reduce(
 					(table, row) => {
 						table +=
 							`<tr id='${row.id}'>
 									<td>${row.number}</td>
-									<td>${nameMap.find(movie=>movie.id===row.movie).name}</td>
+									<td>${nameMap.find(movie => movie.id === row.movie).name}</td>
 									<td>${row.date}</td>
 									<td>${row.time}~${row.time + 2 === 24 ? '00' : row.time + 2}</td>`;
 						let seats = row.seat.split(' ');
@@ -70,7 +72,7 @@
 				let row = jQuery(this).parents("tr");
 				if (confirm('確定要刪除這筆訂單嗎')) {
 					jQuery.get(
-						'/ClassB/WebB03/Remove.ashx',
+						`${API_PATH}/Remove.ashx`,
 						{
 							item: 'Ticket',
 							id: row.attr('id')
@@ -86,7 +88,7 @@
 		);
 		//批次刪除訂單
 		jQuery("form").submit(
-			() => {
+			event => {
 				event.preventDefault();
 				if (confirm('確定要刪除這些訂單嗎')) {
 					//根據日期
@@ -96,7 +98,7 @@
 						ticketList.forEach(
 							ticket => {
 								jQuery.get(
-									'/ClassB/WebB03/Remove.ashx',
+									`${API_PATH}/Remove.ashx`,
 									{
 										item: 'Ticket',
 										id: ticket.id
@@ -116,7 +118,7 @@
 						ticketList.forEach(
 							ticket => {
 								jQuery.get(
-									'/ClassB/WebB03/Remove.ashx',
+									`${API_PATH}/Remove.ashx`,
 									{
 										item: 'Ticket',
 										id: ticket.id

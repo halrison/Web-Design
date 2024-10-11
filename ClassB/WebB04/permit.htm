@@ -1,170 +1,172 @@
 ﻿<style>
-	#Summary table,#Detail table{
-		width:50%;
-		margin:auto;
-	}
+  #Summary table, #Detail table {
+    width: 50%;
+    margin: auto;
+  }
 </style>
 <div id="Summary" class="ct">
-	<button id="Add">新增管理員</button>
-	<table>
-		<thead>
-			<tr class="tt">
-				<th>帳號</th>
-				<th>密碼</th>
-				<th>管理</th>
-			</tr>
-			<tr class="pp">
-				<td>admin</td>
-				<td>****</td>
-                <td>此帳號為最高權限</td>
-			</tr>
-		</thead>
-		<tbody></tbody>
-	</table>
+  <button id="Add">新增管理員</button>
+  <table>
+    <thead>
+      <tr class="tt">
+        <th>帳號</th>
+        <th>密碼</th>
+        <th>管理</th>
+      </tr>
+      <tr class="pp">
+        <td>admin</td>
+        <td>****</td>
+        <td>此帳號為最高權限</td>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 <div id="Detail">
-	<h1 class="ct"></h1>
-	<table>
-		<tr>
-			<th class="ct tt">帳號</th>
-			<td class="pp">
-				<input id="Account" type="text" />
-			</td>
-		</tr>
-		<tr>
-			<th class="ct tt">密碼</th>
-			<td class="pp">
-				<input id="Password" type="password" />
-			</td>
-		</tr>
-		<tr>
-			<th class="ct tt">權限</th>
-			<td class="pp">
-				<label for="CategoryAndCommodity">
-					<input id="CategoryAndCommodity" type="checkbox" />商品分類與管理
-				</label>
-				<br />
-				<label for="Order">
-					<input id="Order" type="checkbox" />訂單管理
-				</label>
-				<br/>
-				<label for="Member">
-					<input id="Member" type="checkbox" />會員管理
-				</label>
-				<br />
-				<label for="Footer">
-					<input id="Footer" type="checkbox" />頁尾版權區管理
-				</label>
-				<br/>
-				<label for="News">
-					<input id="News" type="checkbox" />最新消息管理
-				</label>
-			</td>
-		</tr>
-	</table>
-	<p class="ct">
-		<input id="Submit" type="submit" />|<input id="Reset" type="reset" value="重置" />
-	</p>
+  <h1 class="ct"></h1>
+  <table>
+    <tr>
+      <th class="ct tt">帳號</th>
+      <td class="pp">
+        <input id="Account" type="text" />
+      </td>
+    </tr>
+    <tr>
+      <th class="ct tt">密碼</th>
+      <td class="pp">
+        <input id="Password" type="password" />
+      </td>
+    </tr>
+    <tr>
+      <th class="ct tt">權限</th>
+      <td class="pp">
+        <label for="CategoryAndCommodity">
+          <input id="CategoryAndCommodity" type="checkbox" />商品分類與管理
+        </label>
+        <br />
+        <label for="Order">
+          <input id="Order" type="checkbox" />訂單管理
+        </label>
+        <br />
+        <label for="Member">
+          <input id="Member" type="checkbox" />會員管理
+        </label>
+        <br />
+        <label for="Footer">
+          <input id="Footer" type="checkbox" />頁尾版權區管理
+        </label>
+        <br />
+        <label for="News">
+          <input id="News" type="checkbox" />最新消息管理
+        </label>
+      </td>
+    </tr>
+  </table>
+  <p class="ct">
+    <input id="Submit" type="submit" />|<input id="Reset" type="reset" value="重置" />
+  </p>
 </div>
 <script type="text/javascript">
-	loadTable();
-	jQuery("#Detail").hide();
-	//編輯按鈕
-	jQuery("#Summary").on(
-		'click',
-		"[name='Edit']",
-		function() {
-			jQuery("#Submit").val('修改');
-			//載入管理員資訊
-			jQuery.getJSON(
-				'/ClassB/WebB04/Admin.ashx',
-				{
-					action: 'fetchone',
-					account:jQuery(this).parent().siblings("td:first-child").text()
-				},
-				response => {
-					jQuery("#Account").val(response[0].account);
-					jQuery("#Password").val(response[0].password);
-					jQuery("#CategoryAndCommodity").prop('checked', response[0].permittion.includes('category') && response[0].permittion.includes('commodity'));
-					jQuery("#Order").prop('checked', response[0].permittion.includes('order'));
-					jQuery("#Member").prop('checked', response[0].permittion.includes('member'));
-					jQuery("#Footer").prop('checked', response[0].permittion.includes('footer'));
-					jQuery("#News").prop('checked', response[0].permittion.includes('news'));
-					jQuery("#Summary,#Detail").toggle();
-				}
-			);
-		}
-	).on(
-	//移除按鈕
-		'click',
-		"[name='Remove']",
-		function () {
-			jQuery.get(
-                '/ClassB/WebB04/Admin.ashx',
-				{
-					action: 'remove',
-                    account: jQuery(this).parent().siblings("td:first-child").text()
-                },
-				response => {
-					if (response === 'Success') jQuery(this).parents("tr").remove();
-                }
-			);
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..';
+  loadTable();
+  jQuery("#Detail").hide();
+  //編輯按鈕
+  jQuery("#Summary").on(
+    'click',
+    "[name='Edit']",
+    function () {
+      jQuery("#Submit").val('修改');
+      //載入管理員資訊
+      jQuery.getJSON(
+        `${API_PATH}/Admin.ashx`,
+        {
+          action: 'fetchone',
+          account: jQuery(this).parent().siblings("td:first-child").text()
+        },
+        response => {
+          jQuery("#Account").val(response[0].account);
+          jQuery("#Password").val(response[0].password);
+          jQuery("#CategoryAndCommodity").prop('checked', response[0].permittion.includes('category') && response[0].permittion.includes('commodity'));
+          jQuery("#Order").prop('checked', response[0].permittion.includes('order'));
+          jQuery("#Member").prop('checked', response[0].permittion.includes('member'));
+          jQuery("#Footer").prop('checked', response[0].permittion.includes('footer'));
+          jQuery("#News").prop('checked', response[0].permittion.includes('news'));
+          jQuery("#Summary,#Detail").toggle();
         }
-	);
-	jQuery(":submit").click(
-		function () {
-			event.preventDefault();
-			//根據按鈕名稱決定新增或編輯
-			jQuery.post(
-				'/ClassB/WebB04/Admin.ashx',
-				{
-					action: `${jQuery(this).val() === '新增' ? 'add' : 'modify'}`,
-					account: jQuery("#Account").val(),
-					password: jQuery("#Password").val(),
-                    permittion: `${jQuery("#CategoryAndCommodity").prop('checked') ? 'category,commodity,' : ''}${jQuery("#Order").prop('checked') ? 'order,' : ''}${jQuery("#Member").prop('checked') ? 'member,' : ''}${jQuery("#Footer").prop('checked') ? 'footer,' : ''}${jQuery("#News").prop('checked') ? 'news' : ''}`
-                },
-				response => {
-					//成功就重新載入頁面
-					if (response === 'Success') {
-						location.reload();
-					}
-                }
-			);
+      );
+    }
+  ).on(
+    //移除按鈕
+    'click',
+    "[name='Remove']",
+    function () {
+      jQuery.get(
+        `${API_PATH}/Admin.ashx`,
+        {
+          action: 'remove',
+          account: jQuery(this).parent().siblings("td:first-child").text()
+        },
+        response => {
+          if (response === 'Success') jQuery(this).parents("tr").remove();
         }
-	);
-	//新增按鈕
-	jQuery("#Add").click(
-		() => {
-			event.preventDefault();
-			jQuery("#Account,#Password").val('');
-            jQuery("#Submit").val('新增'); 
-			jQuery("#Summary,#Detail").toggle();
-		}
-	);
-	//載入管理員列表
-    function loadTable() {
-        jQuery.getJSON(
-            '/ClassB/WebB04/Admin.ashx',
-            {
-                action: 'fetchall'
-            },
-            response => {
-                response.forEach(
-                    row => {
-                        jQuery("#Summary tbody").append(
-                            `
-							<tr class='pp'>
-								<td>${row.account}</td>
-								<td>${Array(row.password.length + 1).join('*')}</td>
-								<td>
-									<input name='Edit' type='button' value='修改' /><input name='Remove' type='button' value='刪除' />
-								</td>
-							</tr>
-						`
-                        );
-                    }
-                );
-            }
+      );
+    }
+  );
+  jQuery(":submit").click(
+    function (event) {
+      event.preventDefault();
+      //根據按鈕名稱決定新增或編輯
+      jQuery.post(
+        `${API_PATH}/Admin.ashx`,
+        {
+          action: `${jQuery(this).val() === '新增' ? 'add' : 'modify'}`,
+          account: jQuery("#Account").val(),
+          password: jQuery("#Password").val(),
+          permittion: `${jQuery("#CategoryAndCommodity").prop('checked') ? 'category,commodity,' : ''}${jQuery("#Order").prop('checked') ? 'order,' : ''}${jQuery("#Member").prop('checked') ? 'member,' : ''}${jQuery("#Footer").prop('checked') ? 'footer,' : ''}${jQuery("#News").prop('checked') ? 'news' : ''}`
+        },
+        response => {
+          //成功就重新載入頁面
+          if (response === 'Success') {
+            location.reload();
+          }
+        }
+      );
+    }
+  );
+  //新增按鈕
+  jQuery("#Add").click(
+    event => {
+      event.preventDefault();
+      jQuery("#Account,#Password").val('');
+      jQuery("#Submit").val('新增');
+      jQuery("#Summary,#Detail").toggle();
+    }
+  );
+  //載入管理員列表
+  function loadTable () {
+    jQuery.getJSON(
+      `${API_PATH}/Admin.ashx`,
+      {
+        action: 'fetchall'
+      },
+      response => {
+        response.forEach(
+          row => {
+            jQuery("#Summary tbody").append(
+              `
+              <tr class='pp'>
+                <td>${row.account}</td>
+                <td>${Array(row.password.length + 1).join('*')}</td>
+                <td>
+                  <input name='Edit' type='button' value='修改' /><input name='Remove' type='button' value='刪除' />
+                </td>
+              </tr>
+            `
+            );
+          }
         );
-	}
+      }
+    );
+  }
 </script>

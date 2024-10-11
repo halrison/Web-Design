@@ -67,7 +67,7 @@ button {
 .mainmu {
 	position: relative;
 	border-radius: 10px;
-	background: url(../Images/menu.fw.png) center no-repeat;
+	background: url(../Content/Images/menu.fw.png) center no-repeat;
 	background-size: cover;
 	line-height: 30px;
 	padding: 2px 10px 2px 10px;
@@ -75,7 +75,7 @@ button {
 }
 
 	.mainmu:hover {
-		background: url(../Images/menu2.fw.png) center no-repeat;
+		background: url(../Content/Images/menu2.fw.png) center no-repeat;
 		background-size: cover;
 	}
 
@@ -90,7 +90,7 @@ button {
 .mainmu2 {
 	position: relative;
 	border-radius: 10px;
-	background: url(../Images/menu3.fw.png) center no-repeat;
+	background: url(../Content/Images/menu3.fw.png) center no-repeat;
 	background-size: cover;
 	line-height: 30px;
 	padding: 2px 10px 2px 10px;
@@ -98,7 +98,7 @@ button {
 }
 
 	.mainmu2:hover {
-		background: url(../Images/menu4.fw.png) center no-repeat;
+		background: url(../Content/Images/menu4.fw.png) center no-repeat;
 		background-size: cover;
 	}
 
@@ -256,14 +256,14 @@ button {
 }
 
 #pagination-item {
-	display: inline-block
+	display: inline-block;
 }
 
 	 #pagination-item li {
 		color: blue;
 		display: inline;
 		padding: 8px;
-		background - color: #dddddd;
+		background-color: white;
 		font-size: 12px;
 	}
 #marquee {
@@ -293,7 +293,7 @@ button {
 	}
 
 	100% {
-		left: -250%;
+		left: -300%;
 	}
 }
 
@@ -303,7 +303,7 @@ button {
 	}
 
 	100% {
-		left: -250%;
+		left: -300%;
 	}
 }
 
@@ -313,7 +313,7 @@ button {
 	}
 
 	100% {
-		left: -250%;
+		left: -300%;
 	}
 }
 
@@ -323,7 +323,7 @@ button {
 	}
 
 	100% {
-		left: -250%;
+		left: -300%;
 	}
 }
 
@@ -333,6 +333,6 @@ button {
 	}
 
 	100% {
-		left: -250%
+		left: -300%
 	}
 }

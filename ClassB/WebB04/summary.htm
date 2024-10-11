@@ -1,20 +1,22 @@
 ﻿<h1></h1>
 <table class="all"></table>
 <script>
-	var searchParam = new URLSearchParams(location.search), action='',big,medium, table = '', nav = '';
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..'; 
+  let searchParam = new URLSearchParams(location.search), action='', big, medium, table = '', nav = '';
 	//載入已上架商品列表
 	jQuery.getJSON(
-		'/ClassB/WebB04/Commodity.ashx',
+    `${API_PATH}/Commodity.ashx`,
 		{
 			action: 'fetchall',
-			status:'up'
+			status: 'up'
 		},
 		responses => {
-			if (searchParam.has('big') && [null, undefined].indexOf(sessionStorage.getItem('big')===-1)) {
-				responses = responses.filter(response => response.big === sessionStorage.getItem('big'));
+			if (searchParam.has('big') && [null, undefined].indexOf(sessionStorage.getItem('big') === -1)) {
+				responses = responses.filter(response => String(response.big) === searchParam.get('big'));
 				nav += sessionStorage.getItem('big') || '全部商品';
 			} if (searchParam.has('medium') && [null, undefined].indexOf(sessionStorage.getItem('medium') === -1)) {
-				responses = responses.filter(response => response.medium === sessionStorage.getItem('medium'));
+				responses = responses.filter(response => String(response.medium) === searchParam.get('medium'));
 				nav += `>${sessionStorage.getItem('medium')}`;
 			}
 			responses.forEach(
@@ -23,14 +25,14 @@
 						`<tr class="pp">
 							<td rowspan="4" width="40%" class="ct">
 								<input name="number" type="hidden" value="${response.number}"/>
-								<img src="/ClassB/WebB04/Images/${response.picture}" class="icon" />
+								<img src="${API_PATH}/Content/Images/${response.picture}" class="icon" />
 							</td>
 							<td class="tt ct">${response.name}</td>
 						</tr>
 						<tr class="pp">
 							<td>
 								價錢：${response.price}
-								<img src="/ClassB/WebB04/Images/0402.jpg"  class="i-wanna-buy" />
+								<img src="${API_PATH}/Content/Images/0402.jpg"  class="i-wanna-buy" />
 							</td>
 						</tr>
 						<tr class="pp">
@@ -60,11 +62,11 @@
 		function(){
 			let orders = JSON.parse(sessionStorage.getItem('orders')) || [];
 			//若購物車內未發現該商品則加入購物車
-			if (orders.findIndex(order => order.number === jQuery(this).parents("tr").prev().find("[name='number']").val())=== -1) {
+			if (orders.findIndex(order => order.number === jQuery(this).parents("tr").prev().find("[name='number']").val()) === -1) {
 				orders.push(
 					{
 						number: jQuery(this).parents("tr").prev().find("[name='number']").val(),
-						amount:0
+						amount: 0
 					}
 				);
 			}

@@ -50,27 +50,27 @@ input:focus, button:focus {
 {
 	position:relative;
 	border-radius:10px;
-	background:url(/ClassB/WebB01/Images/menu.fw.png) center no-repeat;
+	background:url(../Content/Images/menu.fw.png) center no-repeat;
 	background-size:cover;
 	line-height:30px;
 	padding:2px 10px 2px 10px;
 	margin:7px 1px 7px 1px;
 }
 	.mainmu:hover {
-		background: url(/ClassB/WebB01/Images/menu2.fw.png) center no-repeat;
+		background: url(../Content/Images/menu2.fw.png) center no-repeat;
 		background-size: cover;
 	}
 .mainmu2 {
 	position: relative;
 	border-radius: 10px;
-	background: url(/ClassB/WebB01/Images/menu3.fw.png)center no-repeat;
+	background: url(../Content/Images/menu3.fw.png)center no-repeat;
 	background-size: 100% 100%;
 	line-height: 30px;
 	padding: 2px 10px 2px 10px;
 	margin: 7px 1px 7px 1px;
 }
 	.mainmu2:hover {
-		background: url(/ClassB/WebB01/Images/menu4.fw.png) center no-repeat;
+		background: url(../Content/Images/menu4.fw.png) center no-repeat;
 		background-size: cover;
 	}
 .di {
@@ -190,7 +190,7 @@ input:focus, button:focus {
 		color: blue;
 		display: inline;
 		padding: 8px;
-		background - color: #dddddd;
+		background-color: white;
 		font-size: 12px;
 	}
 #SpanFooter {

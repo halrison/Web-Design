@@ -2,7 +2,9 @@
 <table>
 	<tr class="cent yel">
 		<th>頁尾版權資料：</th>
-		<td><input id="TextboxFooter" type="text" /></td>
+		<td>
+      <textarea id="TextboxFooter" type="text" cols="85"></textarea>
+    </td>
 	</tr>
 </table>
 <table style="margin-top:10px; width:70%;">
@@ -22,7 +24,7 @@
 			//載入並顯示頁尾版權
 			jQuery("#TextboxFooter").val(localStorage.getItem('footer'));
 			jQuery("form").submit(
-				() => {
+				event => {
 					event.preventDefault();
 					//修改頁尾版權
 					localStorage.setItem('footer', jQuery("#TextboxFooter").val());

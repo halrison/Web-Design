@@ -1,46 +1,36 @@
-﻿<!DOCTYPE html>
-<html>
-    <head>
-        <style>
-            #Password{
-                display:none;
+﻿<p>請輸入信箱以查詢密碼</p>
+<input id="Email" type="email" />
+<br />
+<span id="Password" style="display:none;"></span>
+<br />
+<input id="Search" type="submit" value="尋找" />
+<script type="text/javascript">
+  jQuery(document).ready(
+    () => {
+      jQuery("style").appendTo("head");
+      jQuery("#Search").click(
+        event => {
+          event.preventDefault();
+          jQuery.ajax(
+            {
+              url: `${location.hostname === 'localhost' ? '/ClassB/WebB02' : ''}/Forget.ashx`,
+              method: 'post',
+              data: {
+                email: jQuery("#Email").val()
+              },
+              success: response => {
+                jQuery("#Password").text(`您的密碼為:${response}`);
+              },
+              error: (xhr, status, thrown) => {
+                jQuery("#Password").text('查無此資料');
+              },
+              complete: (xhr, status) => {
+                jQuery("#Password").show();
+              }
             }
-        </style>
-    </head>
-    <body>
-        <p>請輸入信箱以查詢密碼</p>
-        <input id="Email" type="email" /><br />
-        <span id="Password"></span><br />
-		<input id="Search" type="submit" value="尋找" />
-        <script type="text/javascript">
-            jQuery(document).ready(
-                () => {
-                    jQuery("style").appendTo("head");
-                    jQuery("#Search").click(
-                        () => {
-                            event.preventDefault();
-                            $.ajax(
-                                {
-                                    url: '/ClassB/WebB02/Forget.ashx',
-                                    method: 'post',
-                                    data: {
-                                        email: jQuery("#Email").val()
-                                    },
-                                    success: response => {
-                                        jQuery("#Password").text(`您的密碼為:${response}`);
-                                    },
-                                    error: (xhr,status,thrown )=> {
-							            jQuery("#Password").text('查無此資料');
-                                    },
-                                    complete: (xhr, status) => {
-                                        jQuery("#Password").show();
-						            }
-                                }
-                            );
-                        }
-                    );
-                }
-            );
-        </script>
-    </body>
-</html>
+          );
+        }
+      );
+    }
+  );
+</script>

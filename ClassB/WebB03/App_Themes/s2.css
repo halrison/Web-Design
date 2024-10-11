@@ -1,0 +1,126 @@
+﻿@charset "utf-8";
+/* CSS Document */
+#left {
+	vertical-align: top;
+	height: 100%;
+}
+
+#top {
+	background: #999 center;
+	background-size: cover;
+}
+
+#slideShow {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: baseline;
+	margin-top: 10px;
+}
+
+#controls {
+	height: 350px;
+}
+
+#animation-area {
+	position: relative;
+	margin: auto;
+	text-align: center;
+}
+
+#marquee {
+	display: inline-block;
+	height: 32px;
+	width: 90%;
+	overflow: hidden;
+	position: relative;
+}
+
+	#marquee > span {
+		display: block;
+		width: 200%;
+		height: 25px;
+		position: absolute;
+		overflow: hidden;
+		color: #a8c7fd;
+		-webkit-animation: marquee 20s linear infinite;
+		-moz-animation: marquee 20s linear infinite;
+		-ms-animation: marquee 20s linear infinite;
+		-o-animation: marquee 20s linear infinite;
+		animation: marquee 20s linear infinite;
+	}
+
+.tab {
+	width: 95%;
+	position: inherit;
+}
+
+.current {
+	font-size: larger;
+}
+
+ul {
+	list-style: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+table {
+	width: 100%;
+}
+
+table a {
+	float: left;
+	margin: auto 0;
+}
+
+@-webkit-keyframes marquee {
+	0% {
+		left: -30%;
+	}
+
+	100% {
+		left: 100%;
+	}
+}
+
+@-moz-keyframes marquee {
+	0% {
+		left: -30%;
+	}
+
+	100% {
+		left: 100%;
+	}
+}
+
+@-ms-keyframes marquee {
+	0% {
+		left: -30%;
+	}
+
+	100% {
+		left: 100%;
+	}
+}
+
+@-o-keyframes marquee {
+	0% {
+		left: -30%;
+	}
+
+	100% {
+		left: 100%;
+	}
+}
+
+@keyframes marquee {
+	0% {
+		left: -30%
+	}
+
+	100% {
+		left: 100%
+	}
+}

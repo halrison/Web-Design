@@ -52,11 +52,12 @@
 			</form>
 		</fieldset>
 		<script type="text/javascript">
+      const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB02' : '';
 			jQuery(document).ready(
 				() => {
 					jQuery("style").appendTo("head");
 					jQuery.getJSON(
-						'/ClassB/WebB02/Fetch.ashx',
+            `${API_PATH}/Fetch.ashx`,
 						{
 							item: 'Member'
 						},
@@ -84,7 +85,7 @@
 							jQuery(":checked").each(
 								() => {
 									jQuery.get(
-										'/ClassB/WebB02/Remove.ashx',
+										`${API_PATH}/Remove.ashx`,
 										{
 											item: 'member',
 											id:jQuery(this).parent('tr').attr('id')
@@ -109,15 +110,15 @@
 						}
 					);
 					jQuery("form").submit(
-						() => {
+						event => {
 							event.preventDefault();
 							var username = jQuery("#Username"), password = jQuery("#Password"), confirm = jQuery("#Confirm"), email = jQuery("#Email");
-							if (username.val() == '' || password.val() == '' || confirm.val() == '' || email.val() == '') {
+							if (username.val() === '' || password.val() === '' || confirm.val() === '' || email.val() === '') {
 								alert('不可空白');
 							} else {
-								if (confirm.val() == password.val()) {
+								if (confirm.val() === password.val()) {
 									$.post(
-										'/ClassB/WebB02/Add.ashx',
+										`${API_PATH}/Add.ashx`,
 										{
 											item: 'Member',
 											username: username.val(),
@@ -125,7 +126,7 @@
 											email: email.val()
 										},
 										response => {
-											if (response == 'Success') {
+											if (response === 'Success') {
 												alert('註冊完成，歡迎加入');
 											} else {
 												alert('帳號重複');

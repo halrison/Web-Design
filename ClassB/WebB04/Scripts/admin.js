@@ -1,6 +1,8 @@
 jQuery(document).ready(
 	() => {
-		//側邊選單
+		//根據網址決定請求路徑
+    const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..';
+    //側邊選單
 		let menu = '';
 		//admin全部顯示
 		if (sessionStorage.getItem('account') === 'admin') {
@@ -16,7 +18,7 @@ jQuery(document).ready(
 		} else {
 			jQuery.ajax(
 				{
-					url: '/ClassB/WebB04/Admin.ashx',
+					url: `${API_PATH}/Admin.ashx`,
 					method: 'get',
 					data:
 					{
@@ -56,7 +58,7 @@ jQuery(document).ready(
 );
 //顯示頁尾
 jQuery.get(
-	'/ClassB/WebB04/Footer.ashx',
+	`${API_PATH}/Footer.ashx`,
 	{
 		action: 'get'
 	},
@@ -67,5 +69,5 @@ jQuery.get(
 //回登入頁
 function logout() {
 	sessionStorage.removeItem('account');
-	location.assign('/ClassB/WebB04/index.htm?do=login&user=admin')
+	location.assign(`${API_PATH}/index.htm?do=login&user=admin`)
 }

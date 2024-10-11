@@ -45,12 +45,14 @@
 	</p>
 </form>
 <script type="text/javascript">
-	//偵測帳號按鈕
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..'; 
+  //偵測帳號按鈕
 	jQuery("#DetectAccount").click(
 		() => {
 			//取得會員資訊
 			jQuery.get(
-				'/ClassB/WebB04/Member.ashx',
+				`${API_PATH}/Member.ashx`,
 				{
 					action: 'fetchone',
 					account: jQuery("#Account").val()
@@ -67,10 +69,10 @@
 	);
 	//新增按鈕
 	jQuery("form").submit(
-		() => {
+		event => {
 			event.preventDefault();
 			jQuery.post(
-				'/ClassB/WebB04/Member.ashx',
+				`${API_PATH}/Member.ashx`,
 				{
 					action: 'add',
 					name: jQuery("#Name").val(),
@@ -79,7 +81,7 @@
 					phone: jQuery("#Phone").val(),
 					address: jQuery("#Address").val(),
 					email: jQuery("#Email").val(),
-					registered_at:new Date().toLocaleDateString()
+					registered_at: new Date().toLocaleDateString()
 				},
 				response => {
 					if (response === 'Success') {

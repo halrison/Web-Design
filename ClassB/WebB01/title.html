@@ -1,221 +1,218 @@
 ﻿<p class="t cent botli">網站標題管理</p>
 <table style="width:100%">
-	<thead>
-		<tr class="yel">
-			<th style="width:45%">網站標題</th>
-			<th style="width:32%">替代文字</th>
-			<th style="width:7%">顯示</th>
-			<th style="width:7%">刪除</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-	</tbody>
+  <thead>
+    <tr class="yel">
+      <th style="width:45%">網站標題</th>
+      <th style="width:32%">替代文字</th>
+      <th style="width:7%">顯示</th>
+      <th style="width:7%">刪除</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
 </table>
 <table style="margin-top:10px; width:70%;">
-	<tbody>
-		<tr>
-			<td style="width:200px">
-				<input type="button" id="btnadd" />
-			</td>
-			<td class="cent">
-				<input type="submit" value="修改確定" />
-				<input type="reset" value="重置" />
-			</td>
-		</tr>
-	</tbody>
+  <tbody>
+    <tr>
+      <td style="width:200px">
+        <input type="button" id="btnadd" />
+      </td>
+      <td class="cent">
+        <input type="submit" value="修改確定" />
+        <input type="reset" value="重置" />
+      </td>
+    </tr>
+  </tbody>
 </table>
 <script type="text/javascript">
-	jQuery(document).ready(
-		function () {
-			//載入並顯示所有標題區
-			jQuerygetJSON(
-				 '/ClassB/WebB01/Fetch.ashx',
-				{
-					item: 'Title'
-				},
-				returns => {
-					let row = '';
-					jQuery.each(
-						returns,
-						(key, value) => {
-						row+=
-								`<tr id="${value.Id }" class="trce">
-									<td>
-										<img src="/ClassB/WebB01/Images/${ value.FileName }" width="300" height="30"/>
-									</td>
-									<td>
-										<input name="alt" type="text" value="${value.AlternativeText }"/>
-									</td>
-									<td>
-										<input type="radio" name="display"`;
-							if (value.Display == 'yes') { row +=` checked`; }
-							row +=
-										`/>
-									</td >
-									<td>
-										<input type="checkbox" name="delete"/>
-									</td>
-									<td>
-										<input name="change_image" type="button" value="更新圖片" />
-									</td>
-								</tr>`;
-							jQuery("tbody:nth-child(2)").append(row);
-						}
-					);
-				}
-			);
-			jQuery("#btnadd").val('新增網站標題圖片').click(
-				() => {
-					//渲染並顯示單一標題圖片(新增)
-					jQuery("#cvr").html(
-						`<p class="t cent">新增標題區圖片</p>
-						<hr/>
-						標題區圖片：<input id="Picture" name="Picture" type="file" accept="image/*"/><br/>
-						標題區替代文字：<input id="AltText" type="text"/><br/>
-						<button id="Insert" type="button">新增</button>
-						<button id="Clear" type="button">重置</button>`
-					);
-					jQuery("#cover").fadeIn();
-				}
-			);
-			jQuery("form").on(
-				'click',
-				"input[name='change_image']",
-				function () {
-					//渲染並顯示單一標題圖片(修改)
-					jQuery("#cvr").empty().html(
-						`<p class="t cent">更改標題區圖片</p>
-						<hr/>
-						標題區圖片：<input id="Picture" name="Picture" type="file" accept="image/*"/><br/>
-						<input id="rowid" type="hidden" value="${jQuery(this).parent("tr").attr('id')}"/>
-						<button id="Update" type="button">更改</button>
-						<button id="Clear" type="button">重置</button>`
-					);
-					jQuery("#cover").fadeIn();
-				}
-			);
-			jQuery("form").on(
-				'click',
-				"#Insert",
-				()=> {
-					//上傳新圖片，並在表格頂端插入一列
-					event.preventDefault();
-					let form = new FormData, file = jQuery("#Picture").get(0).files[0];
-					form.set('Picture', file);
-					fetch(
-						'/ClassB/ClassB/WebB01/Upload.ashx',
-						{
-							method: 'post',
-							body: form
-						}
-					).then(
-						function () {
-							jQuery.ajax(
-								{
-									url: '/ClassB/WebB01/Add.ashx',
-									method: 'post',
-									async: false,
-									data: {
-										item: 'Title',
-										filename: file.name,
-										alternativetext: jQuery("#AltText").val(),
-										display: 'no'
-									},
-									success: returns => {
-										jQuery("tbody:nth-child(2)").prepend(
-											`<tr id="${returns}" class="trce">
-												<td>
-													<img src="/ClassB/WebB01/Images/' + file.name + '" width="300" height="30"/>
-												</td>
-												<td>
-													<input name="alt" type="text" />
-												</td>
-												<td>
-													<input type="radio" name="display">
-												</td>
-												<td>
-													<input type="checkbox" name="delete"/>
-												</td>
-												<td>
-													<input name="change_image" type="button" value="更新圖片" />
-												</td>
-											</tr>`
-										);
-										jQuery("#cover").fadeOut();
-									}
-								}
-							);
-						}
-					);
-				}
-			);
-			jQuery("form").on(
-				'click',
-				"#Update",
-				() => {
-					//重新上傳新圖片，並隱藏modal
-					let form = new FormData, file = jQuery("#Picture").get(0).files[0];
-					form.set('Picture', file);
-					fetch(
-						"/ClassB/WebB01/Upload.ashx",
-						{
-							method: "post",
-							body: form
-						}
-					).then(
-						function () {
-							jQuery("#cover").fadeOut();
-						}
-					);
-				}
-			);
-			jQuery("form").on(
-				'click',
-				"#Clear",
-				() => {
-					//清除標題圖片與替代文字
-					jQuery("#Picture").empty();
-					jQuery("#AltText").empty();
-					jQuery("#rowid").empty();
-				}
-			);
-			jQuery("form").submit(
-				()=>{
-					event.preventDefault();
-					jQuery("tbody:nth-child(2) tr").each(
-						function () {
-							if (jQuery(this).find("input:checkbox").prop('checked')) {
-								//批次刪除
-								jQuery.get(
-									'/ClassB/WebB01/delete.ashx',
-									{
-										item: 'Title',
-										id: jQuery(this).attr('id')
-									},
-									returns => {
-										if (returns == 'success') {
-											jQuery("tr#" + value).remove();
-										}
-									}
-								);
-							} else {
-								//批次修改
-								jQuery.post(
-									'/ClassB/WebB01/Modify.ashx',
-									{
-										item: 'Title',
-										id: jQuery(this).attr('id'),
-										filename: jQuery(this).find("img").attr('src').replace('/ClassB/WebB01/Images/', ''),
-										alternativetext: jQuery(this).find("input:text").val(),
-										display: jQuery(this).find("input:radio").prop('checked') ? 'yes' : 'no'
-									}
-								);
-							}
-						}
-					);
-				}
-			);
-		}
-	);
+  jQuery(document).ready(
+    function () {
+      //根據域名決定請求路徑
+      const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB01' : '..'
+      let rows = []
+      //載入並顯示所有標題區
+      fetchrow()
+      jQuery("#btnadd").val('新增網站標題圖片').click(
+        () => {
+          //渲染並顯示單一標題圖片(新增)
+          jQuery("#cvr").html(
+            `<p class="t cent">新增標題區圖片</p>
+            <hr/>
+            標題區圖片：<input id="Picture" name="Picture" type="file" accept="image/*"/><br/>
+            標題區替代文字：<input id="AltText" type="text"/><br/>
+            <button id="Insert" type="button">新增</button>
+            <button id="Clear" type="button">重置</button>`
+          );
+          jQuery("#cover").fadeIn();
+        }
+      );
+      jQuery("form").on(
+        'click',
+        "input[name='change_image']",
+        function () {
+          //渲染並顯示單一標題圖片(修改)
+          let id = jQuery(this).parents("tr").attr('id');
+          let row = rows.find(r => r.Id === parseInt(id));
+          jQuery("#cvr").empty().html(
+            `<p class="t cent">更改標題區圖片</p>
+            <hr/>
+            標題區圖片：<input id="Picture" name="Picture" type="file" accept="image/*"/><br/>
+            標題區替代文字：<input id="AltText" type="text" value=${row.AlternativeText}/><br/>
+            <input id="rowid" type="hidden" value="${id}"/>
+            <button id="Update" type="button">更改</button>
+            <button id="Clear" type="button">重置</button>`
+          );
+          jQuery("#cover").fadeIn();
+        }
+      );
+      jQuery("form").on(
+        'click',
+        "#Insert",
+        event => {
+          //上傳新圖片，並在表格頂端插入一列
+          event.preventDefault();
+          let form = new FormData, file = jQuery("#Picture").get(0).files[0];
+          form.set('Picture', file);
+          fetch(
+            `${API_PATH}/Upload.ashx`,
+            {
+              method: 'post',
+              body: form
+            }
+          ).then(
+            function () {
+              jQuery.ajax(
+                {
+                  url: `${API_PATH}/Add.ashx`,
+                  method: 'post',
+                  async: false,
+                  data: {
+                    item: 'Title',
+                    FileName: file.name,
+                    AlternativeText: jQuery("#AltText").val(),
+                    Display: 'no'
+                  },
+                  success: returns => {
+                    if (returns !== 'fail') jQuery("#cover").fadeOut();
+                  }
+                }
+              );
+            }
+          ).finally(() => { fetchrow(); }
+          );
+        }
+      );
+      jQuery("form").on(
+        'click',
+        "#Update",
+        () => {
+          //重新上傳新圖片，並隱藏modal
+          let form = new FormData;
+          let file = jQuery("#Picture").get(0).files[0];
+          let id = jQuery("#rowid").val();
+          form.set('Picture', file);
+          fetch(
+            `${API_PATH}/Upload.ashx`,
+            {
+              method: "post",
+              body: form
+            }
+          ).then(
+            function () {
+              rows[rows.findIndex(r => r.Id === parseInt(id))].FileName = file.name;
+              jQuery(`tr#${id}`).find("img").attr('src', `${API_PATH}/Content/Images/${file.name}`);
+              jQuery("#cover").fadeOut();
+            }
+          );
+        }
+      );
+      jQuery("form").on(
+        'click',
+        "#Clear",
+        () => {
+          //清除標題圖片與替代文字
+          jQuery("#Picture").empty();
+          jQuery("#AltText").empty();
+          jQuery("#rowid").empty();
+        }
+      );
+      jQuery("form").submit(
+        event => {
+          event.preventDefault();
+          jQuery("tbody:nth-child(2) tr").each(
+            function () {
+              if (jQuery(this).find("input:checkbox").prop('checked')) {
+                //批次刪除
+                jQuery.get(
+                  `${API_PATH}/Remove.ashx`,
+                  {
+                    item: 'Title',
+                    Id: jQuery(this).attr('id')
+                  },
+                  returns => {
+                    if (returns === 'success') {
+                      jQuery(this).remove();
+                    }
+                  }
+                );
+              } else {
+                //批次修改
+                jQuery.post(
+                  `${API_PATH}/Modify.ashx`,
+                  {
+                    item: 'Title',
+                    Id: jQuery(this).attr('id'),
+                    Filename: jQuery(this).find("img").attr('src').replace(`${API_PATH}/Content/Images/`, ''),
+                    Alternativetext: jQuery(this).find("input:text").val(),
+                    Display: jQuery(this).find("input:radio").prop('checked') ? 'yes' : 'no'
+                  }
+                );
+              }
+            }
+          );
+          fetchrow();
+        }
+      );
+      function fetchrow () {
+      rows = [];
+        jQuery.getJSON(
+          `${API_PATH}/Fetch.ashx`,
+          {
+            item: 'Title'
+          },
+          returns => {
+            rows = returns;
+            jQuery("tbody:nth-child(2)").html("");
+rows.forEach(
+              value => {
+                let row =
+                  `<tr id="${value.Id}" class="trce">
+                  <td>
+                    <img src="${API_PATH}/Content/Images/${value.FileName}" width="300" height="30"/>
+                  </td>
+                  <td>
+                    <input name="alt" type="text" value="${value.AlternativeText}"/>
+                  </td>
+                  <td>
+                    <input type="radio" name="display"`;
+                if (value.Display === 'yes') { row += ` checked`; }
+                row +=
+                  `/>
+                  </td >
+                  <td>
+                    <input type="checkbox" name="delete"/>
+                  </td>
+                  <td>
+                    <input name="change_image" type="button" value="更新圖片" />
+                  </td>
+                </tr>`;
+                jQuery("tbody:nth-child(2)").append(row);
+              }
+            );
+          }
+        );
+}
+    }
+  );
 </script>

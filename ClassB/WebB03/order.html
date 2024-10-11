@@ -1,26 +1,24 @@
-﻿<!DOCTYPE html>
-<html>
-    <head>
-        <script src="Scripts/order.js"></script>
-    </head>
-    <body>
-        <form>
-            <div class="ct rb">訂單清單</div>
-            快速刪除：<input value="ByDate" name="filter" type="radio" />依日期<input id="DateFilter" type="date" /><input value="ByName" name="filter" type="radio" />依電影<select id="NameFilter"></select><input type="submit" value="刪除" />
-            <table class="c ct">
-                <thead>
-					<tr>
-                        <th>訂單編號</th>
-                        <th>電影名稱</th>
-                        <th>日期</th>
-                        <th>場次時間</th>
-                        <th>訂購數量</th>
-                        <th>訂購位置</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </form>
-    </body>
-</html>
+﻿<script src="Scripts/order.js"></script>
+<form>
+  <div class="ct rb">訂單清單</div>
+  快速刪除：
+  <input value="ByDate" name="filter" type="radio" />依日期
+  <input id="DateFilter" type="date" />
+  <input value="ByName" name="filter" type="radio" />依電影
+  <select id="NameFilter"></select>
+  <input type="submit" value="刪除" />
+  <table class="c ct">
+    <thead>
+      <tr>
+        <th>訂單編號</th>
+        <th>電影名稱</th>
+        <th>日期</th>
+        <th>場次時間</th>
+        <th>訂購數量</th>
+        <th>訂購位置</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</form>

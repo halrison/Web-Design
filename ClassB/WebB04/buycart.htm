@@ -1,257 +1,258 @@
-﻿<h1 class="ct"></h1>
+﻿<h1 class="ct">
+</h1>
 <div id="EditOrder" class="ct">
-
 </div>
 <div id="CheckInfo" class="ct">
-
 </div>
 <script type="text/javascript">
-	let cartInfo = '', today = new Date(), total = 0;
-	//未登入者導向登入頁
-	if (sessionStorage.getItem('account') === null || sessionStorage.getItem('account') === undefined) {
-		location.assign('?do=login&user=member');
-	}
-	jQuery("h1").text(`${sessionStorage.getItem('account')}的購物車`);
-	//載入購物車列表
-	if (sessionStorage.getItem('orders') === null || sessionStorage.getItem('orders') === undefined) {
-		jQuery("#EditOrder").text('未選購任何商品');
-	} else {
-		cartInfo =
-			`<table>
-                        <thead>
-                            <tr class='tt'>
-                                <th>編號</th>
-                                <th>商品名稱</th>
-                                <th>數量</th>
-                                <th>庫存量</th>
-                                <th>單價</th>
-                                <th>小計</th>
-                                <th>刪除</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-		let orders = JSON.parse(sessionStorage.getItem('orders'));
-		orders.forEach(
-			order => {
-				jQuery.ajax(
-					{
-						url: '/ClassB/WebB04/Commodity.ashx',
-						method: 'get',
-						data:
-						{
-							action: 'fetchone',
-							number: order.number
-						},
-						dataType: 'json',
-						async:false
-					}
-				).done(
-					response => {
-						cartInfo +=`
-							<tr class='pp'>
-								<td>${order.number}</td>
-								<td>${response[0].name}</td>
-								<td>
-									<input id="amount" type="number" value="${order.amount}"/>
-								</td>
-								<td>${response[0].quantity}</td>
-								<td>${response[0].price}</td>
-								<td>${order.amount * response[0].price}</td>
-								<td>
-									<img src="/ClassB/WebB04/Images/0415.jpg" alt="刪除" class="delete"/>
-								</td>
-							</tr>
-						`;
-						total += order.amount * response[0].price;
-					}
-				);
-			}
-		);
-		cartInfo += `
-					</tbody>
-				</table>
-				<img src="/ClassB/WebB04/Images/0411.jpg" alt="繼續選購商品" id="ContinuePurchase"/>
-				<img src="/ClassB/WebB04/Images/0412.jpg" alt="進入結帳櫃台" id="GotoCashier"/>
-				`;
-		jQuery("#EditOrder").html(cartInfo);
-		cartInfo = '';
-		//載入會員資訊
-		jQuery.ajax(
-			{
-				url: '/ClassB/WebB04/Member.ashx',
-				method: 'get',
-				data:
-				{
-					action: 'fetchone',
-					account: sessionStorage.getItem('account')
-				},
-				dataType: 'json',
-				async: false
-			}
-		).done(
-			member => {
-				cartInfo = `
-							<table>
-									<thead>
-										<tr>
-											<th class='tt'>登入帳號</th>
-											<th class='pp' colspan=4>${member[0].account}</th>
-										</tr>
-										<tr>
-											<th class='tt'>姓名</th>
-											<th class='pp' colspan=4>${member[0].name}</th>
-										</tr>
-											<th class='tt'>電子信箱</th>
-											<th class='pp' colspan=4>${member[0].email}</th>
-										<tr>
-											<th class='tt'>聯絡地址</th>
-											<th class='pp' colspan=4>${member[0].address}</th>
-										</tr>
-										<tr>
-											<th class='tt'>聯絡電話</th>
-											<th class='pp' colspan=4>${member[0].phone}</th>
-										</tr>
-								</thead>
-								<tbody>
-									<tr class='tt'>
-										<td>商品名稱</td>
-										<td>編號</td>
-										<td>數量</td>
-										<td>單價</td>
-										<td>小計</td>
-									</tr>
-						`;
-				//載入估價單
-				orders.forEach(
-					order => {
-						jQuery.ajax(
-							{
-								url: '/ClassB/WebB04/Commodity.ashx',
-								method: 'get',
-								data:
-								{
-									action: 'fetchone',
-									number: order.number
-								},
-								dataType: 'json',
-								async: false
-							}
-						).done(
-							commodity => {
-								cartInfo += `
-									<tr class='pp'>
-										<td>${commodity[0].name}</td>
-										<td>${commodity[0].number}</td>
-										<td>${order.amount}</td>
-										<td>${commodity[0].price}</td>
-										<td>${commodity[0].price * order.amount}</td>
-									</tr>
-								`
-							}
-						);
-					}
-				);
-				cartInfo += `
-									<tr class='tt'>
-										<td colspan=5>總計:${total}</td>
-									</tr>
-								</tbody>
-							</table>
-							<input id="Confirm" type="submit" value="確定送出" />
-							<input id="Backto" type="button" value="返回修改訂單" />
-				`;
-				jQuery("#CheckInfo").html(cartInfo);
-			}
-		);
-	}
-	jQuery("#CheckInfo").hide();
-	//繼續選購商品按鈕
-	jQuery("#EditOrder").on(
-		'click',
-		"#ContinuePurchase",
-		() => {
-			location.assign('index.htm');
-		}
-	//進入結帳櫃台按鈕
-	).on(
-		'click',
-		"#GotoCashier",
-		() => {
-			jQuery("h1").text('填寫資料');
-			jQuery("#EditOrder").toggle();
-			jQuery("#CheckInfo").toggle();
-		}
-	//刪除按鈕
-	).on(
-		'click',
-		".delete",
-		function () {
-			jQuery(this).parents("tr").remove();
-		}
-	);
-	//返回修改訂單按鈕
-	jQuery("#CheckInfo").on(
-		'click',
-		"#Backto",
-		() => {
-			jQuery("h1").text(`${sessionStorage.getItem('account')}的購物車`);
-			jQuery("#EditOrder").toggle();
-			jQuery("#CheckInfo").toggle();
-		}
-	//確定送出按鈕
-	).on(
-		'click',
-		"#Confirm",
-		() => {
-			event.preventDefault();
-			let number = today.getFullYear().toString() + (today.getMonth()+1).toString().padStart(2, 0) + today.getDate().toString().padStart(2, 0) + today.getHours().toString().padStart(2, 0) + today.getMinutes().toString().padStart() + today.getSeconds().toString().padStart(2, 0);
-			jQuery.post(
-				'/ClassB/WebB04/OrderSummary.ashx',
-				{
-					action: 'add',
-					number: number,
-					account: sessionStorage.getItem('account'),
-					total:total
-				},
-				response => {
-					if (response === 'Success') {
-						jQuery("#CheckInfo table tbody .pp").each(
-							async (index, row) => {
-								//新增訂單
-								await jQuery.post(
-									'/ClassB/WebB04/OrderDetail.ashx',
-									{
-										action:'add',
-										order_number: number,
-										commodity_number: jQuery(row).find("td:nth-child(2)").text(),
-										amount:jQuery(row).find("td:nth-child(3)").text()
-									}
-								).done(
-									response => {
-										if (response === 'Success') {
-											//減少庫存
-											jQuery.post(
-												'/ClassB/WebB04/Commodity.ashx',
-												{
-													action: 'decrease',
-													number: jQuery(row).find("td:nth-child(2)").text()
-												}
-											);
-										}
-									}
-								);
-							}
-						);
-						sessionStorage.removeItem('orders');
-						alert(
-							`訂購成功
-感謝您的選購`
-						);
-						//回首頁
-						location.assign('index.htm');
-					}
-				}
-			);
-		}
-	);
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..';
+  let cartInfo = '', today = new Date(), total = 0;
+  //未登入者導向登入頁
+  if (sessionStorage.getItem('account') === null || sessionStorage.getItem('account') === undefined) {
+    location.assign('?do=login&user=member');
+  }
+  jQuery("h1").text(`${sessionStorage.getItem('account')}的購物車`);
+  //載入購物車列表
+  if (sessionStorage.getItem('orders') === null || sessionStorage.getItem('orders') === undefined) {
+    jQuery("#EditOrder").text('未選購任何商品');
+  } else {
+    cartInfo =
+      `<table>
+        <thead>
+          <tr class='tt'>
+              <th>編號</th>
+              <th>商品名稱</th>
+              <th>數量</th>
+              <th>庫存量</th>
+              <th>單價</th>
+              <th>小計</th>
+              <th>刪除</th>
+          </tr>
+        </thead>
+        <tbody>`;
+    let orders = JSON.parse(sessionStorage.getItem('orders'));
+    orders.forEach(
+      order => {
+        jQuery.ajax(
+          {
+            url: `${API_PATH}/Commodity.ashx`,
+            method: 'get',
+            data:
+            {
+              action: 'fetchone',
+              number: order.number
+            },
+            dataType: 'json',
+            async: false
+          }
+        ).done(
+          response => {
+            cartInfo += `
+              <tr class='pp'>
+                <td>${order.number}</td>
+                <td>${response[0].name}</td>
+                <td>
+                  <input id="amount" type="number" value="${order.amount}"/>
+                </td>
+                <td>${response[0].quantity}</td>
+                <td>${response[0].price}</td>
+                <td>${order.amount * response[0].price}</td>
+                <td>
+                  <img src="${API_PATH}/Content/Images/0415.jpg" alt="刪除" class="delete"/>
+                </td>
+              </tr>
+            `;
+            total += order.amount * response[0].price;
+          }
+        );
+      }
+    );
+    cartInfo += `
+          </tbody>
+        </table>
+        <img src="${API_PATH}/Content/Images/0411.jpg" alt="繼續選購商品" id="ContinuePurchase"/>
+        <img src="${API_PATH}/Content/Images/0412.jpg" alt="進入結帳櫃台" id="GotoCashier"/>
+        `;
+    jQuery("#EditOrder").html(cartInfo);
+    cartInfo = '';
+    //載入會員資訊
+    jQuery.ajax(
+      {
+        url: `${API_PATH}/Member.ashx`,
+        method: 'get',
+        data:
+        {
+          action: 'fetchone',
+          account: sessionStorage.getItem('account')
+        },
+        dataType: 'json',
+        async: false
+      }
+    ).done(
+      member => {
+        cartInfo = `
+              <table>
+                  <thead>
+                    <tr>
+                      <th class='tt'>登入帳號</th>
+                      <th class='pp' colspan=4>${member[0].account}</th>
+                    </tr>
+                    <tr>
+                      <th class='tt'>姓名</th>
+                      <th class='pp' colspan=4>${member[0].name}</th>
+                    </tr>
+                      <th class='tt'>電子信箱</th>
+                      <th class='pp' colspan=4>${member[0].email}</th>
+                    <tr>
+                      <th class='tt'>聯絡地址</th>
+                      <th class='pp' colspan=4>${member[0].address}</th>
+                    </tr>
+                    <tr>
+                      <th class='tt'>聯絡電話</th>
+                      <th class='pp' colspan=4>${member[0].phone}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr class='tt'>
+                    <td>商品名稱</td>
+                    <td>編號</td>
+                    <td>數量</td>
+                    <td>單價</td>
+                    <td>小計</td>
+                  </tr>
+            `;
+        //載入估價單
+        orders.forEach(
+          order => {
+            jQuery.ajax(
+              {
+                url: `${API_PATH}/Commodity.ashx`,
+                method: 'get',
+                data:
+                {
+                  action: 'fetchone',
+                  number: order.number
+                },
+                dataType: 'json',
+                async: false
+              }
+            ).done(
+              commodity => {
+                cartInfo += `
+                  <tr class='pp'>
+                    <td>${commodity[0].name}</td>
+                    <td>${commodity[0].number}</td>
+                    <td>${order.amount}</td>
+                    <td>${commodity[0].price}</td>
+                    <td>${commodity[0].price * order.amount}</td>
+                  </tr>
+                `
+              }
+            );
+          }
+        );
+        cartInfo += `
+                  <tr class='tt'>
+                    <td colspan=5>總計:${total}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <input id="Confirm" type="submit" value="確定送出" />
+              <input id="Backto" type="button" value="返回修改訂單" />
+        `;
+        jQuery("#CheckInfo").html(cartInfo);
+      }
+    );
+  }
+  jQuery("#CheckInfo").hide();
+  //繼續選購商品按鈕
+  jQuery("#EditOrder").on(
+    'click',
+    "#ContinuePurchase",
+    () => {
+      location.assign('index.htm');
+    }
+    //進入結帳櫃台按鈕
+  ).on(
+    'click',
+    "#GotoCashier",
+    () => {
+      jQuery("h1").text('填寫資料');
+      jQuery("#EditOrder").toggle();
+      jQuery("#CheckInfo").toggle();
+    }
+    //刪除按鈕
+  ).on(
+    'click',
+    ".delete",
+    function () {
+      jQuery(this).parents("tr").remove();
+    }
+  );
+  //返回修改訂單按鈕
+  jQuery("#CheckInfo").on(
+    'click',
+    "#Backto",
+    () => {
+      jQuery("h1").text(`${sessionStorage.getItem('account')}的購物車`);
+      jQuery("#EditOrder").toggle();
+      jQuery("#CheckInfo").toggle();
+    }
+    //確定送出按鈕
+  ).on(
+    'click',
+    "#Confirm",
+    event => {
+      event.preventDefault();
+      let number = today.getFullYear().toString() + (today.getMonth() + 1).toString().padStart(2, 0) + today.getDate().toString().padStart(2, 0) + today.getHours().toString().padStart(2, 0) + today.getMinutes().toString().padStart() + today.getSeconds().toString().padStart(2, 0);
+      jQuery.post(
+        `${API_PATH}/OrderSummary.ashx`,
+        {
+          action: 'add',
+          number: number,
+          account: sessionStorage.getItem('account'),
+          total
+        },
+        response => {
+          if (response === 'Success') {
+            jQuery("#CheckInfo table tbody .pp").each(
+              async (index, row) => {
+                //新增訂單
+                await jQuery.post(
+                  `${API_PATH}/OrderDetail.ashx`,
+                  {
+                    action: 'add',
+                    order_number: number,
+                    commodity_number: jQuery(row).find("td:nth-child(2)").text(),
+                    amount: jQuery(row).find("td:nth-child(3)").text()
+                  }
+                ).done(
+                  response => {
+                    if (response === 'Success') {
+                      //減少庫存
+                      jQuery.post(
+                        `${API_PATH}/Commodity.ashx`,
+                        {
+                          action: 'decrease',
+                          number: jQuery(row).find("td:nth-child(2)").text()
+                        }
+                      );
+                    }
+                  }
+                );
+              }
+            );
+            sessionStorage.removeItem('orders');
+            alert(
+              `訂購成功
+              感謝您的選購`
+            );
+            //回首頁
+            location.assign('index.htm');
+          }
+        }
+      );
+    }
+  );
 </script>

@@ -1,21 +1,22 @@
 jQuery(document).ready(
 	function () {
-		var item = new URLSearchParams(location.search), date = new Date, days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], user = sessionStorage.getItem('user');
+		let item = new URLSearchParams(location.search), date = new Date, days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], user = sessionStorage.getItem('user');
 		let counter_today = counter_total = 0;
-		if (user !== null) {
+    const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB02' : '..';
+    if (user !== null) {
 			let welcome_messege = `歡迎，${user}`;
 			if (user === 'admin') {
-				welcome_messege+=`<br/><a href=""  style="border:1px solid black;">管理</a> | `
+				welcome_messege+=`<br/><a href="" style="border: 1px solid black;">管理</a> | `
 			}
-			welcome_messege += `<a href="?do=logout" style="border:1px solid black;">登出</a>`;
+			welcome_messege += `<a href="?do=logout" style="border: 1px solid black;">登出</a>`;
 			jQuery("#marquee+span").html(welcome_messege);
 		}
 		if (sessionStorage.getItem('first view') === 'true' || sessionStorage.getItem('first view') === null) {
 			jQuery.getJSON(
-				'/ClassB/WebB02/Counter.ashx',
+				`${API_PATH}/Counter.ashx`,
 				{
 					year: date.getFullYear(),
-					month: date.getMonth()+1,
+					month: date.getMonth() + 1,
 					date:date.getDate()
 				},
 				response => {
@@ -45,7 +46,7 @@ jQuery(document).ready(
 function good(id, type, user) {
 	if (type === "plus") {
 		jQuery.post(
-			'/ClassB/WebB02/Add.ashx',
+			`${API_PATH}/Add.ashx`,
 			{
 				item: 'Good',
 				account: user,
@@ -54,15 +55,16 @@ function good(id, type, user) {
 			response => {
 				if (response === 'Success') {
 					jQuery.post(
-						'/ClassB/WebB02/Modify.ashx',						
+						`${API_PATH}/Modify.ashx`,						
 						{
 							item: 'Article',
 							id: id,
-							action:type
+							action: type
 						},
 						response => {
-							jQuery("#vie" + id).text(jQuery("#vie" + id).text() + 1);
-							jQuery("#good" + id).text("收回讚").attr("onclick", `good(${id},'minus','${user}')`);
+              if(response === 'Success'){
+							  location.reload();
+              }
 						}
 					);
 				}
@@ -71,7 +73,7 @@ function good(id, type, user) {
 	}
 	else {
 		jQuery.post(
-			'/ClassB/WebB02/Remove.ashx',
+			`${API_PATH}/Remove.ashx`,
 			{
 				item: 'Good',
 				account: user,
@@ -79,8 +81,19 @@ function good(id, type, user) {
 			},
 			response => {
 				if (response === 'Success') {
-					jQuery("#vie" + id).text(jQuery("#vie" + id).text() - 1);
-					jQuery("#good" + id).text("讚").attr("onclick", `good(${id},'plus','${user}')`);
+					jQuery.post(
+						`${API_PATH}/Modify.ashx`,						
+						{
+							item: 'Article',
+							id: id,
+							action: type
+						},
+						response => {
+              if(response === 'Success'){
+							  location.reload();
+              }
+						}
+					);
 				}
 			}
 		);

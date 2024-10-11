@@ -6,8 +6,9 @@ Public Class Add
 	Dim command As New SqlCommand
 	Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
 		connection.ConnectionString = WebConfigurationManager.ConnectionStrings("Connection").ToString()
-		connection.Open()
-		If context.Request.Params.HasKeys Then
+    connection.Open()
+    connection.ChangeDatabase("DB03")
+    If context.Request.Params.HasKeys Then
 			Dim item = context.Request.Params.Get("item")
 			command.Connection = connection
 			command.CommandType = CommandType.Text
@@ -47,15 +48,10 @@ Public Class Add
 					command.Parameters.AddWithValue("@number", context.Request.Params.Get("number"))
 			End Select
 			context.Response.ContentType = "text/plain"
-			If command.ExecuteNonQuery() > 0 Then
-				command.CommandType = CommandType.StoredProcedure
-				command.CommandText = "getLastInsertedId"
-				command.Parameters.Clear()
-				command.Parameters.AddWithValue("@table", item)
-				Dim id = command.ExecuteScalar()
-				context.Response.Write(id)
-			Else
-				context.Response.Write("failed")
+      If command.ExecuteNonQuery() > 0 Then
+        context.Response.Write("Success")
+      Else
+        context.Response.Write("failed")
 			End If
 		End If
 	End Sub

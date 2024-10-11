@@ -37,7 +37,7 @@
 		<td colspan="2" class="ct">
 			購買數量
 			<input id="amount" type="number" />
-			<img src="Images/0402.jpg" alt="我要購買" id="i_wanna_buy"/>
+			<img src="Content/Images/0402.jpg" alt="我要購買" id="i_wanna_buy"/>
 		</td>
 	</tr>
 </table>
@@ -48,20 +48,42 @@
 	}
 </style>
 <script>
-	//載入商品資訊
-	jQuery.getJSON(
-		'/ClassB/WebB04/Commodity.ashx',
-		{
-			action: 'fetchone',
-			number: new URLSearchParams(location.search).get('number')
-		}
-	).done(
-		response => {
-			let selectedCommodity = response[0];
-			jQuery("#icon").attr('src', `/ClassB/WebB04/Images/${selectedCommodity.picture}`);
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..'; 
+  let bigCategory, mediumCategory;
+  //載入商品資訊
+  jQuery.getJSON(
+    `${API_PATH}/Commodity.ashx`,
+    {
+      action: 'fetchone',
+      number: new URLSearchParams(location.search).get('number')
+    }
+  ).done(
+    async response => {
+      let selectedCommodity = response[0];
+      await jQuery.getJSON(
+        `${API_PATH}/Big.ashx`,
+        {
+          action: 'fetch'
+        },
+        response => {
+          bigCategory = response.find(category => category.id === selectedCommodity.big).name;
+        }
+      );
+      await jQuery.getJSON(
+        `${API_PATH}/Medium.ashx`,
+        {
+          action: 'fetch',
+          big: selectedCommodity.big
+        },
+        response => {
+          mediumCategory = response.find(category => category.id === selectedCommodity.medium).name;
+        }
+      );
+	    jQuery("#icon").attr('src', `${API_PATH}/Content/Images/${selectedCommodity.picture}`);
 			jQuery("h1").text(selectedCommodity.name);
 			jQuery("#number").text(selectedCommodity.number);
-			jQuery("#category").text(`${selectedCommodity.big}>${selectedCommodity.medium}`);
+			jQuery("#category").text(`${bigCategory}>${mediumCategory}`);
 			jQuery("#price").text(selectedCommodity.price);
 			jQuery("#description").text(selectedCommodity.description);
 			jQuery("#quantity").text(selectedCommodity.quantity);
@@ -81,7 +103,7 @@
 				location.assign('?do=login&user=member');
 			} else {
 				let orders = JSON.parse(sessionStorage.getItem('orders')) || [], searchIndex = orders.findIndex(order => order.number === jQuery("#number").text());
-				if (searchIndex> -1) {
+				if (searchIndex > -1) {
 					orders[searchIndex].amount = jQuery("#amount").val();
 				} else {
 					//加入購物車

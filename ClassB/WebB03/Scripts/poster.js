@@ -1,21 +1,22 @@
 ﻿jQuery(document).ready(
 	() => {
-		var table;
-		//海報列表
+		let table;
+		//根據網域決定路徑
+    const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB03' : '..';
+    //海報列表
 		jQuery.getJSON(
-			'/ClassB/WebB03/Fetch.ashx',
+			`${API_PATH}/Fetch.ashx`,
 			{
 				item: 'Movie'
 			},
 			response => {
 				table = response;
-				jQuery.each(
-					response,
-					(key, value) => {
+				table.forEach(
+					value => {
 						jQuery('tbody').append(
 							`<tr id='${value.id}'>
 								<td>
-									<img src='/ClassB/WebB03/Images/${value.poster}' />
+									<img src='${API_PATH}/Content/Images/${value.poster}' width='200'/>
 								</td>
 								<td>
 									<input type='text' name='name' value='${value.name}' />
@@ -24,8 +25,15 @@
 									<button class='up'>往上</button>
 									<button class='down'>往下</button>
 								</td>
+                <td>
+                  <select value='${value.animation}'>
+                    <option value='fadein' ${value.animation === 'fadein' ? 'selected' : ''}>淡入</option>
+                    <option value='slidedown' ${value.animation === 'slidedown' ? 'selected' : ''}>滑出</option>
+                    <option value='resize' ${value.animation === 'resize' ? 'selected' : ''}>縮放</option>
+                  </select>
+                </td>
 								<td>
-									<input type='checkbox' name='display' />顯示
+									<input type='checkbox' name='display' ${value.display === 'yes' ? 'checked' : ''}/>顯示
 									<input type='checkbox' name='delete' />刪除
 								</td>
 							</tr>`
@@ -38,14 +46,14 @@
 		jQuery("tbody").on(
 			'click',
 			".up",
-			async function(){
+			async function(event){
 				event.preventDefault();
 				const currentRow = jQuery(this).parents("tr"),
 					previosRow = currentRow.prev("tr"),
 					currentRecord = table.find(value => String(value.id) === currentRow.attr("id")),
 					previosRecord = table.find(value => String(value.id) === previosRow.attr("id"));
 				let currentAjax = await jQuery.post(
-					'/ClassB/WebB03/Modify.ashx',
+					`${API_PATH}/Modify.ashx`,
 					{
 						item: 'Movie',
 						id: currentRecord.id,
@@ -63,7 +71,7 @@
 					}
 				),
 					previosAjax = await jQuery.post(
-					'/ClassB/WebB03/Modify.ashx',
+					`${API_PATH}/Modify.ashx`,
 					{
 						item: 'Movie',
 						id: previosRecord.id,
@@ -86,14 +94,14 @@
 		).on(
 			'click',
 			".down",
-			async function () {
+			async function (event) {
 				event.preventDefault();
 				const currentRow = jQuery(this).parents("tr"),
 					nextRow = currentRow.next("tr"),
 					currentRecord = table.find(value => String(value.id) === currentRow.attr("id")),
 					nextRecord = table.find(value => String(value.id) === nextRow.attr("id"));
 				let currentAjax = await jQuery.post(
-					'/ClassB/WebB03/Modify.ashx',
+					`${API_PATH}/Modify.ashx`,
 					{
 						item: 'Movie',
 						id: currentRecord.id,
@@ -111,7 +119,7 @@
 					}
 				),
 				nextAjax = await jQuery.post(
-					'/ClassB/WebB03/Modify.ashx',
+					`${API_PATH}/Modify.ashx`,
 					{
 						item: 'Movie',
 						id: nextRecord.id,
@@ -133,13 +141,13 @@
 		);
 		//批次刪除
 		jQuery('#Submit1').click(
-			() => {
+			event => {
 				event.preventDefault();
 				jQuery("tbody tr").each(
 					function () {
 						if (jQuery(this).find("[name='delete']").prop('checked')) {
 							jQuery.get(
-								'/ClassB/WebB03/Remove.ashx',
+								`${API_PATH}/Remove.ashx`,
 								{
 									id:jQuery(this).attr('id')
 								},
@@ -160,12 +168,12 @@
 			}
 		);
 		jQuery('#Submit2').click(
-			() => {
+			event => {
 				event.preventDefault();
 				var form = new FormData, file = jQuery('#poster').get(0).files;
 				form.append('poster', file[0]);
 				fetch(
-					'/ClassB/WebB03/Upload.ashx',
+					`${API_PATH}/Upload.ashx`,
 					{
 						method: 'post',
 						body: form
@@ -174,7 +182,7 @@
 					response => {
 						if (response.ok) {
 							jQuery.post(
-								'/ClassB/WebB03/Add.ashx',
+								`${API_PATH}/Add.ashx`,
 								{
 									item: 'Movie',
 									name: jQuery('#name').val(),

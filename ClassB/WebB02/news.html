@@ -1,95 +1,96 @@
 ﻿<!DOCTYPE html>
 <html>
-    <head>
-        <style>
-			tbody th {
-				width: 20%;
-			}
-            tbody td:first-child{
-                width:60%;
+<head>
+  <style>
+    tbody th {
+      width: 20%;
+    }
+
+    tbody td:first-child {
+      width: 60%;
+    }
+  </style>
+</head>
+<body>
+  <nav>目前位置：首頁>最新文章</nav>
+  <table style="width:100%;">
+    <thead>
+      <tr>
+        <td>標題</td>
+        <td>內容</td>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <p style="font-size:large">1</p>
+  <script type="text/javascript">
+    const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB02' : '';
+    jQuery(document).ready(
+      () => {
+        jQuery("style").appendTo("head");
+        jQuery.ajax(
+          {
+            url: `${API_PATH}/Fetch.ashx`,
+            method: 'get',
+            data: {
+              item: 'Article',
+            },
+            async: false,
+            dataType: 'json',
+            success: response => {
+              response.filter(row => row.display === 'yes').forEach(                
+                value => {
+                  let row =
+                    `<tr id='${value.id}'>
+                      <th>${value.title}</th>
+                      <td>
+                        <span>${value.content.substr(0, 10)}</span>
+                        <p style='display:none'>${value.content}</p>
+                      </td>`;
+                  if (sessionStorage.getItem("user") !== null) {
+                    row += fetchgood(value.id);
+                  }
+                  row +=
+                    `</tr>`;
+                  jQuery("tbody").append(row);
+                }
+              )
             }
-        </style>
-    </head>
-    <body>
-        <nav>目前位置：首頁>最新文章</nav>
-		<table style="width:100%;">
-            <thead>
-                <tr>
-	                <td>標題</td>
-	                <td>內容</td>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-		<p style="font-size:large">1</p>
-        <script type="text/javascript">
-			jQuery(document).ready(
-				() => {
-					jQuery("style").appendTo("head");
-					$.ajax(
-						{
-							url: '/ClassB/WebB02/Fetch.ashx',
-							method: 'get',
-							data: {
-								item: 'Article',
-							},
-							async:false,
-							dataType: 'json',
-							success: response => {
-								$.each(
-									response,
-									(key, value) => {
-										let row =
-											`<tr id='${value.id}'>
-												<th>${value.titles}</th>
-												<td>
-													<span>${value.contents.substr(0, 10)}</span>
-													<p style='display:none'>${value.contents}</p>
-												</td>`;
-										if (sessionStorage.length > 0) {
-											row += fetchgood(value.id);
-										}
-										row +=
-											`</tr>`;
-										jQuery("tbody").append(row);
-									}
-								);
-							}
-						}
-					);
-					jQuery("tbody").on(
-						'click',
-						"th",
-						function () {
-							jQuery(this).next().children("p,span").toggle();
-						}
-					);
-				}
-			);
-			function fetchgood(id) {
-				var user = sessionStorage.getItem('user'), cell = `<td>`;
-				$.ajax(
-					{
-						url: '/ClassB/WebB02/Fetch.ashx',
-						method: 'get',
-						data: {
-							item: 'Good',
-							account: user,
-							article: id
-						},
-						async: false,
-						dataType: 'json',
-						success: function (response) {
-							cell += `<a id='good${id}'  onclick="good(${id},'minus','${user}')">收回讚</a>`;
-						},
-						error: function (xhr, status, error) {
-							cell += `<a id='good${id}'  onclick="good(${id},'plus','${user}')">讚</a>`;
-						}
-					}
-				);
-				cell += `</td>`;
-				return cell;
-			}		
-        </script>
-    </body>
+          }
+        );
+        jQuery("tbody").on(
+          'click',
+          "th",
+          function () {
+            jQuery(this).next().children("p,span").toggle();
+          }
+        );
+      }
+    );
+    function fetchgood (id) {
+      let user = sessionStorage.getItem('user'), cell = `<td>`;
+      jQuery.ajax(
+        {
+          url: `${API_PATH}/Fetch.ashx`,
+          method: 'get',
+          data: {
+            item: 'Good',
+            account: user,
+            article: id
+          },
+          async: false,
+          dataType: 'json',
+          success: function (response) {
+            cell += `<a id='good${id}'  onclick="good(${id},'minus','${user}')">收回讚</a>`;
+          },
+          error: function (xhr, status, error) {
+            cell += `<a id='good${id}'  onclick="good(${id},'plus','${user}')">讚</a>`;
+          }
+        }
+      );
+      cell += `</td>`;
+      return cell;
+    }
+  </script>
+</body>
 </html>

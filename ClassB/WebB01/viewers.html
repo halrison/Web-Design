@@ -22,7 +22,7 @@
 			//載入進站總人數
 			jQuery("#TextboxCounter").val(localStorage.getItem('counter'));
 			jQuery("form").submit(
-				() => {
+				event => {
 					//修改進站總人數
 					event.preventDefault();
 					localStorage.setItem('counter', jQuery("#TextboxCounter").val());

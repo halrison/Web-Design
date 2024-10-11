@@ -6,8 +6,9 @@ Public Class Modify
 	Dim command As New SqlCommand
 	Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
 		connection.ConnectionString = WebConfigurationManager.ConnectionStrings("Connection").ToString()
-		connection.Open()
-		If context.Request.Params.HasKeys Then
+    connection.Open()
+    connection.ChangeDatabase("DB03")
+    If context.Request.Params.HasKeys Then
 			command.Connection = connection
 			command.CommandType = CommandType.Text
 			command.CommandText = "update Movie set name=@name,levels=@levels,length=@length,date=@date,publisher=@publisher,director=@director,trailer=@trailer,poster=@poster,brief=@brief,display=@display,animation=@animation where id=@id"

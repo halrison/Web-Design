@@ -1,1 +1,1 @@
-﻿<%@ WebHandler Language="VB" CodeBehind="Upload.ashx.vb" Class="WebB01.Upload" %>
+﻿<%@ WebHandler Language="VB" CodeBehind="Upload.ashx.vb" Class="WebB04.Upload" %>

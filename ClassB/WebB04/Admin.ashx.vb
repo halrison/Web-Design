@@ -10,8 +10,9 @@ Public Class Admin
 		connection.ConnectionString = WebConfigurationManager.ConnectionStrings("Connection").ToString()
 		command.Connection = connection
 		connection.Open()
-		command.CommandType = CommandType.Text
-		If context.Request.Params.HasKeys() Then
+    command.CommandType = CommandType.Text
+    connection.ChangeDatabase("DB04")
+    If context.Request.Params.HasKeys() Then
 			Select Case context.Request.Params.Get("action")
 				'新增
 				Case "add"

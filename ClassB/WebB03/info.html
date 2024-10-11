@@ -4,32 +4,43 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>影城</title>
-        <link rel="stylesheet" href="Content/Site.css">
-        <link href="Content/s2.css" rel="stylesheet" />
-        <script src="Scripts/jquery-3.5.1.js"></script>
+        <link href="App_Themes/Site.css" rel="stylesheet" />
+        <link href="App_Themes/s2.css" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
         <style>
-			#mm .rb {
-				width: 87%;
-			}
-				#mm .rb > div {
-					background: #FFF;
-					width: 100%;
-					color: #333;
-					text-align: left
-				}
-			#ticket {
-				margin-left: 50px;
-				padding: 2px 4px
-			}
-			font {
-				font-size: 24px
-			}
-				font p {
-					margin: 3px
-				}
-			video {
-				float: right;
-			}
+          #level img{
+            float: initial;
+          }
+			    #mm .rb {
+				    width: 87%;
+			    }
+				    #mm .rb > div {
+					    background: #FFF;
+					    width: 100%;
+					    color: #333;
+					    text-align: left
+				    }
+			    #ticket {
+				    margin-left: 50px;
+				    padding: 2px 4px
+			    }
+			    font {
+				    font-size: 24px;
+			    }
+				    font p {
+					    margin: 3px;
+				    }
+              font p:last-child {
+                margin-top: 10px;
+                word-break: break-all;
+              }
+			    video {
+				    float: right;
+			    }
+          img {
+            margin: 10px;
+            float: left;
+          }
         </style>
     </head>
     <body>
@@ -55,7 +66,7 @@
                     <div>
                         <video width="300" height="250" controls="controls"></video>
                         <font>
-                            <img width="200" height="250" style="margin:10px; float:left" />
+                            <img width="200" height="250"  />
                             <p>
                                 影片名稱 ：<span id="name"></span>
                                 <input type="button" id="ticket" value="線上訂票" class="b2_btu" />
@@ -78,7 +89,7 @@
                             </p>
                             <br>
                             <br>
-                            <p style="margin-top:10px; word-break:break-all">
+                            <p>
                                 劇情簡介：<br/>
                                 <span id="brief"></span>
                             </p>

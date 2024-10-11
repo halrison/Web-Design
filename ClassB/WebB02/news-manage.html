@@ -1,183 +1,186 @@
 ﻿<!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            th{
-                background-color:lightgray;
+<head>
+  <style>
+    th {
+      background-color: lightgray;
+    }
+
+    ul {
+      list-style-type: none;
+    }
+
+    li {
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <table>
+      <thead>
+        <tr>
+          <td>編號</td>
+          <td>標題</td>
+          <td>顯示</td>
+          <td>刪除</td>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <nav id="pagination-bar">
+      <ul id="pagination-item">
+      </ul>
+    </nav>
+    <input id="Submit" type="submit" value="確定修改" />
+  </form>
+  <script type="text/javascript">
+    jQuery(document).ready(
+      () => {
+        let pagecurrent = 1, rowcount, pagecount, rows = [];
+        const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB02' : '';
+        jQuery("style").appendTo("head");
+        jQuery.getJSON(
+          `${API_PATH}/Fetch.ashx`,
+          {
+            item: 'Article'
+          },
+          response => {
+            rows = response, rowcount = rows.length, pagecount = Math.ceil(rowcount / 3), paginationlink =
+              `<li>
+                    <a href="" id="prev" style="text-decoration:none"><</a>
+                  </li>`;
+            for (let i = 1; i <= pagecount; i++) {
+              paginationlink +=
+                `<li`;
+              if (i == pagecurrent) {
+                paginationlink +=
+                  `  style="font-size:20px"`;
+              }
+              paginationlink += `>${i}</li>`;
             }
-			ul{
-				list-style-type:none;
-			}
-			li {
-				display: inline-block;
-			}
-        </style>
-    </head>
-	<body>
-		<form>
-			<table>
-				<thead>
-					<tr>
-						<td>編號</td>
-						<td>標題</td>
-						<td>顯示</td>
-						<td>刪除</td>
-					</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
-			<nav id="pagination-bar">
-				<ul id="pagination-item">
-				</ul>
-			</nav>
-			<input id="Submit" type="submit" value="確定修改" />
-		</form>
-		<script type="text/javascript">
-			jQuery(document).ready(
-				() => {
-					var pagecurrent = 1,rowcount,pagecount;
-					jQuery("style").appendTo("head");
-					jQuery.getJSON(
-						'/ClassB/WebB02/Fetch.ashx',
-						{
-							item: 'Article'
-						},
-						response => {							
-							rowcount= response.length,pagecount = Math.ceil(rowcount / 3),paginationlink =
-								`<li>
-									<a href="" id="prev" style="text-decoration:none"><</a>
-								</li>`;
-							for (var i = 1; i <= pagecount; i++) {
-								paginationlink +=
-								`<li`;
-								if (i == pagecurrent) {
-									paginationlink +=
-									`  style="font-size:20px"`;
-								}
-								paginationlink += `>${i}</li>`;
-							}
-							paginationlink +=
-								`<li>
-									<a href="" id="next" style="text-decoration:none">></a>
-								</li>`;
-							jQuery("#pagination-item").html(paginationlink);
-							fetchrow(0, 3);
-						}
-					);
-					jQuery("form").submit(
-						() => {
-							jQuery("tbody tr").each(
-								() => {
-									if (jQuery(this).find(":checkbox[name='delete']").prop('checked')) {
-										jQuery.get(
-											'/ClassB/WebB02/Remove.ashx',
-											{
-												item: 'Article',
-												id: jQuery(this).find("th").text()
-											},
-											response => {
-												if (response === 'Success') {
-													jQuery(this).remove();
-												}
-											}
-										);
-									} else {
-										jQuery.post(
-											'/ClassB/WebB02/Modify.ashx',
-											{
-												item: 'Article',
-												id: jQuery(this).find("th").text(),
-												display: jQuery(this).find(":checkbox[name='display']").prop('checked') ? 'yes':'no'
-											}
-										);
-									}
-								}
-							);
-						}
-					);
-					jQuery("#pagination-item").on(
-						'click',
-						"#prev",
-						() => {
-							event.preventDefault();
-							pagecurrent--;
-							if (pagecurrent < 1) {
-								pagecurrent = 1;
-							} else {
-								jQuery("#pagination-item").children("li").each(
-									function () {
-										if (jQuery(this).text() == pagecurrent) {
-											jQuery(this).css('font-size', '20px');
-										} else {
-											jQuery(this).css('font-size', '12px');
-										}
-									}
-								);
-								fetchrow((pagecurrent - 1) * 3, 3);
-							}
-						}
-					);
-					jQuery("#pagination-item").on(
-						'click',
-						"#next",
-						() => {
-							event.preventDefault();
-							pagecurrent++;
-							if (pagecurrent > pagecount) {
-								pagecurrent = pagecount;
-							} else {
-								jQuery("#pagination-item").children("li").each(
-									function () {
-										if (jQuery(this).text() == pagecurrent) {
-											jQuery(this).css('font-size', '20px');
-										} else {
-											jQuery(this).css('font-size', '12px');
-										}
-									}
-								);
-								fetchrow((pagecurrent - 1) * 3, 3);
-							}
-						}
-					);
-					function fetchrow(skip, fetch) {
-						jQuery("tbody").empty();
-						jQuery.getJSON(
-							'/ClassB/WebB02/Fetch.ashx',
-							{
-								item: 'Article',
-								skip: skip,
-								fetch: fetch
-							},
-							response => {
-								jQuery.each(
-									response,
-									(key, value) => {
-										if (key < 3) {
-											let row =
-												`<tr>
-												<th>${value.id}</th>
-												<td>${value.titles}</td>
-												<td>
-													<input name="display" type="checkbox" `;
-											if (value.display === 'yes') {
-												row += `checked`
-											}
-											row +=
-												`/>
-												</td>
-												<td>
-													<input name="delete" type="checkbox"/>
-												</td>
-											</tr>`;
-											jQuery("tbody").append(row);
-										}
-									}
-								);
-							}
-						);
-					}				
-				}
-			);
-		</script>
-	</body>
+            paginationlink +=
+              `<li>
+                    <a href="" id="next" style="text-decoration:none">></a>
+                  </li>`;
+            jQuery("#pagination-item").html(paginationlink);
+            fetchrow(0, 3);
+          }
+        );
+        jQuery("form").submit(
+          function (event) {
+            event.preventDefault();
+            jQuery("tbody tr").each(
+              function () {
+                let id = jQuery(this).find("th").text()
+                if (jQuery(this).find("input[name='delete']").prop('checked')) {
+                  jQuery.post(
+                    `${API_PATH}/Remove.ashx`,
+                    {
+                      item: 'Article',
+                      id
+                    },
+                    response => {
+                      if (response === 'Success') {
+                        jQuery(this).remove();
+                      }
+                    }
+                  );
+                } else {
+                  let display = jQuery(this).find("input[name='display']").prop('checked') ? 'yes' : 'no';
+                  jQuery.post(
+                    `${API_PATH}/Modify.ashx`,
+                    {
+                      item: 'Article',
+                      id,
+                      display
+                    }
+                  );
+                }
+              }
+            ); 
+            fetchrow((pagecurrent - 1) * 3, 3)
+          }
+        );
+        jQuery("#pagination-item").on(
+          'click',
+          "#prev",
+          event => {
+            event.preventDefault();
+            pagecurrent--;
+            if (pagecurrent < 1) {
+              pagecurrent = 1;
+            } else {
+              jQuery("#pagination-item").children("li").each(
+                function () {
+                  if (jQuery(this).text() == pagecurrent) {
+                    jQuery(this).css('font-size', '20px');
+                  } else {
+                    jQuery(this).css('font-size', '12px');
+                  }
+                }
+              );
+              fetchrow((pagecurrent - 1) * 3, 3);
+            }
+          }
+        );
+        jQuery("#pagination-item").on(
+          'click',
+          "#next",
+          event => {
+            event.preventDefault();
+            pagecurrent++;
+            if (pagecurrent > pagecount) {
+              pagecurrent = pagecount;
+            } else {
+              jQuery("#pagination-item").children("li").each(
+                function () {
+                  if (jQuery(this).text() == pagecurrent) {
+                    jQuery(this).css('font-size', '20px');
+                  } else {
+                    jQuery(this).css('font-size', '12px');
+                  }
+                }
+              );
+              fetchrow((pagecurrent - 1) * 3, 3);
+            }
+          }
+        );
+        function fetchrow (skip, fetch) {
+          jQuery("tbody").html("");
+          rows = [];
+          jQuery.getJSON(
+            `${API_PATH}/Fetch.ashx`,
+            {
+              item: 'Article'
+            },
+            response => {
+              rows = response;
+              for (let key = skip; key < skip + fetch; key++) {
+                if (key === rowcount) break
+                let row =
+                  `<tr>
+                    <th>${rows[key].id}</th>
+                    <td>${rows[key].title}</td>
+                    <td>
+                      <input name="display" type="checkbox" `;
+                if (rows[key].display === 'yes') {
+                  row += `checked`
+                }
+                row +=
+                  `/>
+                    </td>
+                    <td>
+                      <input name="delete" type="checkbox"/>
+                    </td>
+                  </tr>`;
+                jQuery("tbody").append(row);
+              }
+            }
+          )
+        }
+      }
+    );
+  </script>
+</body>
 </html>

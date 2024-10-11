@@ -11,13 +11,13 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("WebB03")>
-<Assembly: AssemblyCopyright("Copyright ©  2020")>
+<Assembly: AssemblyCopyright("Copyright ©  2024")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
 
-'下列 GUID 為專案公開 (Expose) 至 COM 時所要使用的 typelib ID
-<Assembly: Guid("f1ff2576-91ce-4f1e-901f-909b7bbeeb08")>
+'如果此專案公開至 COM，則下列 GUID 就是適用於 typelib 的識別碼
+<Assembly: Guid("0eb30c54-a28e-426b-99e2-16f752989c96")>
 
 ' 組件的版本資訊是由下列四項值構成:
 '

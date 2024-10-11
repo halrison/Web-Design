@@ -1,26 +1,28 @@
 ﻿jQuery(document).ready(
 	() => {
-		//取得電影資訊
+		//根據網域決定路徑
+    const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB03' : '..';
+    //取得電影資訊
 		const info = JSON.parse(sessionStorage.getItem('info'))[0];
 		//海報圖片
-		jQuery("font>img").attr('src', `Images/${info.poster}`);
+		jQuery("font>img").attr('src', `${API_PATH}/Content/Images/${info.poster}`);
 		//預告影片
-		jQuery("video").attr('src', `Videos/${info.trailer}`);
+		jQuery("video").attr('src', `${API_PATH}/Content/Videos/${info.trailer}`);
 		//片名
 		jQuery("#name").text(info.name);
 		//分級
 		switch (info.levels) {
 			case 'general':
-				jQuery("#level").html('<img src="Images/03C01.png" />普遍級');
+				jQuery("#level").html(`<img src="${API_PATH}/Content/Images/03C01.png" />普遍級`);
 				break;
 			case 'protected':
-				jQuery("#level").html('<img src="Images/03C02.png" />保護級');
+				jQuery("#level").html(`<img src="${API_PATH}/Content/Images/03C03.png" />保護級`);
 				break;
 			case 'couching':
-				jQuery("#level").html('<img src="Images/03C03.png" />輔導級');
+				jQuery("#level").html(`<img src="${API_PATH}/Content/Images/03C02.png" />輔導級`);
 				break;
 			case 'restricted':
-				jQuery("#level").html('<img src="Images/03C04.png" />限制級');
+				jQuery("#level").html(`<img src="${API_PATH}/Content/Images/03C04.png" />限制級`);
 				break;
 		}
 		//長度
@@ -43,6 +45,7 @@
 		//導向訂票頁
 		jQuery("#ticket").click(
 			() => {
+        let today = new Date;
 				sessionStorage.setItem(
 					'info',
 					JSON.stringify(

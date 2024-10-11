@@ -1,95 +1,97 @@
 ﻿<!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            label,#options{
-                background-color:lightgray;
-            }
-            input[type=button],[type=submit],[type=reset]{
-                border:1px solid black;
-            }
-        </style>
-    </head>
-    <body>
-        <fieldset>
-            <legend>新增問卷</legend>
-            <form>
-                <label>問卷名稱</label>
-                <input id="name" type="text" />
-                <div id="options">
-                    選項<input name="option" type="text" />
-                </div>
-				<input type="button" value="更多" /><br>
-				<input type="submit" value="新增" />|
-				<input type="reset" value="清空" />
-            </form>
-        </fieldset>
-        <script type="text/javascript">
-            jQuery(document).ready(
-                () => {
-                    jQuery(":button").click(
-                        () => {
-                            jQuery("#options").append(
-								`<br/>選項<input name = "option" type = "text" />`
-                            );
-						}
-                    );
-                    jQuery("form").submit(
-                        () => {
-                            event.preventDefault();
-                            var id;
-                            jQuery.ajax(
-                                {
-                                    url: '/ClassB/WebB02/Add.ashx',
-                                    method: 'post',
-                                    data:
-                                    {
-                                        item: 'QuestionnaireTopic',
-                                        topic: jQuery("#name").val()
-                                    },
-                                    async:false,
-                                    success: response => {
-                                        if (response === 'Success') {
-                                            jQuery.ajax(
-                                                {
-                                                    url: '/ClassB/WebB02/Fetch.ashx',
-                                                    method: 'get',
-                                                    data:
-                                                    {
-                                                        item: 'QuestionnaireTopic'
-                                                    },
-                                                    async: false,
-                                                    dataType: 'json',
-                                                    success: response => {
-                                                        id = response[response.length-1].id;
-                                                        jQuery("input[name='option']").each(
-                                                            function () {
-                                                                jQuery.ajax(
-                                                                    {
-                                                                        url: '/ClassB/WebB02/Add.ashx',
-                                                                        method: 'post',
-                                                                        data:
-                                                                        {
-                                                                            item: 'QuestionnaireOption',
-                                                                            topic: id,
-                                                                            option: jQuery(this).val()
-                                                                        },
-                                                                        async: false
-                                                                    }
-                                                                );
-                                                            }
-                                                        );
-                                                    }
-                                                }
-                                            );
-                                        }
-                                    }
-                                }
-                            );
-						}
-                    );
-				}
+<head>
+  <style>
+    label, #options {
+      background-color: lightgray;
+    }
+
+    input[type=button], [type=submit], [type=reset] {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <fieldset>
+    <legend>新增問卷</legend>
+    <form>
+      <label>問卷名稱</label>
+      <input id="name" type="text" />
+      <div id="options">
+        選項<input name="option" type="text" />
+      </div>
+      <input type="button" value="更多" /><br>
+      <input type="submit" value="新增" />|
+      <input type="reset" value="清空" />
+    </form>
+  </fieldset>
+  <script type="text/javascript">
+    jQuery(document).ready(
+      () => {
+        jQuery(":button").click(
+          () => {
+            jQuery("#options").append(
+              `<br/>選項<input name = "option" type = "text" />`
             );
-        </script>
-    </body>
+          }
+        );
+        jQuery("form").submit(
+          event => {
+            event.preventDefault();
+            let id;
+            const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB02' : ''; 
+            jQuery.ajax(
+              {
+                url: `${API_PATH}/Add.ashx`,
+                method: 'post',
+                data:
+                {
+                  item: 'QuestionnaireTopic',
+                  topic: jQuery("#name").val()
+                },
+                async: false,
+                success: response => {
+                  if (response === 'Success') {
+                    jQuery.ajax(
+                      {
+                        url: `${API_PATH}/Fetch.ashx`,
+                        method: 'get',
+                        data:
+                        {
+                          item: 'QuestionnaireTopic'
+                        },
+                        async: false,
+                        dataType: 'json',
+                        success: response => {
+                          id = response[response.length - 1].id;
+                          jQuery("input[name='option']").each(
+                            function () {
+                              jQuery.ajax(
+                                {
+                                  url: `${API_PATH}/Add.ashx`,
+                                  method: 'post',
+                                  data:
+                                  {
+                                    item: 'QuestionnaireOption',
+                                    topic: id,
+                                    option: jQuery(this).val()
+                                  },
+                                  async: false
+                                }
+                              );
+                            }
+                          );
+                        }
+                      }
+                    );
+                  }
+                }
+              }
+            );
+          }
+        );
+      }
+    );
+  </script>
+</body>
 </html>

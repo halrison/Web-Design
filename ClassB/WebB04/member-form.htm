@@ -49,12 +49,14 @@
     <input type="button" value="取消" />
 </p>
 <script type="text/javascript">
-    //載入會員資料
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..'; 
+  //載入會員資料
     jQuery.getJSON(
-        '/ClassB/WebB04/Member.ashx',
+        `${API_PATH}/Member.ashx`,
         {
             action: 'fetchone',
-            account:sessionStorage.getItem('member')
+            account: sessionStorage.getItem('member')
         },
         response => {
             jQuery("#Name").val(response[0].name);
@@ -67,10 +69,10 @@
     );
     //計算累計交易額
     jQuery.getJSON(
-        '/ClassB/WebB04/OrderSummary.ashx',
+        `${API_PATH}/OrderSummary.ashx`,
         {
             action: 'fetch',
-            account:sessionStorage.getItem('member')
+            account: sessionStorage.getItem('member')
         },
         response => {
             const total = response.reduce(
@@ -82,10 +84,10 @@
     );
     //編輯成功才導回會員列表
     jQuery(":submit").click(
-        () => {
+        event => {
             event.preventDefault();
             jQuery.post(
-                '/ClassB/WebB04/Member.ashx',
+                `${API_PATH}/Member.ashx`,
                 {
                     action: 'modify',
                     name: jQuery("#Name").val(),

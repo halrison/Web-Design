@@ -1,146 +1,149 @@
 ﻿<p class="botli cent t">管理者帳號管理</p>
 <table style="width: 100%;">
-	<thead>
-		<tr class="yel">
-			<th>帳號</th>
-			<th>密碼</th>
-			<th>刪除</th>
-		</tr>
-	</thead>
-	<tbody>
-	</tbody>
+  <thead>
+    <tr class="yel">
+      <th>帳號</th>
+      <th>密碼</th>
+      <th>刪除</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
 </table>
 <table style="margin-top:10px; width:70%;">
-	<tbody>
-		<tr>
-			<td style="width:200px">
-				<input type="button" id="btnadd" />
-			</td>
-			<td class="cent">
-				<input type="submit" value="修改確定" />
-				<input type="reset" value="重置" />
-			</td>
-		</tr>
-	</tbody>
+  <tbody>
+    <tr>
+      <td style="width:200px">
+        <input type="button" id="btnadd" />
+      </td>
+      <td class="cent">
+        <input type="submit" value="修改確定" />
+        <input type="reset" value="重置" />
+      </td>
+    </tr>
+  </tbody>
 </table>
 <script type="text/javascript">
-	jQuery(document).ready(
-		() => {
-			//載入並渲染管理者帳號
-			jQuery.getJSON(
-				'/ClassB/WebB01/Fetch.ashx',
-				{
-					item: 'Account'
-				},
-				responses => {
-					jQuery.each(
-						responses,
-						(key, value) => {
-							jQuery("tbody:nth-child(2)").append(
-								`<tr id="${value.Id}" class="trce">
-									<td>
-										<input name="username" type="text" value="${value.UserName}"/>
-									</td>
-									<td>
-										<input name="password" type="password" value="${value.PassWord}"/>
-									</td>
-									<td>
-										<input name="delete" type="checkbox" />
-									</td>
-								</tr>`
-							);
-						}
-					);
-				}
-			);
-			//渲染並顯示modal
-			jQuery("#btnadd").val('新增管理員帳號').click(
-				() => {
-					jQuery("#cvr").html(
-						`<p class="botli t">新增管理員帳號</p>
-						帳號：<input id="username" type="text" autocomplete="off"/><br>
-						密碼：<input id="password" type="password" autocomplete="off"/><br>
-						確認密碼：<input id="confirm" type="password" autocomplete="off"/><br>
-						<button id="Insert">新增</button>
-						<button id="Clear">重置</button>`
-					);
-					jQuery("#cover").addClass('cent').fadeIn();
-				}
-			);
-			jQuery("form").on(
-				'click',
-				"#Insert",
-				() => {
-					//新增管理員帳號，並渲染新的表格列以顯示
-					jQuery.post('/ClassB/WebB01/Add.ashx',
-						 {
-							item: 'Account',
-							username: jQuery("#username").val(),
-							password: jQuery("#password").val()
-						},
-						returns => {
-							jQuery("tbody:nth-child(2)").prepend(
-								`<tr id="${returns}" class="trce">
-									<td>
-										<input name="username" type="text" value="${jQuery("#username").val()}"/>
-									</td>
-									<td>
-										<input name="password" type="password" value="${ jQuery("#password").val()}"/>
-									</td>
-									<td>
-										<input name="delete" type="checkbox" />
-									</td>
-								</tr>`
-							);
-							jQuery("#cover").fadeOut();
-						}
-					);
-				}
-			);
-			jQuery("form").on(
-				'click',
-				"#Clear",
-				() => {
-					//清除帳號密碼
-					jQuery("#username").empty();
-					jQuery("#password").empty();
-				}
-			);
-			jQuery("form").submit(
-				() => {
-					event.preventDefault();
-					jQuery("tbody:nth-child(2) tr").each(
-						function () {
-							if (jQuery(this).find("input[name='delete']").prop('checked')) {
-								//批次刪除
-								jQuery.get(
-									'/ClassB/WebB01/Delete.ashx',
-									{
-										item: 'Account',
-										id: jQuery(this).attr('id')
-									},
-									responses => {
-										if (responses == 'success') {
-											jQuery(this).remove();
-										}
-									}
-								);
-							} else {
-								//批次修改
-								jQuery.post(
-									'/ClassB/WebB01/Modify.ashx',
-									 {
-										item: 'Account',
-										id: jQuery(this).attr('id'),
-										username: jQuery(this).find("input:text").val(),
-										password: jQuery(this).find("input:password").val()
-									}
-								);
-							}
-						}
-					);
-				}
-			);
-		}
-	);
+  jQuery(document).ready(
+    () => {
+      //根據域名決定請求路徑
+      const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB01' : '..'
+      //載入並渲染管理者帳號
+      jQuery("tbody:nth-child(2)").html("");
+jQuery.getJSON(
+        `${API_PATH}/Fetch.ashx`,
+        {
+          item: 'Account'
+        },
+        responses => {
+          jQuery.each(
+            responses,
+            (key, value) => {
+              jQuery("tbody:nth-child(2)").append(
+                `<tr id="${value.Id}" class="trce">
+                  <td>
+                    <input name="username" type="text" value="${value.UserName}"/>
+                  </td>
+                  <td>
+                    <input name="password" type="password" value="${value.Password}"/>
+                  </td>
+                  <td>
+                    <input name="delete" type="checkbox" />
+                  </td>
+                </tr>`
+              );
+            }
+          );
+        }
+      );
+      //渲染並顯示modal
+      jQuery("#btnadd").val('新增管理員帳號').click(
+        () => {
+          jQuery("#cvr").html(
+            `<p class="botli t">新增管理員帳號</p>
+            帳號：<input id="username" type="text" autocomplete="off"/><br>
+            密碼：<input id="password" type="password" autocomplete="off"/><br>
+            確認密碼：<input id="confirm" type="password" autocomplete="off"/><br>
+            <button id="Insert">新增</button>
+            <button id="Clear">重置</button>`
+          );
+          jQuery("#cover").addClass('cent').fadeIn();
+        }
+      );
+      jQuery("form").on(
+        'click',
+        "#Insert",
+        () => {
+          //新增管理員帳號，並渲染新的表格列以顯示
+          jQuery.post(`${API_PATH}/Add.ashx`,
+            {
+              item: 'Account',
+              UserName: jQuery("#username").val(),
+              PassWord: jQuery("#password").val()
+            },
+            returns => {
+              jQuery("tbody:nth-child(2)").prepend(
+                `<tr id="${returns}" class="trce">
+                  <td>
+                    <input name="username" type="text" value="${jQuery("#username").val()}"/>
+                  </td>
+                  <td>
+                    <input name="password" type="password" value="${jQuery("#password").val()}"/>
+                  </td>
+                  <td>
+                    <input name="delete" type="checkbox" />
+                  </td>
+                </tr>`
+              );
+              jQuery("#cover").fadeOut();
+            }
+          );
+        }
+      );
+      jQuery("form").on(
+        'click',
+        "#Clear",
+        () => {
+          //清除帳號密碼
+          jQuery("#username").empty();
+          jQuery("#password").empty();
+        }
+      );
+      jQuery("form").submit(
+        event => {
+          event.preventDefault();
+          jQuery("tbody:nth-child(2) tr").each(
+            function () {
+              if (jQuery(this).find("input[name='delete']").prop('checked')) {
+                //批次刪除
+                jQuery.get(
+                  `${API_PATH}/Remove.ashx`,
+                  {
+                    item: 'Account',
+                    Id: jQuery(this).attr('id')
+                  },
+                  responses => {
+                    if (responses == 'success') {
+                      jQuery(this).remove();
+                    }
+                  }
+                );
+              } else {
+                //批次修改
+                jQuery.post(
+                  `${API_PATH}/Modify.ashx`,
+                  {
+                    item: 'Account',
+                    Id: jQuery(this).attr('id'),
+                    UserName: jQuery(this).find("input:text").val(),
+                    Password: jQuery(this).find("input:password").val()
+                  }
+                );
+              }
+            }
+          );
+        }
+      );
+    }
+  );
 </script>

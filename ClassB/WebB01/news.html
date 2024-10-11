@@ -29,24 +29,27 @@
 <script type="text/javascript">
 	jQuery(document).ready(
 		() => {
-			var pagecount, rowcount, pagecurrent = 1;
+      //根據域名決定請求路徑
+      const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB01' : '..'; 
+      let pagecount, rowcount, pagecurrent = 1,rows = [];
 			//載入與顯示分頁頁碼
-			jQuery.getJSON(
-				'/ClassB/WebB01/Fetch.ashx',
+jQuery.getJSON(
+				`${API_PATH}/Fetch.ashx`,
 				{
 					item: 'News'
 				},
 				returns => {
-					rowcount = returns.length;
+          rows = returns;
+					rowcount = rows.length;
 					pagecount = Math.ceil(rowcount / 4);
-					var paginationlink =
+					let paginationlink =
 						`<li>
 							<a href="" id="prev" style="text-decoration:none"><</a>
 						</li>`;
-					for (var i = 1; i <= pagecount; i++) {
+					for (let i = 1; i <= pagecount; i++) {
 						paginationlink +=
 						`<li`;
-						if (i == pagecurrent) {
+						if (i === pagecurrent) {
 							paginationlink +=
 								` style="font-size:20px"`;
 						}
@@ -65,7 +68,7 @@
 					//渲染並顯示modal
 					jQuery("#cvr").html(
 						`<p class="cent botli t">新增最新消息資料</p>
-						最新消息資料：<textarea id="News" rows="2" cols="20"></textarea>
+						最新消息資料：<textarea id="News" rows="2" cols="85%"></textarea><br/>
 						<button id="Insert" type="button">新增</button>
 						<button id="Clear" type="button">重置</button>`
 					);
@@ -78,29 +81,16 @@
 				() => {
 					//新增一筆最新消息，並在表格頂端插入一列
 					jQuery.post(
-						'/ClassB/WebB01/Add.ashx',
+						`${API_PATH}/Add.ashx`,
 						{
 							item: 'News',
-							message: jQuery("#News").val(),
-							display: 'no'
+							Message: jQuery("#News").val(),
+							Display: 'no'
 						},
 						returns => {
 							if (returns !== 'fail') {
-								jQuery("tbody:nth-child(2)").prepend(
-									`<tr id="${returns}" class="trce">
-										<td class="cent">
-											<textarea name="news" rows="3" cols="60%">${jQuery("#News").val()}</textarea>
-										</td>
-										<td>
-											<input type="checkbox" name="display"/>
-										</td>
-										<td>
-											<input name="delete" type="checkbox" />
-										</td>
-									</tr>`
-								);
-								jQuery("#cover").fadeOut();
-							}
+                location.reload();
+              }
 						}
 					);
 				}
@@ -116,10 +106,10 @@
 			jQuery("#pagination-item").on(
 				'click',
 				"#prev",
-				() => {
+				event => {
 					//上一頁
 					event.preventDefault();
-					pagecurrent--;
+					pagecurrent --;
 					if (pagecurrent < 1) {
 						pagecurrent = 1;
 					} else {
@@ -139,10 +129,10 @@
 			jQuery("#pagination-item").on(
 				'click',
 				"#next",
-				() => {
+				event => {
 					//下一頁
 					event.preventDefault();
-					pagecurrent++;
+					pagecurrent ++;
 					if (pagecurrent > pagecount) {
 						pagecurrent = pagecount;
 					} else {
@@ -160,20 +150,20 @@
 				}
 			);
 			jQuery("form").submit(
-				()=> {
+				event => {
 					event.preventDefault();
 					jQuery("tbody:nth-child(2) tr").each(
 						function () {
 							if (jQuery(this).find("input[name='delete']").prop('checked')) {
 								//批次刪除
 								jQuery.get(
-									'/ClassB/WebB01/Delete.ashx',
+									`${API_PATH}/Remove.ashx`,
 									{
 										item: 'News',
-										id: jQuery(this).attr('id')
+										Id: jQuery(this).attr('id')
 									},
 									responses => {
-										if (responses == 'success') {
+										if (responses === 'success') {
 											jQuery(this).remove();
 										}
 									}
@@ -181,55 +171,42 @@
 							} else {
 								//批次修改
 								jQuery.post(
-									'/ClassB/WebB01/Modify.ashx',
+									`${API_PATH}/Modify.ashx`,
 									{
 										item: 'News',
-										id: jQuery(this).attr('id'),
-										message: jQuery(this).find("textarea").val(),
-										display: jQuery(this).find("input[name='display']").prop('checked') ? 'yes' : 'no'
+										Id: jQuery(this).attr('id'),
+										Message: jQuery(this).find("textarea").val(),
+										Display: jQuery(this).find("input[name='display']").prop('checked') ? 'yes' : 'no'
 									}
 								);
 							}
 						}
 					);
-				}
+          location.reload();
+}
 			);
 			//渲染表格
 			function fetchrow(skipnum, fetchnum) {
-				jQuery("tbody:nth-child(2)").empty();
-				jQuery.getJSON(
-					'/ClassB/WebB01/Fetch.ashx',
-					{
-						item: 'News',
-						skipnum: skipnum,
-						fetchnum: fetchnum
-					},
-					returns => {
-						jQuery.each(
-							returns,
-							(key, value) => {
-								if (key < 4) {
-									let row =
-										`<tr id="${value.Id}" class="trce">
-											<td class="cent">
-												<textarea name="news" rows="3" cols="60%">${value.Message}</textarea>
-											</td>
-											<td>
-												<input type="checkbox" name="display"`;
-									if (value.Display == 'yes') { row +=` checked`; }
-									row += 
-												`/>
-											</td>
-											<td>
-												<input name="delete" type="checkbox" />
-											</td>
-										</tr>`;
-									jQuery("tbody:nth-child(2)").append(row);
-								}
-							}
-						);
-					}
-				);
+        jQuery("tbody:nth-child(2)").html("");
+        for (let key = skipnum; key < fetchnum + skipnum; key ++) {
+          if(key === rowcount) break
+          let row =
+            `<tr id="${rows[key].Id}" class="trce">
+									<td class="cent">
+										<textarea name="news" rows="3" cols="90%">${rows[key].Message}</textarea>
+									</td>
+									<td>
+										<input type="checkbox" name="display"`;
+          if (rows[key].Display == 'yes') { row += ` checked`; }
+          row +=
+            `/>
+									</td>
+									<td>
+										<input name="delete" type="checkbox" />
+									</td>
+								</tr>`;
+          jQuery("tbody:nth-child(2)").append(row);
+        }
 			}
 		}
 	);

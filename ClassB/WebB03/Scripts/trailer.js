@@ -1,10 +1,12 @@
 ﻿jQuery(document).ready(
 	function(){
-		var table;
-		sessionStorage.removeItem('info');
+		let table;
+		//根據網域決定路徑
+    const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB03' : '..';
+    sessionStorage.removeItem('info');
 		//載入預告片列表
 		jQuery.getJSON(
-			'/ClassB/WebB03/Fetch.ashx',
+			`${API_PATH}/Fetch.ashx`,
 			{
 				item: 'Movie'
 			},
@@ -15,30 +17,30 @@
 						let row =
 							`<tr id='${value.id}'>
 								<td>
-									<img src='/ClassB/WebB03/Images/${value.poster}' />
+									<img src='${API_PATH}/Content/Images/${value.poster}' width='200'/>
 								</td>
 								<td>`;
 						switch (value.levels) {
 							case 'general':
-								row += `<img src="Images/03C01.png" />`;
+								row += `<img src="${API_PATH}/Content/Images/03C01.png" />`;
 								break;
 							case 'protected':
-								row += `<img src="Images/03C02.png" />`;
+								row += `<img src="${API_PATH}/Content/Images/03C03.png" />`;
 								break;
-							case 'couching':
-								row += `<img src="Images/03C03.png" />`;
+							case 'coaching':
+								row += `<img src="${API_PATH}/Content/Images/03C02.png" />`;
 								break;
 							case 'restricted':
-								row += `<img src="Images/03C04.png" />`;
+								row += `<img src="${API_PATH}/Content/Images/03C04.png" />`;
 								break;
 						}
 						row +=
 							`	</td>
 								<td>${value.name}</td>
-								<td>${Math.floor(value.length / 60)}時${value.length % 60}分</td>
-								<td>${value.date}</td>
-								<td>${value.brief}</td>
-								<td>${value.display==='yes'?'是':'否'}</td>
+								<td>${isNaN(value.length) ? 0 : Math.floor(value.length / 60)}時${isNaN(value.length) ? 0 : value.length % 60}分</td>
+								<td>${value.date || new Date().toLocaleDateString()}</td>
+								<td>${value.brief || ''}</td>
+								<td>${value.display === 'yes' ? '是' : '否'}</td>
 								<td>
 									<button class='edit'>編輯電影</button>
 									<button class='remove'>刪除電影</button>
@@ -55,7 +57,7 @@
 		jQuery("tbody").on(
 			'click',
 			".edit",
-			function () {
+			function (event) {
 				event.preventDefault();		
 				let id = jQuery(this).parents("tr").attr('id'),
 					row = table.find(value => value.id === Number(id));
@@ -66,11 +68,11 @@
 		).on(
 			'click',
 			".remove",
-			function () {
+			function (event) {
 				event.preventDefault();		
 				let id = jQuery(this).parents("tr").attr('id');
 				jQuery.get(
-					'/ClassB/WebB03/Remove.ashx',
+					`${API_PATH}/Remove.ashx`,
 					{
 						id:id
 					},
@@ -85,14 +87,14 @@
 		).on(
 			'click',
 			".up",
-			async function () {
+			async function (event) {
 				event.preventDefault();
 				const currentRow = jQuery(this).parents("tr"),
 					previosRow = currentRow.prev("tr"),
 					currentRecord = table.find(value => String(value.id) === currentRow.attr("id")),
 					previosRecord = table.find(value => String(value.id) === previosRow.attr("id"));
 				let currentAjax = await jQuery.post(
-					'/ClassB/WebB03/Modify.ashx',
+					`${API_PATH}/Modify.ashx`,
 					{
 						item: 'Movie',
 						id: currentRecord.id,
@@ -110,7 +112,7 @@
 					}
 				),
 					previosAjax = await jQuery.post(
-					'/ClassB/WebB03/Modify.ashx',
+					`${API_PATH}/Modify.ashx`,
 					{
 						item: 'Movie',
 						id: previosRecord.id,
@@ -133,14 +135,14 @@
 		).on(
 			'click',
 			".down",
-			async function () {
+			async function (event) {
 				event.preventDefault();
 				const currentRow = jQuery(this).parents("tr"),
 					nextRow = currentRow.next("tr"),
 					currentRecord = table.find(value => String(value.id) === currentRow.attr("id")),
 					nextRecord = table.find(value => String(value.id) === nextRow.attr("id"));
 				let currentAjax = await jQuery.post(
-					'/ClassB/WebB03/Modify.ashx',
+					`${API_PATH}/Modify.ashx`,
 					{
 						item: 'Movie',
 						id: currentRecord.id,
@@ -158,7 +160,7 @@
 					}
 				),
 				nextAjax = await jQuery.post(
-					'/ClassB/WebB03/Modify.ashx',
+					`${API_PATH}/Modify.ashx`,
 					{
 						item: 'Movie',
 						id: nextRecord.id,

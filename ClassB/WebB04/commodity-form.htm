@@ -57,7 +57,9 @@
 </table>
 <input id="Submit" type="submit" />|<input id="Reset" type="reset" value="重置" />|<input id="Back" type="button" value="返回" />
 <script type="text/javascript">
-	var selectedCommodity;
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..'; 
+  let selectedCommodity;
 	//自 '新增商品按鈕' 進入
 	if (sessionStorage.getItem('selected_commodity') === null || sessionStorage.getItem('selected_commodity') === undefined) {
 		jQuery("h1").text('新增商品');
@@ -78,7 +80,7 @@
 	}
 	//載入大分類選單
 	jQuery.getJSON(
-		'/ClassB/WebB04/Big.ashx',
+		`${API_PATH}/Big.ashx`,
 		{
 			action:'fetch'
 		}		
@@ -87,7 +89,7 @@
 			jQuery("#BigCategory").append(`<option>請選擇一項</option>`);
 			response.forEach(
 				bigCategory => {
-					jQuery("#BigCategory").append(`<option ${selectedCommodity?.big === bigCategory.name?'selected':''}>${bigCategory.name}</option>`);
+					jQuery("#BigCategory").append(`<option value='${bigCategory.id}' ${selectedCommodity?.big === bigCategory.id ? 'selected' : ''}>${bigCategory.name}</option>`);
 				}
 			);
 			jQuery("#BigCategory").trigger('change');
@@ -104,10 +106,32 @@
 		() => {
 			history.back();
 		}
-	); 
+  );			
+  //上傳商品圖片
+  jQuery("#Picture").change(
+    function(){
+      if (jQuery(this).get(0).files.length > 0) {
+        let file = jQuery(this).get(0).files[0], form = new FormData;
+        form.append('Picture', file);
+        fetch(
+          `${API_PATH}/Upload.ashx`,
+          {
+            method: 'post',
+            body: form
+          }
+        ).then(
+          () => {
+            picture = file.name;
+          }
+        );
+      } else {
+        picture = selectedCommodity.picture;
+      }
+    }
+  )
 	jQuery("#Submit").click(
-		function(){
-			let action ='' , number='',picture='';
+		function(event){
+      let action = '', number = '', picture = '';
 			event.preventDefault();
 			if (jQuery(this).val() === '新增') {
 				action = 'add';
@@ -117,34 +141,17 @@
 				action = 'modify';
 				//取得商品編號
 				number = jQuery("#Number").text();
-			//上傳商品圖片
-			} if (jQuery("#Picture").get(0).files.length > 0) {
-				let file = jQuery("#Picture").get(0).files[0], form = new FormData;
-				form.append('Picture', file);
-				fetch(
-					'/ClassB/WebB04/Upload.ashx',
-					{
-						method: 'post',
-						body: form
-					}
-				).then(
-					() => {
-						picture = file.name;
-					}
-				);
-			} else {
-				picture = selectedCommodity.picture;
-			}
+			} 
 			jQuery.post(
-				'/ClassB/WebB04/Commodity.ashx',
+				`${API_PATH}/Commodity.ashx`,
 				{
-					action:action,
+					action,
 					big: jQuery("#BigCategory").val(),
 					medium: jQuery("#MediumCategory").val(),
-					number:number,
+					number,
 					name: jQuery("#Name").val(),
 					price: jQuery("#Price").val(),
-					picture:picture,
+					picture,
 					specification: jQuery("#Specification").val(),
 					quantity: jQuery("#Quantity").val(),
 					description: jQuery("#Description").val()
@@ -161,16 +168,16 @@
 	function loadMediumCategory() {
 		jQuery("#MediumCategory").html(`<option>請選擇一項</option>`);
 		jQuery.getJSON(
-			'/ClassB/WebB04/Medium.ashx',
+			`${API_PATH}/Medium.ashx`,
 			{
 				action: 'fetch',
-				big: jQuery("#BigCategory").find(":checked").index()+1
+				big: jQuery("#BigCategory").find(":checked").index()
 			}
 		).done(
 			response => {
 				response.forEach(
 					mediumCategory => {
-						jQuery("#MediumCategory").append(`<option data-big='${mediumCategory.big}' ${selectedCommodity?.medium === mediumCategory.name ? 'selected' : ''}>${mediumCategory.name}</option>`);
+						jQuery("#MediumCategory").append(`<option value='${mediumCategory.id}' ${selectedCommodity?.medium === mediumCategory.id ? 'selected' : ''}>${mediumCategory.name}</option>`);
 					}
 				);
 			}

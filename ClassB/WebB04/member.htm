@@ -15,31 +15,33 @@
 <div id="Detail">
 </div>
 <script type="text/javascript">
-	//載入會員列表
-    jQuery.getJSON(
-        '/ClassB/WebB04/Member.ashx',
-        {
-            action: 'fetchall'
-        },
-        response => {
-            let table = '';
-            response.forEach(
-                row => {
-                    table += `
-						<tr>
-							<td>${row.name}</td>
-							<td>${row.account}</td>
-							<td>${row.registered_at}</td>
-							<td>
-								<input name="Edit" type="button" value="修改" />
-								<input name="Delete" type="button" value="刪除" />
-							</td>
-						</tr>
-					`;
-                }
-            );
-            jQuery("#Summary tbody").html(table);
-        }
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..'; 
+  //載入會員列表
+  jQuery.getJSON(
+      `${API_PATH}/Member.ashx`,
+      {
+          action: 'fetchall'
+      },
+      response => {
+          let table = '';
+          response.forEach(
+              row => {
+                  table += `
+					            <tr class='pp'>
+						            <td>${row.name}</td>
+						            <td>${row.account}</td>
+						            <td>${row.registered_at}</td>
+						            <td>
+							            <input name="Edit" type="button" value="修改" />
+							            <input name="Delete" type="button" value="刪除" />
+						            </td>
+					            </tr>
+				            `;
+              }
+          );
+          jQuery("#Summary tbody").html(table);
+      }
 	);
 	//編輯按鈕
 	jQuery("tbody").on(
@@ -56,7 +58,7 @@
 		"[name='Delete']",
 		function () {
 			jQuery.get(
-				'/ClassB/WebB04/Member.ashx',
+				`${API_PATH}/Member.ashx`,
 				{
 					action: 'remove',
 					account: jQuery(this).parent().prev().prev().text()

@@ -7,8 +7,9 @@ Public Class Footer
     Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         context.Response.ContentType = "text/plain"
         connection.ConnectionString = WebConfigurationManager.ConnectionStrings("Connection").ToString()
-        connection.Open()
-        If context.Request.Params.HasKeys() Then
+    connection.Open()
+    connection.ChangeDatabase("DB04")
+    If context.Request.Params.HasKeys() Then
             command.Connection = connection
             command.CommandType = 1
             Select Case context.Request.Params.Get("action")

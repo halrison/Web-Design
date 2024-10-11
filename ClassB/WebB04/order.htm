@@ -22,10 +22,12 @@
 	<button>返回</button>
 </div>
 <script type="text/javascript">
-	//載入訂單列表
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..';
+  //載入訂單列表
 	jQuery.ajax(
 		{
-			url: '/ClassB/WebB04/OrderSummary.ashx',
+			url: `${API_PATH}/OrderSummary.ashx`,
 			method: 'get',
 			data: {
 				action: 'fetch'
@@ -46,7 +48,7 @@
 					//取得會員姓名
 					jQuery.ajax(
 						{
-							url: '/ClassB/WebB04/Member.ashx',
+							url: `${API_PATH}/Member.ashx`,
 							method: 'get',
 							data: 
 							{
@@ -81,7 +83,7 @@
 			//載入會員資訊
 			jQuery.ajax(
 				{
-					url: '/ClassB/WebB04/Member.ashx',
+					url: `${API_PATH}/Member.ashx`,
 					method: 'get',
 					data:
 					{
@@ -129,7 +131,7 @@
 					//載入訂單明細
 					jQuery.ajax(
 						{
-							url: '/ClassB/WebB04/OrderDetail.ashx',
+							url: `${API_PATH}/OrderDetail.ashx`,
 							method: 'get',
 							data:
 							{
@@ -146,7 +148,7 @@
 									//載入商品資訊
 									jQuery.ajax(
 										{
-											url: '/ClassB/WebB04/Commodity.ashx',
+											url: `${API_PATH}/Commodity.ashx`,
 											method: 'get',
 											data:
 											{
@@ -190,7 +192,7 @@
 			let promises = [];
 			//取得訂單明細
 			jQuery.getJSON(
-				'/ClassB/WebB04/OrderDetail.ashx',
+				`${API_PATH}/OrderDetail.ashx`,
 				{
 					action: 'fetch',
 					order_number: jQuery(this).parents("tr").find("td:first").text()
@@ -202,10 +204,10 @@
 							promises.push(
 								//逐筆取得商品編號
 								jQuery.post(
-									'/ClassB/WebB04/Commodity.ashx',
+									`${API_PATH}/Commodity.ashx`,
 									{
 										action: 'fetchone',
-										number:detail.commodity_number
+										number: detail.commodity_number
 									}
 								)
 							);
@@ -216,7 +218,7 @@
 			Promise.all(promises).then(
 				//刪除訂單明細
 				jQuery.get(
-					'/ClassB/WebB04/OrderDetail.ashx',
+					`${API_PATH}/OrderDetail.ashx`,
 					{
 						action: 'remove',
 						order_number: jQuery(this).parents("tr").find("td:first").text()
@@ -225,7 +227,7 @@
 					() => {
 						//刪除訂單摘要
 						return jQuery.get(
-							'/ClassB/WebB04/OrderSummary.ashx',
+							`${API_PATH}/OrderSummary.ashx`,
 							{
 								action: 'remove',
 								number: jQuery(this).parents("tr").find("td:first").text()

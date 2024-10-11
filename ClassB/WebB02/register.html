@@ -1,78 +1,77 @@
 ﻿<!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            p{
-                color:red;
-            }
-            th{
-                background-color:lightgray;
-                border:1px solid white;
-            }
-        </style>
-    </head>
-    <body>
-        <fieldset>
-            <legend></legend>
-            <form>
-                <p>*請設定您要註冊的帳號及密碼 ( 最長12個字元 )</p>
-				<table style="width:100%;">
-                    <tr>
-                        <th>Step1:登入帳號</th>
-                        <td><input id="Username" type="text" maxlength="12"/></td>
-                    </tr>
-                    <tr>
-                        <th>Step2:登入密碼</th>
-                        <td><input id="Password" type="password" maxlength="12"/></td>
-                    </tr>
-                    <tr>
-                        <th>Step3:再次確認密碼</th>
-                        <td><input id="Confirm" type="password" /></td>
-                    </tr>
-                    <tr>
-						<th>Step4:信箱(忘記密碼時使用)</th>
-						<td><input id="Email" type="email" /></td>
-                    </tr>
-                </table>
-                <input id="Submit" type="submit" value="註冊" />
-                <input id="Reset" type="reset" value="清除" />
-            </form>
-        </fieldset>
-        <script type="text/javascript">
-            jQuery(document).ready(
-                () => {
-                    jQuery("form").submit(
-                        () => {
-                            event.preventDefault();
-                            var username = jQuery("#Username"), password = jQuery("#Password"), confirm = jQuery("#Confirm"),email=jQuery("#Email");
-                            if (username.val() == '' || password.val() == '' || confirm.val() == '' || email.val() == '') {
-                                alert('不可空白');
-                            } else {
-                                if (confirm.val() == password.val()) {
-							        $.post(
-                                        '/ClassB/WebB02/Add.ashx',
-                                        {
-                                            item:'Member',
-                                            username: username.val(),
-                                            password: password.val(),
-                                            email: email.val()
-                                        },
-                                        response => {
-                                            if (response == 'Success') {
-                                                alert('註冊完成，歡迎加入');
-                                            } else {
-                                                alert('帳號重複');
-                                            }
-                                        }
-                                    );
-                                } else {
-                                    alert('密碼錯誤');
-                                }
-                            }
-                        }
-                    );
+<head>
+  <style>
+    p {
+      color: red;
+    }
+
+    th {
+      background-color: lightgray;
+      border: 1px solid white;
+    }
+  </style>
+</head>
+<body>
+  <fieldset>
+    <legend></legend>
+    <form>
+      <p>*請設定您要註冊的帳號及密碼 ( 最長12個字元 )</p>
+      <table style="width:100%;">
+        <tr>
+          <th>Step1:登入帳號</th>
+          <td><input id="Username" type="text" maxlength="12" /></td>
+        </tr>
+        <tr>
+          <th>Step2:登入密碼</th>
+          <td><input id="Password" type="password" maxlength="12" /></td>
+        </tr>
+        <tr>
+          <th>Step3:再次確認密碼</th>
+          <td><input id="Confirm" type="password" /></td>
+        </tr>
+        <tr>
+          <th>Step4:信箱(忘記密碼時使用)</th>
+          <td><input id="Email" type="email" /></td>
+        </tr>
+      </table>
+      <input id="Submit" type="submit" value="註冊" />
+      <input id="Reset" type="reset" value="清除" />
+    </form>
+  </fieldset>
+  <script type="text/javascript">
+    jQuery(document).ready(
+      () => {
+        jQuery("form").submit(
+          event => {
+            event.preventDefault();
+            let username = jQuery("#Username"), password = jQuery("#Password"), confirm = jQuery("#Confirm"), email = jQuery("#Email");
+            if (username.val() === '' || password.val() === '' || confirm.val() === '' || email.val() === '') {
+              alert('不可空白');
+            } else if (confirm.val() == password.val()) {
+              jQuery.post(
+                `${location.hostname === 'localhost' ? '/ClassB/WebB02' : ''}/Add.ashx`,
+                {
+                  item: 'Member',
+                  username: username.val(),
+                  password: password.val(),
+                  email: email.val()
+                },
+                response => {
+                  if (response == 'Success') {
+                    alert('註冊完成，歡迎加入');
+                  } else {
+                    alert('帳號重複');
+                  }
                 }
-            );
-        </script>
-    </body>
+              );
+            } else {
+              alert('密碼錯誤');
+            }
+          }
+        );
+      }
+    );
+  </script>
+</body>
 </html>

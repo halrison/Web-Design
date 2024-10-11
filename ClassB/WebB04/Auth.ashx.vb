@@ -10,8 +10,9 @@ Public Class Auth
 		context.Response.ContentType = "text/plain"
 		connection.ConnectionString = WebConfigurationManager.ConnectionStrings("Connection").ToString()
 		connection.Open()
-		'未收到驗證碼，則重新產生兩個驗證碼
-		If context.Request.Params.Get("authcode") Is vbNullString Then
+    connection.ChangeDatabase("DB04")
+    '未收到驗證碼，則重新產生兩個驗證碼
+    If context.Request.Params.Get("authcode") Is vbNullString Then
 			command.Connection = connection
 			command.CommandType = 1
 			command.CommandText = "update Setting set authNumber1=@auth_number1,authNumber2=@auth_number2"

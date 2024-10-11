@@ -11,7 +11,7 @@
 <input type="reset" value="重置" />
 <script type="text/javascript">
     jQuery.get(
-        '/ClassB/WebB04/Footer.ashx',
+        'API_PATH/Footer.ashx',
         {
             action:'get'
         },
@@ -24,7 +24,7 @@
             event.preventDefault();
             if (jQuery(":text").val()) {
                 jQuery.post(
-                    '/ClassB/WebB04/Footer.ashx',
+                    'API_PATH/Footer.ashx',
                     {
                         action:'set',
                         newFooter: jQuery(":text").val()

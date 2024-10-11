@@ -1,0 +1,41 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+WebB03
+</name>
+</assembly>
+<members>
+<member name="T:WebB03.My.MyWebExtension">
+ <summary>
+ 用來定義可用於 Web 專案 My 命名空間中之屬性的模組。
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="P:WebB03.My.MyWebExtension.Computer">
+ <summary>
+ 傳回主機電腦的資訊。
+ </summary>
+</member>
+<member name="P:WebB03.My.MyWebExtension.User">
+ <summary>
+ 傳回目前 Web 使用者的資訊。
+ </summary>
+</member>
+<member name="P:WebB03.My.MyWebExtension.Request">
+ <summary>
+ 傳回要求物件。
+ </summary>
+</member>
+<member name="P:WebB03.My.MyWebExtension.Response">
+ <summary>
+ 傳回回應物件。
+ </summary>
+</member>
+<member name="P:WebB03.My.MyWebExtension.Log">
+ <summary>
+ 傳回 Asp 記錄物件。
+ </summary>
+</member>
+</members>
+</doc>

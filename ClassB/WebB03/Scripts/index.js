@@ -1,21 +1,23 @@
 ﻿jQuery(document).ready(
 	() => {		 
-		var nowpage = 1, num = 1, length = 0, timer, table, today = new Date();
+		let nowpage = 1, num = 1, length = 0, timer, table, today = new Date();
+    //根據網域決定路徑
+    const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB03' : '..';
 		//載入電影列表
 		jQuery.getJSON(
-			'/ClassB/WebB03/Fetch.ashx',
+			`${API_PATH}/Fetch.ashx`,
 			{
 				item: 'Movie'
 			},
 			returns => {
 				//上一張的圖片
-				var images = `<img src="/ClassB/WebB03/Images/03E01.jpg" id="prev" />`;
+				let images = `<img src="${API_PATH}/Content/Images/03E01.jpg" id="prev" />`;
 				//篩選上映日期
 				returns = returns.filter(
 					value => {
 						const ondate = new Date(value.date);
 						ondate.setDate(ondate.getDate() + 3);
-						return value.display === 'yes' && today< ondate;
+						return value.display === 'yes' && today < ondate;
 					}
 				);
 				returns.forEach(
@@ -23,19 +25,19 @@
 						//每部電影的海報
 						images +=
 							`<p data-animate='${value.animation}' class="thumb">
-								<img src="/ClassB/WebB03/Images/${value.poster}" width="60" height="60" />
+								<img src="${API_PATH}/Content/Images/${value.poster}" width="60" height="60" />
 								<br/>
 								<span>${value.name}</span>
 							</p>`;
 					}
 				);
 				//下一張的圖片
-				images += `<img src="/ClassB/WebB03/Images/03E02.jpg" id="next" />`;
+				images += `<img src="${API_PATH}/Content/Images/03E02.jpg" id="next" />`;
 				jQuery("#slideShow").append(images);
 				//標記第一張海報
 				jQuery(".thumb").hide().first().addClass('active');
 				//只顯示四張海報
-				for (let s = 0; s <4; s++) {
+				for (let s = 0; s < 4; s ++) {
 					jQuery(".thumb").eq(s).show();
 				}
 				showimage();
@@ -50,7 +52,7 @@
 							num = 1;
 						}
 						//標記第幾張海報
-						jQuery(".thumb").removeClass('active').eq(num-1).addClass('active');
+						jQuery(".thumb").removeClass('active').eq(num - 1).addClass('active');
 						animation();
 						num++;
 					}
@@ -58,9 +60,9 @@
 				);
 				//分頁導覽列
 				if (length > 4) {
-					var totalpage = Math.ceil(length / 4), pagination =
+					let totalpage = Math.ceil(length / 4), pagination =
 						`<ul>`;
-					for (let i = 1; i <= totalpage; i++) {
+					for (let i = 1; i <= totalpage; i ++) {
 						pagination +=
 							`<li>
 								<a>${i}</a>
@@ -100,9 +102,9 @@
 						if (num > length) {
 							num = 1;
 						}
-						jQuery(".thumb").removeClass('active').eq(num-1).addClass('active');
+						jQuery(".thumb").removeClass('active').eq(num - 1).addClass('active');
 						animation();
-						num++;
+						num ++;
 					}
 					, 5000
 				);
@@ -141,7 +143,7 @@
 			function () {				
 				//篩選該部電影的資訊
 				const id = jQuery(this).parents("td").attr('id'),
-					info = table.filter(
+					info = table.find(
 						value => value.id === parseInt(id)
 					);
 				//保留該部電影的資訊
@@ -163,15 +165,15 @@
 		function pp(x) {
 			//上一頁
 			if (x === 1 && nowpage > 1) {
-				nowpage--;
+				nowpage --;
 			}
 			//下一頁
 			if (x === 2 && nowpage < length - 3) {
-				nowpage++;
+				nowpage ++;
 			}
 			//根據頁碼顯示四張海報
 			jQuery(".thumb").hide();
-			for (let s = 0; s <4; s++) {
+			for (let s = 0; s <4; s ++) {
 				let t = s + nowpage;
 				jQuery(".thumb").eq(t-1).show();
 			}
@@ -193,13 +195,12 @@
 			//載入電影資訊
 			let listHTML =
 					`<tr>`;
-			jQuery.each(
-				listArray,
-				(key, value) => {
+			listArray.forEach(
+				(value, key) => {
 					listHTML +=
 						`<td id='${value.id}'>
 							<a>
-								<img src='Images/${value.poster}' width='100' height='180' />
+								<img src='${API_PATH}/Content/Images/${value.poster}' width='100' height='180' />
 							</a>
 							<div>
 								<h4>${value.name}</h4>
@@ -207,22 +208,22 @@
 					switch (value.levels) {
 						case 'general':
 							listHTML +=
-								`<img src='Images/03C01.png' />
+								`<img src='${API_PATH}/Content/Images/03C01.png' />
 								普遍級<br/>`;
 							break;
 						case 'protected':
 							listHTML +=
-								`<img src='Images/03C02.png' />
+								`<img src='${API_PATH}/Content/Images/03C03.png' />
 								保護級<br/>`;
 							break;
 						case 'coaching':
 							listHTML +=
-								`<img src='Images/03C03.png' />
+								`<img src='${API_PATH}/Content/Images/03C02.png' />
 								輔導級<br/>`;
 							break;
 						case 'restricted':
 							listHTML +=
-								`<img src='Images/03C04.png' />
+								`<img src='${API_PATH}/Content/Images/03C04.png' />
 								限制級<br/>`;
 							break;
 					}
@@ -245,11 +246,11 @@
 			switch (jQuery(".active").data('animate')) {
 				case 'fadein':
 					//淡入淡出
-					jQuery("#animation-area").fadeOut(1000,showimage).fadeIn(1000);
+					jQuery("#animation-area").fadeOut(1000, showimage).fadeIn(1000);
 					break;
 				case 'slidedown':
 					//滑入滑出
-					jQuery("#animation-area").slideUp(1000,showimage).slideDown(1000);
+					jQuery("#animation-area").slideUp(1000, showimage).slideDown(1000);
 					break;
 				case 'resize':
 					//放大縮小

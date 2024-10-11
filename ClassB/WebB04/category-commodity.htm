@@ -29,12 +29,14 @@
 	</table>
 </div>
 <script type="text/javascript">
-	var categories1, categories2,commodities,currentRow;
+  //根據網址決定請求路徑
+  const API_PATH = location.hostname === 'localhost' ? '/ClassB/WebB04' : '..'; 
+  let categories1, categories2,commodities,currentRow;
 	jQuery("#CommodityManage").hide();
 	//載入分類列表
 	jQuery.ajax(
 		{
-			url: '/ClassB/WebB04/Big.ashx',
+			url: `${API_PATH}/Big.ashx`,
 			method: 'get',
 			data:
 			{
@@ -60,7 +62,7 @@
 									`;
 							jQuery.ajax(
 								{
-									url: '/ClassB/WebB04/Medium.ashx',
+									url: `${API_PATH}/Medium.ashx`,
 									method: 'get',
 									data: {
 										action: 'fetch',
@@ -94,7 +96,7 @@
 	);
 	//載入商品列表
 	jQuery.getJSON(
-		'/ClassB/WebB04/Commodity.ashx',
+		`${API_PATH}/Commodity.ashx`,
 		{
 			action:'fetchall'
 		},
@@ -129,13 +131,13 @@
 		function () {
 			currentRow = jQuery(this).parents(".pp");
 			jQuery.get(
-				'/ClassB/WebB04/Big.ashx',
+				`${API_PATH}/Big.ashx`,
 				{
 					action: 'remove',
-					id:jQuery(currentRow).data('big')
+					id: jQuery(currentRow).data('big')
 				},
 				response => {
-					if (response === 'Success') jQuery(currentrow).remove();
+					if (response === 'Success') jQuery(currentRow).remove();
 				}
 			);
 		}
@@ -145,17 +147,19 @@
 		".pp [name='modify']",
 		function () {
 			let tempCategoryName = prompt('將大分類名稱變更為', jQuery(currentRow).find("td:first-child").text());
-			jQuery.post(
-				'/ClassB/WebB04/Big.ashx',
-				{
-					action: 'modify',
-					name: tempCategoryName  ,
-					id:jQuery(currentRow).data('big')
-				},
-				response => {
-					if (response === 'Success') jQuery(currentRow).find("td:first-child").text(tempCategoryName);
-				}
-			);
+      if (tempCategoryName) {
+        jQuery.post(
+          `${API_PATH}/Big.ashx`,
+          {
+            action: 'modify',
+            name: tempCategoryName,
+            id: jQuery(currentRow).data('big')
+          },
+          response => {
+            if (response === 'Success') jQuery(currentRow).find("td:first-child").text(tempCategoryName);
+          }
+        );
+}
 		}
 	//刪除中分類
 	).on(
@@ -165,10 +169,10 @@
 			currentRow = jQuery(this).parents(".tt");
 			let parentRow = jQuery(currentRow).prev(".pp");
 			jQuery.get(
-				'/ClassB/WebB04/Medium.ashx',
+				`${API_PATH}/Medium.ashx`,
 				{
 					action: 'remove',
-					big:jQuery(parentRow).data('big'),
+					big: jQuery(parentRow).data('big'),
 					medium: jQuery(currentRow).data('medium')
 				},
 				response => {
@@ -184,18 +188,20 @@
 			currentRow = jQuery(this).parents(".tt");
 			let parentRow = jQuery(currentRow).prev(".pp");
 			let tempCategoryName = prompt('將中分類名稱變更為', jQuery(currentRow).find("td:first-child").text());
-			jQuery.post(
-				'/ClassB/WebB04/Medium.ashx',
-				{
-					action: 'modify',
-					name: tempCategoryName,
-					big: jQuery(parentRow).data('big'),
-					medium:jQuery(currentRow).data('medium')
-				},
-				response => {
-					if (response === 'Success') jQuery(currentRow).find("td:first-child").text(tempCategoryName);
-				}
-			);
+      if (tempCategoryName) {
+        jQuery.post(
+          `${API_PATH}/Medium.ashx`,
+          {
+            action: 'modify',
+            name: tempCategoryName,
+            big: jQuery(parentRow).data('big'),
+            medium: jQuery(currentRow).data('medium')
+          },
+          response => {
+            if (response === 'Success') jQuery(currentRow).find("td:first-child").text(tempCategoryName);
+          }
+        );
+}
 		}
 	);
 	//修改商品
@@ -205,7 +211,7 @@
 		function () {
 			currentRow = jQuery(this).parents("tr");
 			jQuery.getJSON(
-				'/ClassB/WebB04/Commodity.ashx',
+				`${API_PATH}/Commodity.ashx`,
 				{
 					action: 'fetchone',
 					number: jQuery(currentRow).find("td").first().text()
@@ -222,7 +228,7 @@
 		"[name='remove']",
 		function () {
 			jQuery.get(
-				'/ClassB/WebB04/Commodity.ashx',
+				`${API_PATH}/Commodity.ashx`,
 				{
 					action: 'remove',
 					number: jQuery(currentRow).find("td").first().text()
@@ -241,7 +247,7 @@
 		function () {
 			currentRow = jQuery(this).parents("tr");
 			jQuery.post(
-				'/ClassB/WebB04/Commodity.ashx',
+				`${API_PATH}/Commodity.ashx`,
 				{
 					action: 'up',
 					number: jQuery(currentRow).find("td").first().text()
@@ -258,7 +264,7 @@
 		function () {
 			currentRow = jQuery(this).parents("tr");
 			jQuery.post(
-				'/ClassB/WebB04/Commodity.ashx',
+				`${API_PATH}/Commodity.ashx`,
 				{
 					action: 'down',
 					number: jQuery(currentRow).find("td").first().text()
@@ -283,4 +289,41 @@
 			location.assign('?do=commodity-form');
 		}
 	);
+  //新增大分類
+  jQuery("#AddBigCategory").click(
+    event => {
+      event.preventDefault();
+      if (jQuery("#BigCategory").val()) {
+        jQuery.post(
+          `${API_PATH}/Big.ashx`,
+          {
+            action: 'add',
+            name: jQuery("#BigCategory").val()
+          },
+          response => {
+            if (response === 'Success') location.reload();
+          }
+        )
+      }
+    }
+  )
+  //新增中分類
+  jQuery("#AddMediumCategory").click(
+    event => {
+      event.preventDefault();
+      if (jQuery("#SelectCategory").val() && jQuery("#MediumCategory").val()) {
+        jQuery.post(
+          `${API_PATH}/Medium.ashx`,
+          {
+            action: 'add',
+            name: jQuery("#MediumCategory").val(),
+            big: jQuery("#SelectCategory").val()
+          },
+          response => {
+            if (response === 'Success') location.reload();
+          }
+        )
+      }
+    }
+  )
 </script>
